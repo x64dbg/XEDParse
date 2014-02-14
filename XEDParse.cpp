@@ -1,4 +1,5 @@
 #include "XEDParse.h"
+#include "xed2\include\xed-interface.h"
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
 {
