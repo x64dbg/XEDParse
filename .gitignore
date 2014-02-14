@@ -1,0 +1,10 @@
+bin/
+Win32/
+x64/
+*.pdb
+ipch/
+*.sdf
+*.suo
+*.depend
+*.layout
+*.bmarks
