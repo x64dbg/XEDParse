@@ -1,5 +1,5 @@
-#ifndef __MAIN_H__
-#define __MAIN_H__
+#ifndef _XEDPARSE_H
+#define _XEDPARSE_H
 
 #include <windows.h>
 
@@ -44,4 +44,4 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
 }
 #endif
 
-#endif // __MAIN_H__
+#endif // _XEDPARSE_H

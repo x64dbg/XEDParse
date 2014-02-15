@@ -73,6 +73,8 @@
 		</Build>
 		<Unit filename="XEDParse.cpp" />
 		<Unit filename="XEDParse.h" />
+		<Unit filename="parser.cpp" />
+		<Unit filename="parser.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
