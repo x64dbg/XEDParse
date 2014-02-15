@@ -65,5 +65,7 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         strcpy(parsed->operand2.raw, operand2);
     }
     strcpy(parsed->operand1.raw, instr);
+    parsed->operand1.type=TYPE_NONE;
+    parsed->operand2.type=TYPE_NONE;
     return true;
 }
