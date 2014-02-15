@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEDParse", "XEDParse.vcxproj", "{05FD4520-9761-3F68-5034-D8E8EDB3B729}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEDParseTest", "XEDParseTest\XEDParseTest.vcxproj", "{CB690634-908F-4E23-A178-834CCB189CD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|Win32 = Release|Win32
@@ -13,6 +15,10 @@ Global
 		{05FD4520-9761-3F68-5034-D8E8EDB3B729}.Release|Win32.Build.0 = Release|Win32
 		{05FD4520-9761-3F68-5034-D8E8EDB3B729}.Release|x64.ActiveCfg = Release|x64
 		{05FD4520-9761-3F68-5034-D8E8EDB3B729}.Release|x64.Build.0 = Release|x64
+		{CB690634-908F-4E23-A178-834CCB189CD5}.Release|Win32.ActiveCfg = Release|Win32
+		{CB690634-908F-4E23-A178-834CCB189CD5}.Release|Win32.Build.0 = Release|Win32
+		{CB690634-908F-4E23-A178-834CCB189CD5}.Release|x64.ActiveCfg = Release|x64
+		{CB690634-908F-4E23-A178-834CCB189CD5}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
