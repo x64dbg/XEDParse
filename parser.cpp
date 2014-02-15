@@ -224,6 +224,17 @@ static bool valfromstring(const char* text, ULONG_PTR* value)
 #endif // _WIN64
         return true;
     }
+    else if(*text=='0' && text[1]=='x') //hexadecimal
+    {
+        if(!isbase(text+2, "0123456789ABCDEF"))
+            return false;
+#ifdef _WIN64
+        sscanf(text+2, "%llx", value);
+#else
+        sscanf(text+2, "%x", value);
+#endif // _WIN64
+        return true;
+    }
     else if(*text=='.') //decimal
     {
         int skip=1;
@@ -270,6 +281,21 @@ static bool valfromstring(const char* text, ULONG_PTR* value)
     return true;
 }
 
+static SCALE getscale(const char* text)
+{
+    if(scmp(text, "1"))
+        return SIZE_BYTE;
+    else if(scmp(text, "2"))
+        return SIZE_WORD;
+    else if(scmp(text, "4"))
+        return SIZE_DWORD;
+#ifdef _WIN64
+    else if(scmp(text, "8"))
+        return SIZE_QWORD;
+#endif //_WIN64
+    return SIZE_BYTE; //default scale
+}
+
 static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
 {
     if(!raw || !operand)
@@ -300,11 +326,99 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
             return false;
         }
         //get stuff inside brackets
-        char brackets[XEDPARSE_MAXBUFSIZE/2]="";
-        strcpy(brackets, strstr(operand->raw, "[")+1);
-        *strstr(brackets, "]")=0;
-        puts(brackets);
-        //TODO: handle stuff inside brackets
+        char temp[XEDPARSE_MAXBUFSIZE/2]="";
+        strcpy(temp, strstr(operand->raw, "[")+1);
+        *strstr(temp, "]")=0;
+        len=strlen(temp);
+
+        char brackets[XEDPARSE_MAXBUFSIZE/2];
+        for(int i=0,j=0; i<len; i++) //remove spaces
+            if(temp[i]!=' ')
+                j+=sprintf(brackets+j, "%c", temp[i]);
+        len=strlen(brackets);
+        if(!len)
+        {
+            strcpy(raw->error, "nothing inside brackets!");
+            return false;
+        }
+        for(int i=0,j=0; i<len; i++)
+        {
+            if(brackets[i]=='+' || brackets[i]=='*')
+                j+=sprintf(temp+j, " %c ", brackets[i]);
+            else
+                j+=sprintf(temp+j, "%c", brackets[i]);
+        }
+
+        char index[XEDPARSE_MAXBUFSIZE/2]="";
+        char scale[XEDPARSE_MAXBUFSIZE/2]="";
+        char other1[XEDPARSE_MAXBUFSIZE/2]="";
+        char other2[XEDPARSE_MAXBUFSIZE/2]="";
+
+        if(
+            sscanf(temp, "%s + %s * %s + %s", other1, index, scale, other2)!=4 &&
+            sscanf(temp, "%s + %s * %s", other1, index, scale)!=3 &&
+            sscanf(temp, "%s * %s + %s", index, scale, other1)!=3 &&
+            sscanf(temp, "%s * %s", index, scale)!=2 &&
+            sscanf(temp, "%s", other1)!=1
+        )
+        {
+            strcpy(raw->error, "invalid stuff inside brackets!");
+            return false;
+        }
+        operand->u.mem.scale=getscale(scale);
+        operand->u.mem.index=getregister(index);
+
+        REG reg1=getregister(other1);
+        REG reg2=getregister(other2);
+        if(reg1!=REG_NAN && reg2!=REG_NAN)
+        {
+            strcpy(raw->error, "invalid stuff inside brackets!");
+            return false;
+        }
+        if(reg1!=REG_NAN)
+        {
+            strcpy(other1, other2);
+            operand->u.mem.base=reg1;
+        }
+        else if(reg2!=REG_NAN)
+            operand->u.mem.base=reg2;
+
+        //get value of displacement
+        ULONG_PTR value;
+        if(valfromstring(other1, &value)) //normal value
+        {
+            operand->u.mem.displ.val=value;
+            if(value<=0xFF)
+                operand->u.mem.displ.size=SIZE_BYTE;
+            else if(value<=0xFFFF)
+                operand->u.mem.displ.size=SIZE_WORD;
+            else if(value<=0xFFFFFFFF)
+                operand->u.mem.displ.size=SIZE_DWORD;
+#ifdef _WIN64
+            else if(value<=0xFFFFFFFFFFFFFFFF)
+                operand->u.mem.displ.size=SIZE_QWORD;
+#endif //_WIN64
+        }
+        else if(raw->cbUnknown && raw->cbUnknown(other1, &value)) //unknown value
+        {
+            operand->u.mem.displ.val=value;
+            if(value<=0xFF)
+                operand->u.mem.displ.size=SIZE_BYTE;
+            else if(value<=0xFFFF)
+                operand->u.mem.displ.size=SIZE_WORD;
+            else if(value<=0xFFFFFFFF)
+                operand->u.mem.displ.size=SIZE_DWORD;
+#ifdef _WIN64
+            else if(value<=0xFFFFFFFFFFFFFFFF)
+                operand->u.mem.displ.size=SIZE_QWORD;
+#endif //_WIN64
+        }
+        else
+        {
+            strcpy(raw->error, "invalid displacement inside brackets!");
+            return false;
+        }
+
         //default segment + size
 #ifdef _WIN64
         operand->u.mem.size=SIZE_QWORD;
@@ -317,7 +431,6 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         strcpy(other, operand->raw);
         _strlwr(other); //lowercase
         *strstr(other, "[")=0;
-        puts(other);
         if(scmp(other, "byte"))
             operand->u.mem.size=SIZE_BYTE;
         else if(scmp(other, "word"))
@@ -338,6 +451,7 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
     {
         operand->u.reg=reg;
         operand->type=TYPE_REGISTER;
+        printf("%d\n", reg);
         return true;
     }
     else if(valfromstring(operand->raw, &value)) //value
@@ -354,26 +468,25 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
             operand->u.val.size=SIZE_QWORD;
 #endif //_WIN64
         operand->type=TYPE_VALUE;
+        printf("0x%p\n", value);
         return true;
     }
-    else if(raw->cbUnknown) //unknown operand
+    else if(raw->cbUnknown && raw->cbUnknown(operand->raw, &value)) //unknown operand
     {
-        if(raw->cbUnknown(operand->raw, &value))
-        {
-            operand->u.val.val=value;
-            if(value<=0xFF)
-                operand->u.val.size=SIZE_BYTE;
-            else if(value<=0xFFFF)
-                operand->u.val.size=SIZE_WORD;
-            else if(value<=0xFFFFFFFF)
-                operand->u.val.size=SIZE_DWORD;
+        operand->u.val.val=value;
+        if(value<=0xFF)
+            operand->u.val.size=SIZE_BYTE;
+        else if(value<=0xFFFF)
+            operand->u.val.size=SIZE_WORD;
+        else if(value<=0xFFFFFFFF)
+            operand->u.val.size=SIZE_DWORD;
 #ifdef _WIN64
-            else if(value<=0xFFFFFFFFFFFFFFFF)
-                operand->u.val.size=SIZE_QWORD;
+        else if(value<=0xFFFFFFFFFFFFFFFF)
+            operand->u.val.size=SIZE_QWORD;
 #endif //_WIN64
-            operand->type=TYPE_VALUE;
-            return true;
-        }
+        operand->type=TYPE_VALUE;
+        printf("0x%p\n", value);
+        return true;
     }
     operand->type=TYPE_NONE;
     return false;
@@ -408,6 +521,7 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         strcpy(raw->error, "no mnemonic");
         return false;
     }
+    puts(parsed->mnemonic);
     while(raw->instr[skip]!=' ' && skip<len)
         skip++;
     char instr[XEDPARSE_MAXBUFSIZE]="";

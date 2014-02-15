@@ -5,7 +5,6 @@
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
 {
-    printf("sizeof(XEDPARSE)=%d\n", sizeof(XEDPARSE));
     INSTRUCTION instr;
     memset(&instr, 0, sizeof(instr));
     if(!parse(XEDParse, &instr))
@@ -13,7 +12,6 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
         puts(XEDParse->error);
         return XEDPARSE_ERROR;
     }
-    printf("%d \"%s\" \"%s\",\"%s\"\n", (int)instr.prefix, instr.mnemonic, instr.operand1.raw, instr.operand2.raw);
     return XEDPARSE_OK;
 }
 
