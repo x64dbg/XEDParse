@@ -443,15 +443,12 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
 #endif // _WIN64
         operand->u.mem.seg=getsegment(other);
 
-        printf("%d ptr %d:[%d+%d*%d+0x%p]\n", operand->u.mem.size, operand->u.mem.seg, operand->u.mem.base, operand->u.mem.index, operand->u.mem.scale, operand->u.mem.displ.val);
-
         return true;
     }
     else if(reg!=REG_NAN) //register
     {
         operand->u.reg=reg;
         operand->type=TYPE_REGISTER;
-        printf("%d\n", reg);
         return true;
     }
     else if(valfromstring(operand->raw, &value)) //value
@@ -468,7 +465,6 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
             operand->u.val.size=SIZE_QWORD;
 #endif //_WIN64
         operand->type=TYPE_VALUE;
-        printf("0x%p\n", value);
         return true;
     }
     else if(raw->cbUnknown && raw->cbUnknown(operand->raw, &value)) //unknown operand
@@ -485,7 +481,6 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
             operand->u.val.size=SIZE_QWORD;
 #endif //_WIN64
         operand->type=TYPE_VALUE;
-        printf("0x%p\n", value);
         return true;
     }
     operand->type=TYPE_NONE;
@@ -521,7 +516,6 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         strcpy(raw->error, "no mnemonic");
         return false;
     }
-    puts(parsed->mnemonic);
     while(raw->instr[skip]!=' ' && skip<len)
         skip++;
     char instr[XEDPARSE_MAXBUFSIZE]="";

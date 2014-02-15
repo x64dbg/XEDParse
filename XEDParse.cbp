@@ -75,6 +75,8 @@
 		<Unit filename="XEDParse.h" />
 		<Unit filename="parser.cpp" />
 		<Unit filename="parser.h" />
+		<Unit filename="parsetest.cpp" />
+		<Unit filename="parsetest.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

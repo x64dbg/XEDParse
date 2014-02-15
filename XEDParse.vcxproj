@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="parser.cpp" />
+    <ClCompile Include="parsetest.cpp" />
     <ClCompile Include="XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser.h" />
+    <ClInclude Include="parsetest.h" />
     <ClInclude Include="XEDParse.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

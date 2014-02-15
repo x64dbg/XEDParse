@@ -1,6 +1,7 @@
 #include "XEDParse.h"
 #include "xed2\include\xed-interface.h"
 #include "parser.h"
+#include "parsetest.h"
 #include <stdio.h>
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
@@ -12,6 +13,7 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
         puts(XEDParse->error);
         return XEDPARSE_ERROR;
     }
+    parsedisasm(&instr); //convert parsed instruction back to text
     return XEDPARSE_OK;
 }
 
