@@ -296,6 +296,86 @@ static SCALE getscale(const char* text)
     return SIZE_BYTE; //default scale
 }
 
+static REGSIZE getregsize(REG reg)
+{
+    REGSIZE regsizelist[]=
+    {
+        SIZE_BYTE, //REG_NAN
+        SIZE_DWORD, //REG_EAX
+        SIZE_WORD, //REG_AX
+        SIZE_BYTE, //REG_AH
+        SIZE_BYTE, //REG_AL
+        SIZE_DWORD, //REG_EBX
+        SIZE_WORD, //REG_BX
+        SIZE_BYTE, //REG_BH
+        SIZE_BYTE, //REG_BL
+        SIZE_DWORD, //REG_ECX
+        SIZE_WORD, //REG_CX
+        SIZE_BYTE, //REG_CH
+        SIZE_BYTE, //REG_CL
+        SIZE_DWORD, //REG_EDX
+        SIZE_WORD, //REG_DX
+        SIZE_BYTE, //REG_DH
+        SIZE_BYTE, //REG_DL
+        SIZE_DWORD, //REG_EDI
+        SIZE_WORD, //REG_DI
+        SIZE_DWORD, //REG_ESI
+        SIZE_WORD, //REG_SI
+        SIZE_DWORD, //REG_EBP
+        SIZE_WORD, //REG_BP
+        SIZE_DWORD, //REG_ESP
+        SIZE_WORD, //REG_SP
+#ifdef _WIN64
+        SIZE_QWORD, //REG_RAX
+        SIZE_QWORD, //REG_RBX
+        SIZE_QWORD, //REG_RCX
+        SIZE_QWORD, //REG_RDX
+        SIZE_QWORD, //REG_RSI
+        SIZE_BYTE, //REG_SIL
+        SIZE_QWORD, //REG_RDI
+        SIZE_BYTE, //REG_DIL
+        SIZE_QWORD, //REG_RBP
+        SIZE_BYTE, //REG_BPL
+        SIZE_QWORD, //REG_RSP
+        SIZE_BYTE, //REG_SPL
+        SIZE_QWORD, //REG_RIP
+        SIZE_QWORD, //REG_R8
+        SIZE_DWORD, //REG_R8D
+        SIZE_WORD, //REG_R8W
+        SIZE_BYTE, //REG_R8B
+        SIZE_QWORD, //REG_R9
+        SIZE_DWORD, //REG_R9D
+        SIZE_WORD, //REG_R9W
+        SIZE_BYTE, //REG_R9B
+        SIZE_QWORD, //REG_R10
+        SIZE_DWORD, //REG_R10D
+        SIZE_WORD, //REG_R10W
+        SIZE_BYTE, //REG_R10B
+        SIZE_QWORD, //REG_R11
+        SIZE_DWORD, //REG_R11D
+        SIZE_WORD, //REG_R11W
+        SIZE_BYTE, //REG_R11B
+        SIZE_QWORD, //REG_R12
+        SIZE_DWORD, //REG_R12D
+        SIZE_WORD, //REG_R12W
+        SIZE_BYTE, //REG_R12B
+        SIZE_QWORD, //REG_R13
+        SIZE_DWORD, //REG_R13D
+        SIZE_WORD, //REG_R13W
+        SIZE_BYTE, //REG_R13B
+        SIZE_QWORD, //REG_R14
+        SIZE_DWORD, //REG_R14D
+        SIZE_WORD, //REG_R14W
+        SIZE_BYTE, //REG_R14B
+        SIZE_QWORD, //REG_R15
+        SIZE_DWORD, //REG_R15D
+        SIZE_WORD, //REG_R15W
+        SIZE_BYTE, //REG_R15B
+#endif //_WIN64
+    };
+    return regsizelist[reg];
+}
+
 static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
 {
     if(!raw || !operand)
@@ -409,7 +489,7 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         if(!*other1) //no value
         {
             operand->u.mem.displ.val=0;
-            operand->u.mem.displ.size=SIZE_BYTE; //TODO: fix this
+            operand->u.mem.displ.size=SIZE_BYTE;
         }
         else if(valfromstring(other1, &value)) //normal value
         {
@@ -472,7 +552,8 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
     }
     else if(reg!=REG_NAN) //register
     {
-        operand->u.reg=reg;
+        operand->u.reg.reg=reg;
+        operand->u.reg.size=getregsize(reg);
         operand->type=TYPE_REGISTER;
         return true;
     }
@@ -511,6 +592,32 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
     operand->type=TYPE_NONE;
     sprintf(raw->error, "invalid value \"%s\"!", operand->raw);
     return false;
+}
+
+static int opsizetoint(OPSIZE opsize)
+{
+    switch(opsize)
+    {
+    case SIZE_BYTE:
+        return 1;
+        break;
+    case SIZE_WORD:
+        return 2;
+        break;
+    case SIZE_DWORD:
+        return 4;
+        break;
+#ifdef _WIN64
+    case SIZE_QWORD:
+        return 8;
+        break;
+#endif //_WIN64
+    }
+    return 0;
+}
+
+static bool checkopsize(OPERAND* operand1, OPERAND* operand2)
+{
 }
 
 bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
@@ -574,5 +681,13 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         return false;
     if(!parseoperand(raw, &parsed->operand2))
         return false;
+    if(parsed->operand2.type==TYPE_NONE) //only one operand
+        return true;
+    if(parsed->operand1.type==TYPE_VALUE) //first operand is a value
+    {
+        strcpy(raw->error, "invalid operand detected!");
+        return false;
+    }
+
     return true;
 }

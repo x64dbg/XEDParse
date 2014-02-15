@@ -149,7 +149,7 @@ static void operandtostring(OPERAND* operand, char* str)
 
     case TYPE_REGISTER:
     {
-        sprintf(str, "%s", regtostring(operand->u.reg));
+        sprintf(str, "%s", regtostring(operand->u.reg.reg));
     }
     break;
 

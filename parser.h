@@ -33,6 +33,7 @@ enum OPSIZE
 
 typedef OPSIZE MEMSIZE;
 typedef OPSIZE SCALE;
+typedef OPSIZE REGSIZE;
 
 enum REG
 {
@@ -137,6 +138,12 @@ struct OPMEM //size seg:[base+index*scale+displ]
     OPVAL displ; //displacement
 };
 
+struct OPREG
+{
+    REGSIZE size;
+    REG reg;
+};
+
 struct OPERAND
 {
     char raw[XEDPARSE_MAXBUFSIZE/2]; //raw text
@@ -144,7 +151,7 @@ struct OPERAND
     union
     {
         OPVAL val;
-        REG reg;
+        OPREG reg;
         OPMEM mem;
     } u;
 };
