@@ -468,7 +468,6 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
             operand->u.mem.size=SIZE_QWORD;
 #endif // _WIN64
         operand->u.mem.seg=getsegment(other);
-
         return true;
     }
     else if(reg!=REG_NAN) //register
@@ -510,6 +509,7 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         return true;
     }
     operand->type=TYPE_NONE;
+    sprintf(raw->error, "invalid value \"%s\"!", operand->raw);
     return false;
 }
 
