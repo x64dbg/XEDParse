@@ -10,3 +10,4 @@ ipch/
 *.bmarks
 xed2-ia32/
 xed2-intel64/
+*.opensdf

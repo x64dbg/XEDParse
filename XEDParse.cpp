@@ -9,11 +9,10 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
     memset(&instr, 0, sizeof(instr));
     if(!parse(XEDParse, &instr))
     {
-        strcpy(XEDParse->error, "parsing failed...");
+        puts(XEDParse->error);
         return XEDPARSE_ERROR;
     }
     printf("%d \"%s\" \"%s\",\"%s\"\n", (int)instr.prefix, instr.mnemonic, instr.operand1.raw, instr.operand2.raw);
-
     return XEDPARSE_OK;
 }
 
