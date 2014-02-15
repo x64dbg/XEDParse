@@ -10,11 +10,12 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
     memset(&instr, 0, sizeof(instr));
     if(!parse(XEDParse, &instr))
     {
-        puts(XEDParse->error);
+        printf("error: %s\n", XEDParse->error);
         return XEDPARSE_ERROR;
     }
     char recode[XEDPARSE_MAXBUFSIZE]="";
     parsedisasm(&instr, recode); //convert parsed instruction back to text
+    strcpy((char*)XEDParse->dest, recode);
     puts(recode); //print recoded instruction
     return XEDPARSE_OK;
 }

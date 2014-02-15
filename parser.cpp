@@ -663,6 +663,8 @@ static bool checkopsize(OPERAND* operand1, OPERAND* operand2)
             return true;
             break;
         case TYPE_REGISTER: //mov reg,reg
+            if(opsize1>opsize2) //example: movxz eax,cl
+                return true;
             if(opsize1!=opsize2) //example: mov al,eax
                 return false;
             return true;
@@ -673,13 +675,15 @@ static bool checkopsize(OPERAND* operand1, OPERAND* operand2)
                 operand2->u.mem.size=inttoopsize(opsize1);
                 opsize2=opsize1;
             }
+            if(opsize1>opsize2) //example: movzx ebp, byte [esi]
+                return true;
             if(opsize1!=opsize2)
                 return false;
             return true;
             break;
         default:
             return true;
-        }        
+        }
         break;
     case TYPE_MEMORY:
         switch(operand2->type)
@@ -736,7 +740,7 @@ static bool checkopsize(OPERAND* operand1, OPERAND* operand2)
             break;
         default:
             return true;
-        }    
+        }
         break;
     default:
         return false;
@@ -825,13 +829,13 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         return false;
     if(!parseoperand(raw, &parsed->operand2))
         return false;
+    if(parsed->operand2.type==TYPE_NONE) //only one operand
+        return true;
     if(parsed->operand1.type==TYPE_VALUE) //first operand is a value
     {
         strcpy(raw->error, "invalid operand detected!");
         return false;
     }
-    if(parsed->operand2.type==TYPE_NONE) //only one operand
-        return true;
     if(!checkopsize(&parsed->operand1, &parsed->operand2))
     {
         strcpy(raw->error, "operand size mismatch!");

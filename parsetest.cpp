@@ -202,7 +202,7 @@ void parsedisasm(INSTRUCTION* parsed, char* string)
     _strlwr(operand2);
     int j=sprintf(string, "%s%s", prefixtostring(parsed->prefix), parsed->mnemonic);
     if(*operand1)
-        sprintf(string+j, " %s", operand1);
+        j+=sprintf(string+j, " %s", operand1);
     if(*operand2)
         sprintf(string+j, ",%s", operand2);
 }
