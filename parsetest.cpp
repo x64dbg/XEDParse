@@ -142,25 +142,53 @@ static void operandtostring(OPERAND* operand, char* str)
     switch(operand->type)
     {
     case TYPE_NONE:
+    {
         *str=0;
-        break;
+    }
+    break;
+
     case TYPE_REGISTER:
+    {
         sprintf(str, "%s", regtostring(operand->u.reg));
-        break;
+    }
+    break;
+
     case TYPE_VALUE:
-        sprintf(str, "0x%p[%s]",
+    {
+#ifdef _WIN64
+        sprintf(str, "%llX.%s",
+#else
+        sprintf(str, "%X.%s",
+#endif //_WIN64
                 operand->u.val.val,
                 sizedtostring(operand->u.val.size));
-        break;
+    }
+    break;
+
     case TYPE_MEMORY:
-        sprintf(str, "%s ptr %s:[%s+%s*%s+0x%p]\n",
+    {
+        char base[20]="";
+        char indexscale[20]="";
+        if(operand->u.mem.base!=REG_NAN)
+            sprintf(base, "%s+",
+                    regtostring(operand->u.mem.base));
+        if(operand->u.mem.index!=REG_NAN)
+            sprintf(indexscale, "%s*%s+",
+                    regtostring(operand->u.mem.index),
+                    sizedtostring(operand->u.mem.scale));
+#ifdef _WIN64
+        sprintf(str, "%s ptr %s:[%s%s%llX.%s]",
+#else
+        sprintf(str, "%s ptr %s:[%s%s%X.%s]",
+#endif //_WIN64
                 sizetostring(operand->u.mem.size),
                 segtostring(operand->u.mem.seg),
-                regtostring(operand->u.mem.base),
-                regtostring(operand->u.mem.index),
-                sizedtostring(operand->u.mem.scale),
-                operand->u.mem.displ.val);
-        break;
+                base,
+                indexscale,
+                operand->u.mem.displ.val,
+                sizedtostring(operand->u.mem.displ.size));
+    }
+    break;
     }
 }
 

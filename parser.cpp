@@ -305,7 +305,7 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         operand->type=TYPE_NONE;
         return true;
     }
-    ULONG_PTR value;
+    ULONG_PTR value=0;
     REG reg=getregister(operand->raw);
     if(strstr(operand->raw, "[")) //memory
     {
@@ -354,13 +354,33 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         char other1[XEDPARSE_MAXBUFSIZE/2]="";
         char other2[XEDPARSE_MAXBUFSIZE/2]="";
 
-        if(
-            sscanf(temp, "%s + %s * %s + %s", other1, index, scale, other2)!=4 &&
-            sscanf(temp, "%s + %s * %s", other1, index, scale)!=3 &&
-            sscanf(temp, "%s * %s + %s", index, scale, other1)!=3 &&
-            sscanf(temp, "%s * %s", index, scale)!=2 &&
-            sscanf(temp, "%s", other1)!=1
-        )
+        if(sscanf(temp, "%s + %s * %s + %s", other1, index, scale, other2)==4)
+        {
+        }
+        else if(sscanf(temp, "%s + %s * %s", other1, index, scale)==3)
+        {
+            *other2=0;
+        }
+        else if(sscanf(temp, "%s * %s + %s", index, scale, other1)==3)
+        {
+            *other2=0;
+        }
+        else if(sscanf(temp, "%s * %s", index, scale)==2)
+        {
+            *other1=0;
+            *other2=0;
+        }
+        else if(sscanf(temp, "%s + %s", other1, other2)==2)
+        {
+            *index=0;
+            *scale=0;
+        }
+        else if(sscanf(temp, "%s", other1)==1)
+        {
+            *index=0;
+            *scale=0;
+        }
+        else
         {
             strcpy(raw->error, "invalid stuff inside brackets!");
             return false;
@@ -370,7 +390,7 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
 
         REG reg1=getregister(other1);
         REG reg2=getregister(other2);
-        if(reg1!=REG_NAN && reg2!=REG_NAN)
+        if(reg1!=REG_NAN && reg2!=REG_NAN) //both registers
         {
             strcpy(raw->error, "invalid stuff inside brackets!");
             return false;
@@ -378,14 +398,20 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         if(reg1!=REG_NAN)
         {
             strcpy(other1, other2);
+            *other2=0;
             operand->u.mem.base=reg1;
         }
         else if(reg2!=REG_NAN)
             operand->u.mem.base=reg2;
 
         //get value of displacement
-        ULONG_PTR value;
-        if(valfromstring(other1, &value)) //normal value
+        ULONG_PTR value=0;
+        if(!*other1) //no value
+        {
+            operand->u.mem.displ.val=0;
+            operand->u.mem.displ.size=SIZE_BYTE; //TODO: fix this
+        }
+        else if(valfromstring(other1, &value)) //normal value
         {
             operand->u.mem.displ.val=value;
             if(value<=0xFF)
