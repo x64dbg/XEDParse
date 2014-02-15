@@ -27,8 +27,9 @@ enum OPSIZE
     SIZE_WORD,
     SIZE_DWORD,
 #ifdef _WIN64
-    SIZE_QWORD
+    SIZE_QWORD,
 #endif //_WIN64
+    SIZE_UNSET
 };
 
 typedef OPSIZE MEMSIZE;

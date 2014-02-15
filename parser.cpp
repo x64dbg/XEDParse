@@ -486,51 +486,22 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
 
         //get value of displacement
         ULONG_PTR value=0;
+        operand->u.mem.displ.size=SIZE_DWORD; //NOTE: displacement is always DWORD
         if(!*other1) //no value
-        {
             operand->u.mem.displ.val=0;
-            operand->u.mem.displ.size=SIZE_BYTE;
-        }
         else if(valfromstring(other1, &value)) //normal value
-        {
             operand->u.mem.displ.val=value;
-            if(value<=0xFF)
-                operand->u.mem.displ.size=SIZE_BYTE;
-            else if(value<=0xFFFF)
-                operand->u.mem.displ.size=SIZE_WORD;
-            else if(value<=0xFFFFFFFF)
-                operand->u.mem.displ.size=SIZE_DWORD;
-#ifdef _WIN64
-            else if(value<=0xFFFFFFFFFFFFFFFF)
-                operand->u.mem.displ.size=SIZE_QWORD;
-#endif //_WIN64
-        }
         else if(raw->cbUnknown && raw->cbUnknown(other1, &value)) //unknown value
-        {
             operand->u.mem.displ.val=value;
-            if(value<=0xFF)
-                operand->u.mem.displ.size=SIZE_BYTE;
-            else if(value<=0xFFFF)
-                operand->u.mem.displ.size=SIZE_WORD;
-            else if(value<=0xFFFFFFFF)
-                operand->u.mem.displ.size=SIZE_DWORD;
-#ifdef _WIN64
-            else if(value<=0xFFFFFFFFFFFFFFFF)
-                operand->u.mem.displ.size=SIZE_QWORD;
-#endif //_WIN64
-        }
         else
         {
             strcpy(raw->error, "invalid displacement inside brackets!");
             return false;
         }
+        operand->u.mem.displ.val&=0xFFFFFFFF; //NOTE: displacement is always DWORD
 
         //default segment + size
-#ifdef _WIN64
-        operand->u.mem.size=SIZE_QWORD;
-#else
-        operand->u.mem.size=SIZE_DWORD;
-#endif //_WIN64
+        operand->u.mem.size=SIZE_UNSET; //for later correction
         operand->u.mem.seg=SEG_DS;
         //get segment + size
         char other[XEDPARSE_MAXBUFSIZE/2]="";
@@ -616,8 +587,179 @@ static int opsizetoint(OPSIZE opsize)
     return 0;
 }
 
+static OPSIZE inttoopsize(int opsize)
+{
+    switch(opsize)
+    {
+    case 1:
+        return SIZE_BYTE;
+        break;
+    case 2:
+        return SIZE_WORD;
+        break;
+    case 4:
+        return SIZE_DWORD;
+        break;
+#ifdef _WIN64
+    case 8:
+        return SIZE_QWORD;
+        break;
+#endif //_WIN64
+    }
+    return SIZE_BYTE;
+}
+
+static OPSIZE getopsize(OPERAND* operand)
+{
+    switch(operand->type)
+    {
+    case TYPE_NONE:
+        break;
+    case TYPE_VALUE:
+        return operand->u.val.size;
+        break;
+    case TYPE_REGISTER:
+        return operand->u.reg.size;
+        break;
+    case TYPE_MEMORY:
+        return operand->u.mem.size;
+        break;
+    }
+    return SIZE_BYTE;
+}
+
+static void setopsize(OPERAND* operand, int opsize)
+{
+    switch(operand->type)
+    {
+    case TYPE_NONE:
+        break;
+    case TYPE_VALUE:
+        operand->u.val.size=inttoopsize(opsize);
+        break;
+    case TYPE_REGISTER:
+        operand->u.reg.size=inttoopsize(opsize);
+        break;
+    case TYPE_MEMORY:
+        operand->u.mem.size=inttoopsize(opsize);
+        break;
+    }
+}
+
 static bool checkopsize(OPERAND* operand1, OPERAND* operand2)
 {
+    int opsize1=opsizetoint(getopsize(operand1));
+    int opsize2=opsizetoint(getopsize(operand2));
+    switch(operand1->type)
+    {
+    case TYPE_REGISTER:
+        switch(operand2->type)
+        {
+        case TYPE_VALUE: //mov reg,value
+            if(opsize1<opsize2) //example: mov al,12345678
+                return false;
+            if(opsize1!=opsize2) //example: 0x11 can be 0x00000011
+                setopsize(operand2, opsize1);
+            return true;
+            break;
+        case TYPE_REGISTER: //mov reg,reg
+            if(opsize1!=opsize2) //example: mov al,eax
+                return false;
+            return true;
+            break;
+        case TYPE_MEMORY: //mov reg,[]
+            if(operand2->u.mem.size==SIZE_UNSET) //unknown memory size
+            {
+                operand2->u.mem.size=inttoopsize(opsize1);
+                opsize2=opsize1;
+            }
+            if(opsize1!=opsize2)
+                return false;
+            return true;
+            break;
+        default:
+            return true;
+        }        
+        break;
+    case TYPE_MEMORY:
+        switch(operand2->type)
+        {
+        case TYPE_VALUE: //mov [],value
+            if(operand1->u.mem.size==SIZE_UNSET) //unknown memory size
+            {
+#ifdef _WIN64
+                opsize1=8;
+#else
+                opsize1=4;
+#endif //_WIN64
+                operand1->u.mem.size=inttoopsize(opsize1); //assume void* size
+            }
+            if(opsize1<opsize2) //example: mov [ax],12345678
+                return false;
+            if(opsize1!=opsize2) //example: 0x11 can be 0x00000011
+                setopsize(operand2, opsize1);
+            return true;
+            break;
+        case TYPE_REGISTER: //mov [],reg
+            if(operand1->u.mem.size==SIZE_UNSET) //unknown memory size
+            {
+                operand1->u.mem.size=inttoopsize(opsize2);
+                opsize1=opsize2;
+            }
+            if(opsize1!=opsize2) //example: mov al,eax
+                return false;
+            return true;
+            break;
+        case TYPE_MEMORY: //mov [],[]
+            if(operand1->u.mem.size==SIZE_UNSET && operand2->u.mem.size==SIZE_UNSET) //size not set at all
+            {
+#ifdef _WIN64
+                opsize1=8;
+#else
+                opsize1=4;
+#endif //_WIN64
+                operand1->u.mem.size=inttoopsize(opsize1);
+            }
+            if(operand1->u.mem.size==SIZE_UNSET) //unknown memory size in operand1
+            {
+                operand1->u.mem.size=inttoopsize(opsize2);
+                opsize1=opsize2;
+            }
+            else if(operand2->u.mem.size==SIZE_UNSET) //unknown memory size in operand2
+            {
+                operand2->u.mem.size=inttoopsize(opsize1);
+                opsize2=opsize1;
+            }
+            if(opsize1!=opsize2)
+                return false;
+            return true;
+            break;
+        default:
+            return true;
+        }    
+        break;
+    default:
+        return false;
+    }
+    return true;
+}
+
+static void formatoperand(OPERAND* operand)
+{
+    char temp[XEDPARSE_MAXBUFSIZE/2]="";
+    //remove prepended spaces
+    int len=strlen(operand->raw);
+    int skip=0;
+    while(operand->raw[skip]==' ' && skip<len)
+        skip++;
+    strcpy(temp, operand->raw+skip);
+    len=strlen(temp);
+    if(!len) //nothing left
+        return;
+    while(temp[len-1]==' ' && len-1)
+        len--;
+    temp[len]=0;
+    strcpy(operand->raw, temp);
 }
 
 bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
@@ -677,17 +819,23 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         strcpy(parsed->operand2.raw, operand2+skip);
     }
     strcpy(parsed->operand1.raw, instr);
+    formatoperand(&parsed->operand1);
+    formatoperand(&parsed->operand2);
     if(!parseoperand(raw, &parsed->operand1))
         return false;
     if(!parseoperand(raw, &parsed->operand2))
         return false;
-    if(parsed->operand2.type==TYPE_NONE) //only one operand
-        return true;
     if(parsed->operand1.type==TYPE_VALUE) //first operand is a value
     {
         strcpy(raw->error, "invalid operand detected!");
         return false;
     }
-
+    if(parsed->operand2.type==TYPE_NONE) //only one operand
+        return true;
+    if(!checkopsize(&parsed->operand1, &parsed->operand2))
+    {
+        strcpy(raw->error, "operand size mismatch!");
+        return false;
+    }
     return true;
 }

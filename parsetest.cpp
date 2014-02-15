@@ -156,9 +156,9 @@ static void operandtostring(OPERAND* operand, char* str)
     case TYPE_VALUE:
     {
 #ifdef _WIN64
-        sprintf(str, "%llX.%s",
+        sprintf(str, "%llX/%s",
 #else
-        sprintf(str, "%X.%s",
+        sprintf(str, "%X/%s",
 #endif //_WIN64
                 operand->u.val.val,
                 sizedtostring(operand->u.val.size));
@@ -177,9 +177,9 @@ static void operandtostring(OPERAND* operand, char* str)
                     regtostring(operand->u.mem.index),
                     sizedtostring(operand->u.mem.scale));
 #ifdef _WIN64
-        sprintf(str, "%s ptr %s:[%s%s%llX.%s]",
+        sprintf(str, "%s ptr %s:[%s%s%llX/%s]",
 #else
-        sprintf(str, "%s ptr %s:[%s%s%X.%s]",
+        sprintf(str, "%s ptr %s:[%s%s%X/%s]",
 #endif //_WIN64
                 sizetostring(operand->u.mem.size),
                 segtostring(operand->u.mem.seg),
