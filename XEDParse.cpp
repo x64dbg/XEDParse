@@ -5,6 +5,7 @@
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
 {
+    printf("sizeof(XEDPARSE)=%d\n", sizeof(XEDPARSE));
     INSTRUCTION instr;
     memset(&instr, 0, sizeof(instr));
     if(!parse(XEDParse, &instr))

@@ -3,12 +3,12 @@
 
 static bool scmp(const char* a, const char* b)
 {
-    if(_strnicmp(a, b, strlen(b)))
+    if(!_strnicmp(a, b, strlen(b)))
         return true;
     return false;
 }
 
-static PREFIX isprefix(const char* text, int* i)
+static PREFIX getprefix(const char* text, int* i)
 {
     if(scmp(text, "lock "))
     {
@@ -33,7 +33,7 @@ static PREFIX isprefix(const char* text, int* i)
     return PREFIX_NONE;
 }
 
-static REG isregister(const char* text)
+static REG getregister(const char* text)
 {
     if(scmp(text, "eax"))
         return REG_EAX;
@@ -176,6 +176,23 @@ static REG isregister(const char* text)
     return REG_NAN;
 }
 
+static SEG getsegment(const char* text)
+{
+    if(strstr(text, "cs"))
+        return SEG_CS;
+    else if(strstr(text, "ds"))
+        return SEG_DS;
+    else if(strstr(text, "es"))
+        return SEG_ES;
+    else if(strstr(text, "fs"))
+        return SEG_FS;
+    else if(strstr(text, "gs"))
+        return SEG_GS;
+    else if(strstr(text, "ss"))
+        return SEG_SS;
+    return SEG_DS;
+}
+
 static bool isinbase(char ch, const char* base)
 {
     int len=strlen(base);
@@ -263,8 +280,61 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         return true;
     }
     ULONG_PTR value;
-    REG reg=isregister(operand->raw);
-    if(reg!=REG_NAN) //register
+    REG reg=getregister(operand->raw);
+    if(strstr(operand->raw, "[")) //memory
+    {
+        operand->type=TYPE_MEMORY;
+        int len=strlen(operand->raw);
+        int bopen=0;
+        int bclose=0;
+        for(int i=0; i<len; i++)
+        {
+            if(operand->raw[i]=='[')
+                bopen++;
+            else if(operand->raw[i]==']')
+                bclose++;
+        }
+        if(bopen!=1 || bclose!=1)
+        {
+            strcpy(raw->error, "invalid brackets!");
+            return false;
+        }
+        //get stuff inside brackets
+        char brackets[XEDPARSE_MAXBUFSIZE/2]="";
+        strcpy(brackets, strstr(operand->raw, "[")+1);
+        *strstr(brackets, "]")=0;
+        puts(brackets);
+        //TODO: handle stuff inside brackets
+        //default segment + size
+#ifdef _WIN64
+        operand->u.mem.size=SIZE_QWORD;
+#else
+        operand->u.mem.size=SIZE_DWORD;
+#endif //_WIN64
+        operand->u.mem.seg=SEG_DS;
+        //get segment + size
+        char other[XEDPARSE_MAXBUFSIZE/2]="";
+        strcpy(other, operand->raw);
+        _strlwr(other); //lowercase
+        *strstr(other, "[")=0;
+        puts(other);
+        if(scmp(other, "byte"))
+            operand->u.mem.size=SIZE_BYTE;
+        else if(scmp(other, "word"))
+            operand->u.mem.size=SIZE_WORD;
+        else if(scmp(other, "dword"))
+            operand->u.mem.size=SIZE_DWORD;
+#ifdef _WIN64
+        else if(scmp(other, "qword"))
+            operand->u.mem.size=SIZE_QWORD;
+#endif // _WIN64
+        operand->u.mem.seg=getsegment(other);
+
+        printf("%d ptr %d:[%d+%d*%d+0x%p]\n", operand->u.mem.size, operand->u.mem.seg, operand->u.mem.base, operand->u.mem.index, operand->u.mem.scale, operand->u.mem.displ.val);
+
+        return true;
+    }
+    else if(reg!=REG_NAN) //register
     {
         operand->u.reg=reg;
         operand->type=TYPE_REGISTER;
@@ -286,10 +356,24 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         operand->type=TYPE_VALUE;
         return true;
     }
-    else if(strstr(operand->raw, "[")) //memory
+    else if(raw->cbUnknown) //unknown operand
     {
-        operand->type=TYPE_MEMORY;
-        return true;
+        if(raw->cbUnknown(operand->raw, &value))
+        {
+            operand->u.val.val=value;
+            if(value<=0xFF)
+                operand->u.val.size=SIZE_BYTE;
+            else if(value<=0xFFFF)
+                operand->u.val.size=SIZE_WORD;
+            else if(value<=0xFFFFFFFF)
+                operand->u.val.size=SIZE_DWORD;
+#ifdef _WIN64
+            else if(value<=0xFFFFFFFFFFFFFFFF)
+                operand->u.val.size=SIZE_QWORD;
+#endif //_WIN64
+            operand->type=TYPE_VALUE;
+            return true;
+        }
     }
     operand->type=TYPE_NONE;
     return false;
@@ -310,7 +394,7 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
     while(raw->instr[skip]==' ' && skip<len)
         skip++;
     //get prefix
-    parsed->prefix=isprefix(raw->instr+skip, &skip);
+    parsed->prefix=getprefix(raw->instr+skip, &skip);
     len=strlen(raw->instr+skip);
     if(!len)
     {

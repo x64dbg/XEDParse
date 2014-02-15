@@ -15,6 +15,8 @@
 #define XEDPARSE_MAXBUFSIZE 256
 #define XEDPARSE_MAXASMSIZE 16
 
+//typedefs
+typedef bool (XEDPARSE_CALL *CBXEDPARSE_UNKNOWN)(const char* text, ULONG_PTR* value);
 
 //XEDParse enums
 enum XEDPARSE_STATUS
@@ -24,14 +26,17 @@ enum XEDPARSE_STATUS
 };
 
 //XEDParse structs
+#pragma pack(push,8)
 struct XEDPARSE
 {
     ULONG_PTR cip; //instruction pointer (for relative addressing)
     int dest_size; //destination size (returned by XEDParse)
+    CBXEDPARSE_UNKNOWN cbUnknown; //unknown operand callback
     unsigned char dest[XEDPARSE_MAXASMSIZE]; //destination buffer
     char instr[XEDPARSE_MAXBUFSIZE]; //instruction text
     char error[XEDPARSE_MAXBUFSIZE]; //error text (in case of an error)
 };
+#pragma pack(pop)
 
 #ifdef __cplusplus
 extern "C"

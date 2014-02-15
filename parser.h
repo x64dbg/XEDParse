@@ -112,11 +112,11 @@ enum REG
 
 enum SEG
 {
-    SEG_GS,
-    SEG_FS,
-    SEG_ES,
-    SEG_DS,
     SEG_CS,
+    SEG_DS,
+    SEG_ES,
+    SEG_FS,
+    SEG_GS,
     SEG_SS
 };
 
