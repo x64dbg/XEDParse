@@ -192,7 +192,7 @@ static void operandtostring(OPERAND* operand, char* str)
     }
 }
 
-void parsedisasm(INSTRUCTION* parsed)
+void parsedisasm(INSTRUCTION* parsed, char* string)
 {
     char operand1[256]="";
     operandtostring(&parsed->operand1, operand1);
@@ -200,10 +200,9 @@ void parsedisasm(INSTRUCTION* parsed)
     char operand2[256]="";
     operandtostring(&parsed->operand2, operand2);
     _strlwr(operand2);
-    printf("%s%s", prefixtostring(parsed->prefix), parsed->mnemonic);
+    int j=sprintf(string, "%s%s", prefixtostring(parsed->prefix), parsed->mnemonic);
     if(*operand1)
-        printf(" %s", operand1);
+        sprintf(string+j, " %s", operand1);
     if(*operand2)
-        printf(",%s", operand2);
-    puts("");
+        sprintf(string+j, ",%s", operand2);
 }

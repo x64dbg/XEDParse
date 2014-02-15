@@ -73,7 +73,13 @@
 		</Build>
 		<Compiler>
 			<Add option="/MD" />
+			<Add option="/EHc" />
+			<Add option="/EHs" />
+			<Add option="/wd 4244 /wd 4267" />
 		</Compiler>
+		<Linker>
+			<Add option="/NODEFAULTLIB:LIBCMT" />
+		</Linker>
 		<Unit filename="XEDParse.cpp" />
 		<Unit filename="XEDParse.h" />
 		<Unit filename="parser.cpp" />

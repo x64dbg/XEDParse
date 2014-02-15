@@ -13,7 +13,9 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
         puts(XEDParse->error);
         return XEDPARSE_ERROR;
     }
-    parsedisasm(&instr); //convert parsed instruction back to text
+    char recode[XEDPARSE_MAXBUFSIZE]="";
+    parsedisasm(&instr, recode); //convert parsed instruction back to text
+    puts(recode); //print recoded instruction
     return XEDPARSE_OK;
 }
 
