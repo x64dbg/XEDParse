@@ -24,6 +24,21 @@
     <ClCompile Include="parsetest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="xed-dot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xed-dot-prep.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xed-examples-util.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xed-enc-lang.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xed-ex3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEDParse.h">
@@ -33,6 +48,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="parsetest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xed-dot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xed-dot-prep.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xed-enc-lang.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xed-examples-util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

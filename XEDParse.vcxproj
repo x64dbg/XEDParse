@@ -13,11 +13,20 @@
   <ItemGroup>
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="parsetest.cpp" />
+    <ClCompile Include="xed-dot-prep.c" />
+    <ClCompile Include="xed-dot.c" />
+    <ClCompile Include="xed-enc-lang.cpp" />
+    <ClCompile Include="xed-ex3.cpp" />
+    <ClCompile Include="xed-examples-util.c" />
     <ClCompile Include="XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="parser.h" />
     <ClInclude Include="parsetest.h" />
+    <ClInclude Include="xed-dot-prep.h" />
+    <ClInclude Include="xed-dot.h" />
+    <ClInclude Include="xed-enc-lang.H" />
+    <ClInclude Include="xed-examples-util.h" />
     <ClInclude Include="XEDParse.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

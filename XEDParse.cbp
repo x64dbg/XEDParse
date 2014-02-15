@@ -80,6 +80,22 @@
 		<Unit filename="parser.h" />
 		<Unit filename="parsetest.cpp" />
 		<Unit filename="parsetest.h" />
+		<Unit filename="xed-dot-prep.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="xed-dot-prep.h" />
+		<Unit filename="xed-dot.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="xed-dot.h" />
+		<Unit filename="xed-enc-lang.H" />
+		<Unit filename="xed-enc-lang.cpp" />
+		<Unit filename="xed-ex3.cpp" />
+		<Unit filename="xed-ex3.h" />
+		<Unit filename="xed-examples-util.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="xed-examples-util.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />
