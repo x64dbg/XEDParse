@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
     char current_instr[XEDPARSE_MAXBUFSIZE]="";
     XEDPARSE current;
     int errors=0;
+    DWORD ticks=GetTickCount();
     for(int i=0,j=0; i<len; i++)
     {
         if(filedata[i]=='\n' || filedata[i+1]=='\n') //newline
@@ -70,6 +71,6 @@ int main(int argc, char* argv[])
             j+=sprintf(current_instr+j, "%c", filedata[i]);
     }
     free(filedata);
-    printf("\nerrors: %d\ndone!", errors);
+    printf("\nerrors: %d\n%ums passed\ndone!", errors, GetTickCount()-ticks);
     return 0;
 }

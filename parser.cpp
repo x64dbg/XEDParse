@@ -779,7 +779,6 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         strcpy(raw->error, "empty instruction");
         return false;
     }
-    printf("instr1: %s\n", instr);
     //get prefix
     int skipadd=0;
     parsed->prefix=getprefix(instr, &skipadd);

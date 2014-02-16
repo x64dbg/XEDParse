@@ -71,6 +71,7 @@
 		</Build>
 		<Compiler>
 			<Add option="/MD" />
+			<Add option="/wd 4267" />
 		</Compiler>
 		<Unit filename="XEDParseTest.cpp" />
 		<Extensions>

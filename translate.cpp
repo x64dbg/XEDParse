@@ -236,7 +236,7 @@ static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_r
 
     case TYPE_VALUE:
     {
-        return true;
+        strcpy(XEDParse->error, "value operands are not yet supported!");
     }
     break;
 
@@ -253,7 +253,7 @@ static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_r
 
     case TYPE_MEMORY:
     {
-        return true;
+        strcpy(XEDParse->error, "memory operands are not yet supported!");
     }
     break;
 
@@ -304,7 +304,6 @@ static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_enco
         sprintf(XEDParse->error, "unknown instruction \"%s\"!", instruction->mnemonic);
         return false;
     }
-    printf("instruction: \"%s\"\n", xed_iclass_enum_t2str(iclass));
     //set instruction class
     xed_encoder_request_set_iclass(req, iclass);
     return true;
