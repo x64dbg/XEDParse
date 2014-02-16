@@ -265,7 +265,7 @@ void xed_print_hex_line(char* buf, const xed_uint8_t* array, const int length,
 void xedex_derror(const char* s)
 {
     printf("[XED CLIENT ERROR] %s\n",s);
-    exit(1);
+    //exit(1);
 }
 
 void xedex_dwarn(const char* s)

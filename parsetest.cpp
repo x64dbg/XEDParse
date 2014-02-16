@@ -34,7 +34,7 @@ static const char* regtostring(REG reg)
 {
     const char* reglist[]=
     {
-        "nan",
+        "NAN",
         "EAX",
         "AX",
         "AH",

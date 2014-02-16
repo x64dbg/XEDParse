@@ -2,6 +2,8 @@
 #include "xed2\include\xed-interface.h"
 #include "parser.h"
 #include "parsetest.h"
+#include "translate.h"
+#include "xed-ex3.h"
 #include <stdio.h>
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
@@ -17,6 +19,17 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
     parsedisasm(&instr, recode); //convert parsed instruction back to text
     strcpy((char*)XEDParse->dest, recode);
     puts(recode); //print recoded instruction
+    TRANSLATION translation;
+    if(!translate(XEDParse, &instr, &translation))
+    {
+        printf("error: %s\n", XEDParse->error);
+        return XEDPARSE_ERROR;
+    }
+    if(!xed_ex3(XEDParse, translation.instr))
+    {
+        printf("error: %s\n", XEDParse->error);
+        return XEDPARSE_ERROR;
+    }
     return XEDPARSE_OK;
 }
 

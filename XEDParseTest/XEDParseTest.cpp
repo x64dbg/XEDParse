@@ -16,7 +16,8 @@ int main(int argc, char* argv[])
         XEDParseAssemble(&parse);
         puts("bytes:");
         for(int i=0; i<parse.dest_size; i++)
-            printf("0x%.2X ", parse.dest[i]);
+            printf("%.2X ", parse.dest[i]);
+        puts("");
         system("pause");
         return 0;
     }
@@ -59,6 +60,7 @@ int main(int argc, char* argv[])
                 errors++;
             for(int k=0; k<current.dest_size; k++)
                 printf("%.2X ", current.dest[k]);
+            puts("");
             while(filedata[i]=='\r' || filedata[i]=='\n')
                 i++;
             i--;
