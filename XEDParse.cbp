@@ -86,6 +86,8 @@
 		<Unit filename="parser.h" />
 		<Unit filename="parsetest.cpp" />
 		<Unit filename="parsetest.h" />
+		<Unit filename="translate.cpp" />
+		<Unit filename="translate.h" />
 		<Unit filename="xed-dot-prep.c">
 			<Option compilerVar="CC" />
 		</Unit>

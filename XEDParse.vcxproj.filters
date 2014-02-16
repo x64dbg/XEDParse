@@ -39,6 +39,9 @@
     <ClCompile Include="xed-ex3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="translate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEDParse.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xed-examples-util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="translate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

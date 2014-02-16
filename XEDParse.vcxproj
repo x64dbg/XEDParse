@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="parsetest.cpp" />
+    <ClCompile Include="translate.cpp" />
     <ClCompile Include="xed-dot-prep.c" />
     <ClCompile Include="xed-dot.c" />
     <ClCompile Include="xed-enc-lang.cpp" />
@@ -23,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="parser.h" />
     <ClInclude Include="parsetest.h" />
+    <ClInclude Include="translate.h" />
     <ClInclude Include="xed-dot-prep.h" />
     <ClInclude Include="xed-dot.h" />
     <ClInclude Include="xed-enc-lang.H" />

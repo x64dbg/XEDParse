@@ -31,7 +31,6 @@ END_LEGAL */
 /// @file xed-ex3.cpp
 /// Encoder example
 
-
 extern "C"
 {
 #include "xed2\include\xed-interface.h"
@@ -45,66 +44,22 @@ extern "C"
 #include <sstream>
 #include <cstdlib>
 #include <cstring>
+
 using namespace std;
 
-int main(int argc, char** argv);
-
-
-void
-usage(char* progname)
-{
-    cerr << "Usage: " << progname << " [-16|-32|-64] [-s16|-s32] encode-string" << endl;
-    exit(1);
-}
-
-ascii_encode_request_t
-parse_args(unsigned int argc, char** argv)
-{
-    if (argc == 1)
-        usage(argv[0]);
-
-    ascii_encode_request_t r;
-    r.dstate.mmode = XED_MACHINE_MODE_LEGACY_32;
-    r.dstate.stack_addr_width = XED_ADDRESS_WIDTH_32b;
-    string c = "";
-    unsigned int i = 1;
-
-    for( ; i< argc; i++)
-        if (strcmp(argv[i],"-16")==0)
-            r.dstate.mmode = XED_MACHINE_MODE_LEGACY_16;
-        else if (strcmp(argv[i],"-32")==0)
-            r.dstate.mmode = XED_MACHINE_MODE_LEGACY_32;
-        else if (strcmp("-64", argv[i]) == 0)
-        {
-            r.dstate.mmode = XED_MACHINE_MODE_LONG_64;
-        }
-        else if (strcmp("-32", argv[i]) == 0)
-            r.dstate.mmode = XED_MACHINE_MODE_LEGACY_32;
-        else if (strcmp("-16", argv[i]) == 0)
-            r.dstate.mmode = XED_MACHINE_MODE_LEGACY_16;
-        else if (strcmp(argv[i],"-s32")==0)
-            r.dstate.stack_addr_width = XED_ADDRESS_WIDTH_32b;
-        else if (strcmp(argv[i],"-s16")==0)
-            r.dstate.stack_addr_width = XED_ADDRESS_WIDTH_16b;
-        else
-            break;
-
-    if (i == argc)
-        usage(argv[0]);
-
-    for( ; i<argc; i++)
-        c = c + " " + argv[i];
-
-    r.command = c.c_str();
-    return r;
-}
-
-int xed_ex3(int argc, char** argv)
+bool xed_ex3(XEDPARSE* XEDParse, const char* command)
 {
 #define XED_EX3_BUFLEN 5000
     char buf[XED_EX3_BUFLEN];
     xed_tables_init();
-    ascii_encode_request_t areq = parse_args(argc,argv);
+    ascii_encode_request_t areq;
+#ifdef _WIN64
+    areq.dstate.mmode = XED_MACHINE_MODE_LONG_64;
+#else
+    areq.dstate.mmode = XED_MACHINE_MODE_LEGACY_32;
+#endif //_WIN64
+    areq.command=command;
+    areq.dstate.stack_addr_width = XED_ADDRESS_WIDTH_32b;
     xed_encoder_request_t req = parse_encode_request(areq);
 
     cout << "Encode request:" << endl;
@@ -119,9 +74,12 @@ int xed_ex3(int argc, char** argv)
     xed_bool_t encode_okay = ( xed_error == XED_ERROR_NONE);
     if (!encode_okay)
     {
+        strcpy(XEDParse->error, "failed to encode instruction!");
         cout << "Could not encode" << endl;
-        return 1;
+        return false;
     }
+    XEDParse->dest_size=olen;
+    memcpy(XEDParse->dest, array, olen);
     xed_print_hex_line(buf, array, olen, XED_EX3_BUFLEN);
     cout << "Encodable! " << buf << endl;
 
@@ -152,5 +110,5 @@ int xed_ex3(int argc, char** argv)
             cout << "Update failed" << endl;
     }
 #endif
-    return 0;
+    return true;
 }

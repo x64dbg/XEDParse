@@ -1,6 +1,8 @@
 #ifndef _XED_EX3_H
 #define _XED_EX3_H
 
-int xed_ex3(int argc, char** argv);
+#include "XEDParse.h"
+
+bool xed_ex3(XEDPARSE* XEDParse, const char* command);
 
 #endif // _XED_EX3_H
