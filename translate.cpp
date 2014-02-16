@@ -5,165 +5,279 @@ extern "C"
 }
 #include <stdio.h>
 
-static const char* sizetostring(OPSIZE size)
+static xed_reg_enum_t regtoxed(REG reg)
 {
-    const char* sizelist[]=
+    switch(reg)
     {
-        "byte",
-        "word",
-        "dword",
+    case REG_EAX:
+        return XED_REG_EAX;
+        break;
+    case REG_AX:
+        return XED_REG_AX;
+        break;
+    case REG_AH:
+        return XED_REG_AH;
+        break;
+    case REG_AL:
+        return XED_REG_AL;
+        break;
+    case REG_EBX:
+        return XED_REG_EBX;
+        break;
+    case REG_BX:
+        return XED_REG_BX;
+        break;
+    case REG_BH:
+        return XED_REG_BH;
+        break;
+    case REG_BL:
+        return XED_REG_BL;
+        break;
+    case REG_ECX:
+        return XED_REG_ECX;
+        break;
+    case REG_CX:
+        return XED_REG_CX;
+        break;
+    case REG_CH:
+        return XED_REG_CH;
+        break;
+    case REG_CL:
+        return XED_REG_CL;
+        break;
+    case REG_EDX:
+        return XED_REG_EDX;
+        break;
+    case REG_DX:
+        return XED_REG_DX;
+        break;
+    case REG_DH:
+        return XED_REG_DH;
+        break;
+    case REG_DL:
+        return XED_REG_DL;
+        break;
+    case REG_EDI:
+        return XED_REG_EDI;
+        break;
+    case REG_DI:
+        return XED_REG_DI;
+        break;
+    case REG_ESI:
+        return XED_REG_ESI;
+        break;
+    case REG_SI:
+        return XED_REG_SI;
+        break;
+    case REG_EBP:
+        return XED_REG_EBP;
+        break;
+    case REG_BP:
+        return XED_REG_BP;
+        break;
+    case REG_ESP:
+        return XED_REG_ESP;
+        break;
+    case REG_SP:
+        return XED_REG_SP;
+        break;
 #ifdef _WIN64
-        "qword"
-#endif // _WIN64
-    };
-    return sizelist[size];
-}
-
-static const char* sizedtostring(OPSIZE size)
-{
-    const char* sizelist[]=
-    {
-        "1",
-        "2",
-        "4",
-#ifdef _WIN64
-        "8"
-#endif // _WIN64
-    };
-    return sizelist[size];
-}
-
-
-static const char* regtostring(REG reg)
-{
-    const char* reglist[]=
-    {
-        "-",
-        "EAX",
-        "AX",
-        "AH",
-        "AL",
-        "EBX",
-        "BX",
-        "BH",
-        "BL",
-        "ECX",
-        "CX",
-        "CH",
-        "CL",
-        "EDX",
-        "DX",
-        "DH",
-        "DL",
-        "EDI",
-        "DI",
-        "ESI",
-        "SI",
-        "EBP",
-        "BP",
-        "ESP",
-        "SP",
-#ifdef _WIN64
-        "RAX",
-        "RBX",
-        "RCX",
-        "RDX",
-        "RSI",
-        "SIL",
-        "RDI",
-        "DIL",
-        "RBP",
-        "BPL",
-        "RSP",
-        "SPL",
-        "RIP",
-        "R8",
-        "R8D",
-        "R8W",
-        "R8B",
-        "R9",
-        "R9D",
-        "R9W",
-        "R9B",
-        "R10",
-        "R10D",
-        "R10W",
-        "R10B",
-        "R11",
-        "R11D",
-        "R11W",
-        "R11B",
-        "R12",
-        "R12D",
-        "R12W",
-        "R12B",
-        "R13",
-        "R13D",
-        "R13W",
-        "R13B",
-        "R14",
-        "R14D",
-        "R14W",
-        "R14B",
-        "R15",
-        "R15D",
-        "R15W",
-        "R15B"
+    case REG_RAX:
+        return XED_REG_RAX;
+        break;
+    case REG_RBX:
+        return XED_REG_RBX;
+        break;
+    case REG_RCX:
+        return XED_REG_RCX;
+        break;
+    case REG_RDX:
+        return XED_REG_RDX;
+        break;
+    case REG_RSI:
+        return XED_REG_RSI;
+        break;
+    case REG_SIL:
+        return XED_REG_SIL;
+        break;
+    case REG_RDI:
+        return XED_REG_RDI;
+        break;
+    case REG_DIL:
+        return XED_REG_DIL;
+        break;
+    case REG_RBP:
+        return XED_REG_RBP;
+        break;
+    case REG_BPL:
+        return XED_REG_BPL;
+        break;
+    case REG_RSP:
+        return XED_REG_RSP;
+        break;
+    case REG_SPL:
+        return XED_REG_SPL;
+        break;
+    case REG_RIP:
+        return XED_REG_RIP;
+        break;
+    case REG_R8:
+        return XED_REG_R8;
+        break;
+    case REG_R8D:
+        return XED_REG_R8D;
+        break;
+    case REG_R8W:
+        return XED_REG_R8W;
+        break;
+    case REG_R8B:
+        return XED_REG_R8B;
+        break;
+    case REG_R9:
+        return XED_REG_R9;
+        break;
+    case REG_R9D:
+        return XED_REG_R9D;
+        break;
+    case REG_R9W:
+        return XED_REG_R9W;
+        break;
+    case REG_R9B:
+        return XED_REG_R9B;
+        break;
+    case REG_R10:
+        return XED_REG_R10;
+        break;
+    case REG_R10D:
+        return XED_REG_R10D;
+        break;
+    case REG_R10W:
+        return XED_REG_R10W;
+        break;
+    case REG_R10B:
+        return XED_REG_R10B;
+        break;
+    case REG_R11:
+        return XED_REG_R11;
+        break;
+    case REG_R11D:
+        return XED_REG_R11D;
+        break;
+    case REG_R11W:
+        return XED_REG_R11W;
+        break;
+    case REG_R11B:
+        return XED_REG_R11B;
+        break;
+    case REG_R12:
+        return XED_REG_R12;
+        break;
+    case REG_R12D:
+        return XED_REG_R12D;
+        break;
+    case REG_R12W:
+        return XED_REG_R12W;
+        break;
+    case REG_R12B:
+        return XED_REG_R12B;
+        break;
+    case REG_R13:
+        return XED_REG_R13;
+        break;
+    case REG_R13D:
+        return XED_REG_R13D;
+        break;
+    case REG_R13W:
+        return XED_REG_R13W;
+        break;
+    case REG_R13B:
+        return XED_REG_R13B;
+        break;
+    case REG_R14:
+        return XED_REG_R14;
+        break;
+    case REG_R14D:
+        return XED_REG_R14D;
+        break;
+    case REG_R14W:
+        return XED_REG_R14W;
+        break;
+    case REG_R14B:
+        return XED_REG_R14B;
+        break;
+    case REG_R15:
+        return XED_REG_R15;
+        break;
+    case REG_R15D:
+        return XED_REG_R15D;
+        break;
+    case REG_R15W:
+        return XED_REG_R15W;
+        break;
+    case REG_R15B:
+        return XED_REG_R15B;
+        break;
 #endif //_WIN64
-    };
-    return reglist[reg];
+    default:
+        break;
+    }
+    return XED_REG_INVALID;
 }
 
-static const char* segtostring(SEG seg)
+static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_request_t* req)
 {
-    const char* seglist[]=
+    switch(transop->operand->type)
     {
-        "cs",
-        "ds",
-        "es",
-        "fs",
-        "gs",
-        "ss"
-    };
-    return seglist[seg];
-}
-
-static const char* prefixtostring(PREFIX prefix)
-{
-    const char* prefixlist[]=
+    case TYPE_NONE:
     {
-        "",
-        "lock ",
-        "rep ",
-        "repe ",
-        "repne "
-    };
-    return prefixlist[prefix];
+        return true;
+    }
+    break;
+
+    case TYPE_VALUE:
+    {
+        return true;
+    }
+    break;
+
+    case TYPE_REGISTER:
+    {
+        xed_operand_enum_t r=XED_STATIC_CAST(xed_operand_enum_t, XED_OPERAND_REG0+transop->regop);
+        xed_encoder_request_set_reg(req, r, regtoxed(transop->operand->u.reg.reg));
+        xed_encoder_request_set_operand_order(req, transop->operand_index, r);
+        transop->regop++;
+        transop->operand_index++;
+        return true;
+    }
+    break;
+
+    case TYPE_MEMORY:
+    {
+        return true;
+    }
+    break;
+
+    default:
+    {
+    }
+    break;
+    }
+    return false;
 }
 
-bool translate(XEDPARSE* XEDParse, INSTRUCTION* instruction, TRANSLATION* translation)
+static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_encoder_request_t* req)
 {
-    //initialize encoder request
-    xed_state_t dstate;
-#ifdef _WIN64
-    dstate.mmode=XED_MACHINE_MODE_LONG_64;
-#else
-    dstate.mmode=XED_MACHINE_MODE_LEGACY_32;
-#endif //_WIN64
-    dstate.stack_addr_width=XED_ADDRESS_WIDTH_32b;
-    xed_encoder_request_t req;
-    xed_encoder_request_zero_set_mode(&req, &dstate);
-    //set prefix
+    //set instruction prefix
     switch(instruction->prefix)
     {
     case PREFIX_LOCK:
-        xed_encoder_request_set_lock(&req);
+        xed_encoder_request_set_lock(req);
         break;
     case PREFIX_REP:
-        xed_encoder_request_set_rep(&req);
+        xed_encoder_request_set_rep(req);
         break;
     case PREFIX_REPNEZ:
-        xed_encoder_request_set_repne(&req);
+        xed_encoder_request_set_repne(req);
         break;
     }
     //override instruction mode (for x64 mainly)
@@ -172,11 +286,11 @@ bool translate(XEDPARSE* XEDParse, INSTRUCTION* instruction, TRANSLATION* transl
     {
     case TYPE_REGISTER:
         if(instruction->operand1.u.reg.size==SIZE_QWORD) //example: mov rax, rbx
-            xed_encoder_request_set_effective_operand_width(&req, 64);
+            xed_encoder_request_set_effective_operand_width(req, 64);
         break;
     case TYPE_MEMORY:
         if(instruction->operand1.u.mem.size==SIZE_QWORD) //example: mov qword [rax], rbx
-            xed_encoder_request_set_effective_operand_width(&req, 64);
+            xed_encoder_request_set_effective_operand_width(req, 64);
         break;
     default:
         break;
@@ -190,7 +304,53 @@ bool translate(XEDPARSE* XEDParse, INSTRUCTION* instruction, TRANSLATION* transl
         sprintf(XEDParse->error, "unknown instruction \"%s\"!", instruction->mnemonic);
         return false;
     }
+    printf("instruction: \"%s\"\n", xed_iclass_enum_t2str(iclass));
     //set instruction class
-    xed_encoder_request_set_iclass(&req, iclass);
+    xed_encoder_request_set_iclass(req, iclass);
+    return true;
+}
+
+static void initrequest(xed_encoder_request_t* req)
+{
+    xed_tables_init(); //important stuff
+    xed_state_t dstate;
+#ifdef _WIN64
+    dstate.mmode=XED_MACHINE_MODE_LONG_64;
+#else
+    dstate.mmode=XED_MACHINE_MODE_LEGACY_32;
+#endif //_WIN64
+    dstate.stack_addr_width=XED_ADDRESS_WIDTH_32b;
+    xed_encoder_request_zero_set_mode(req, &dstate);
+}
+
+bool translate(XEDPARSE* XEDParse, INSTRUCTION* instruction)
+{
+    //initialize encoder request
+    xed_encoder_request_t req;
+    initrequest(&req);
+    //translate base instruction
+    if(!translatebase(XEDParse, instruction, &req))
+        return false;
+    //translate operands
+    TRANSOP transop;
+    memset(&transop, 0, sizeof(transop));
+    transop.operand=&instruction->operand1;
+    if(!translateoperand(XEDParse, &transop, &req))
+        return false;
+    transop.operand=&instruction->operand2;
+    if(!translateoperand(XEDParse, &transop, &req))
+        return false;
+    //print request
+    char buf[5000]="";
+    xed_encode_request_print(&req, buf, 5000);
+    puts(buf);
+    //encode the final instruction
+    xed_error_enum_t xed_error=xed_encode(&req, XEDParse->dest, XED_MAX_INSTRUCTION_BYTES, &XEDParse->dest_size);
+    xed_bool_t encode_okay=(xed_error==XED_ERROR_NONE);
+    if (!encode_okay)
+    {
+        strcpy(XEDParse->error, "failed to encode instruction!");
+        return false;
+    }
     return true;
 }

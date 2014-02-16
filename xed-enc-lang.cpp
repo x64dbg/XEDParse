@@ -541,7 +541,7 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
 
         // FIXME: add MEM(immed) for the OC1_A and OC1_O types????
         mem_bis_parser_t mem_bis(str_res_reg);
-        if (mem_bis.valid)
+        if (mem_bis.valid) //memory
         {
             if (mem_bis.mem)
             {
@@ -600,7 +600,7 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
         }
 
         seg_parser_t seg_parser(str_res_reg);
-        if (seg_parser.valid)
+        if (seg_parser.valid) //segment
         {
             if (CLIENT_VERBOSE3)
                 printf("Setting segment to %s\n",
@@ -623,7 +623,7 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
         }
 
         immed_parser_t imm(str_res_reg, "IMM");
-        if (imm.valid)
+        if (imm.valid) //immediate
         {
             if (CLIENT_VERBOSE3)
                 printf("Setting immediate value to " XED_FMT_LX "\n",
@@ -637,7 +637,7 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
             continue;
         }
         immed_parser_t simm(str_res_reg, "SIMM");
-        if (simm.valid)
+        if (simm.valid) //simm
         {
             if (CLIENT_VERBOSE3)
                 printf("Setting immediate value to " XED_FMT_LX "\n",
@@ -664,7 +664,7 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
         }
 
         immed_parser_t disp(str_res_reg, "BRDISP");
-        if (disp.valid)
+        if (disp.valid) //branch
         {
             if (CLIENT_VERBOSE3)
                 printf("Setting  displacement value to " XED_FMT_LX "\n",
@@ -681,7 +681,7 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
         }
 
         immed_parser_t ptr_disp(str_res_reg, "PTR");
-        if (ptr_disp.valid)
+        if (ptr_disp.valid) //pointer
         {
             if (CLIENT_VERBOSE3)
                 printf("Setting pointer displacement value to " XED_FMT_LX "\n",
@@ -698,13 +698,13 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
         }
 
         xed_reg_enum_t reg = str2xed_reg_enum_t(str_res_reg.c_str());
-        if (reg == XED_REG_INVALID)
+        if (reg == XED_REG_INVALID) //register
         {
             ostringstream os;
             os << "Bad register name: " << str_res_reg << " on operand " << i;
             xedex_derror(os.str().c_str()); // dies
         }
-        // The registers operands aer numbered starting from the first one
+        // The registers operands are numbered starting from the first one
         // as XED_OPERAND_REG0. We incremenet regnum (below) every time we add a
         // register operands.
         xed_operand_enum_t r =

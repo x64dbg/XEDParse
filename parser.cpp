@@ -770,38 +770,40 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
 {
     if(!raw || !parsed)
         return false;
-    int len=strlen(raw->instr);
+    char* instr=raw->instr;
+    while(*instr==' ' && *instr) //skip initial spaces
+        instr++;
+    int len=strlen(instr);
     if(!len)
     {
         strcpy(raw->error, "empty instruction");
         return false;
     }
-    //skip initial spaces
-    int skip=0;
-    while(raw->instr[skip]==' ' && skip<len)
-        skip++;
+    printf("instr1: %s\n", instr);
     //get prefix
-    parsed->prefix=getprefix(raw->instr+skip, &skip);
-    len=strlen(raw->instr+skip);
+    int skipadd=0;
+    parsed->prefix=getprefix(instr, &skipadd);
+    instr+=skipadd;
+    while(*instr==' ' && *instr) //skip spaces
+        instr++;
+    len=strlen(instr);
     if(!len)
     {
         strcpy(raw->error, "only a prefix");
         return false;
     }
-    while(raw->instr[skip]==' ' && skip<len) //skip spaces
-        skip++;
-    if(!sscanf(raw->instr+skip, "%s", parsed->mnemonic))
+    if(!sscanf(instr, "%s", parsed->mnemonic))
     {
         strcpy(raw->error, "no mnemonic");
         return false;
     }
-    while(raw->instr[skip]!=' ' && skip<len)
-        skip++;
-    char instr[XEDPARSE_MAXBUFSIZE]="";
-    strcpy(instr, raw->instr+skip+1);
+    instr=strstr(instr, " ");
+    if(!instr)
+        return true; //we have a mnemonic already
+    instr++;
     len=strlen(instr);
     if(!len)
-        return true; //we have a mnemonic already
+        return true;
     int commacount=0;
     for(int i=0; i<len; i++)
         if(instr[i]==',')
@@ -811,6 +813,7 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         strcpy(raw->error, "too many arguments found");
         return false;
     }
+    int skip=0;
     if(commacount) //two operands
     {
         char* operand2=strstr(instr, ","); //find comma

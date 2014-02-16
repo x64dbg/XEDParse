@@ -30,7 +30,7 @@ enum XEDPARSE_STATUS
 struct XEDPARSE
 {
     ULONG_PTR cip; //instruction pointer (for relative addressing)
-    int dest_size; //destination size (returned by XEDParse)
+    unsigned int dest_size; //destination size (returned by XEDParse)
     CBXEDPARSE_UNKNOWN cbUnknown; //unknown operand callback
     unsigned char dest[XEDPARSE_MAXASMSIZE]; //destination buffer
     char instr[XEDPARSE_MAXBUFSIZE]; //instruction text

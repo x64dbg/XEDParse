@@ -5,11 +5,14 @@
 #include "parser.h"
 
 //structures
-struct TRANSLATION
+struct TRANSOP //translating operand
 {
-    char instr[XEDPARSE_MAXBUFSIZE];
+    OPERAND* operand;
+    int memop; //number of memory operands
+    int regop; //number of register operands
+    int operand_index; //operand index
 };
 
-bool translate(XEDPARSE* XEDParse, INSTRUCTION* instruction, TRANSLATION* translation);
+bool translate(XEDPARSE* XEDParse, INSTRUCTION* instruction);
 
 #endif
