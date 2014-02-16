@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -29,7 +29,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
 /// @file xed-state.h
-/// 
+///
 
 
 
@@ -42,24 +42,25 @@ END_LEGAL */
 
 
 /// Encapsulates machine modes for decoder/encoder requests.
-/// It specifies the machine operating mode as a 
-/// #xed_machine_mode_enum_t 
+/// It specifies the machine operating mode as a
+/// #xed_machine_mode_enum_t
 /// for decoding and encoding. The machine mode corresponds to the default
 /// data operand width for that mode. For all modes other than the 64b long
 /// mode (XED_MACHINE_MODE_LONG_64), a default addressing width, and a
 /// stack addressing width must be supplied of type
 /// #xed_address_width_enum_t .  @ingroup INIT
-typedef struct xed_state_s {
-  /// real architected machine modes
-  xed_machine_mode_enum_t mmode; 
-  /// for 16b/32b modes
-  xed_address_width_enum_t stack_addr_width; 
+typedef struct xed_state_s
+{
+    /// real architected machine modes
+    xed_machine_mode_enum_t mmode;
+    /// for 16b/32b modes
+    xed_address_width_enum_t stack_addr_width;
 } xed_state_t;
 
 /// @name Initialization
 //@{
 /// Constructor.
-/// DEPRECATED: use #xed_state_init2(). 
+/// DEPRECATED: use #xed_state_init2().
 /// The mode, and addresses widths are enumerations that specify the number
 /// of bits.  In 64b mode (#XED_MACHINE_MODE_LONG_64) the address width and
 /// stack address widths are 64b (#XED_ADDRESS_WIDTH_64b). In other machine
@@ -73,7 +74,8 @@ typedef struct xed_state_s {
 static XED_INLINE void xed_state_init(xed_state_t* p,
                                       xed_machine_mode_enum_t arg_mmode,
                                       xed_address_width_enum_t arg_ignored,
-                                      xed_address_width_enum_t arg_stack_addr_width) {
+                                      xed_address_width_enum_t arg_stack_addr_width)
+{
     p->mmode=arg_mmode;
     p->stack_addr_width=arg_stack_addr_width;
     (void) arg_ignored; //pacify compiler unused arg warning
@@ -90,15 +92,17 @@ static XED_INLINE void xed_state_init(xed_state_t* p,
 /// @param arg_stack_addr_width the stack address width of type #xed_address_width_enum_t (only required if not the mode is not #XED_MACHINE_MODE_LONG_64)
 /// @ingroup INIT
 static XED_INLINE void xed_state_init2(xed_state_t* p,
-                                      xed_machine_mode_enum_t arg_mmode,
-                                      xed_address_width_enum_t arg_stack_addr_width) {
+                                       xed_machine_mode_enum_t arg_mmode,
+                                       xed_address_width_enum_t arg_stack_addr_width)
+{
     p->mmode=arg_mmode;
     p->stack_addr_width=arg_stack_addr_width;
 }
 
 /// clear the xed_state_t
 /// @ingroup INIT
-static XED_INLINE void xed_state_zero(xed_state_t* p) {
+static XED_INLINE void xed_state_zero(xed_state_t* p)
+{
     p->mmode= XED_MACHINE_MODE_INVALID;
     p->stack_addr_width=XED_ADDRESS_WIDTH_INVALID;
 }
@@ -109,39 +113,45 @@ static XED_INLINE void xed_state_zero(xed_state_t* p) {
 //@{
 /// return the machine mode
 /// @ingroup INIT
-static XED_INLINE xed_machine_mode_enum_t   xed_state_get_machine_mode(const xed_state_t* p) {
-    return p->mmode; 
+static XED_INLINE xed_machine_mode_enum_t   xed_state_get_machine_mode(const xed_state_t* p)
+{
+    return p->mmode;
 }
 
 
 /// true iff the machine is in LONG_64 mode
 /// @ingroup INIT
-static XED_INLINE xed_bool_t xed_state_long64_mode(const xed_state_t* p) { 
+static XED_INLINE xed_bool_t xed_state_long64_mode(const xed_state_t* p)
+{
     return xed_state_get_machine_mode(p) == XED_MACHINE_MODE_LONG_64;
 }
 
 /// @ingroup INIT
-static XED_INLINE xed_bool_t xed_state_real_mode(const xed_state_t* p) {
+static XED_INLINE xed_bool_t xed_state_real_mode(const xed_state_t* p)
+{
     return (xed_state_get_machine_mode(p) == XED_MACHINE_MODE_REAL_16);
 }
 
 /// @ingroup INIT
-static XED_INLINE xed_bool_t xed_state_mode_width_16(const xed_state_t* p) {
+static XED_INLINE xed_bool_t xed_state_mode_width_16(const xed_state_t* p)
+{
     return (xed_state_get_machine_mode(p) == XED_MACHINE_MODE_LEGACY_16) ||
-        (xed_state_get_machine_mode(p) == XED_MACHINE_MODE_LONG_COMPAT_16);
+           (xed_state_get_machine_mode(p) == XED_MACHINE_MODE_LONG_COMPAT_16);
 }
 
 /// @ingroup INIT
-static XED_INLINE xed_bool_t xed_state_mode_width_32(const xed_state_t* p) {
+static XED_INLINE xed_bool_t xed_state_mode_width_32(const xed_state_t* p)
+{
     return (xed_state_get_machine_mode(p) == XED_MACHINE_MODE_LEGACY_32) ||
-        (xed_state_get_machine_mode(p) == XED_MACHINE_MODE_LONG_COMPAT_32);
+           (xed_state_get_machine_mode(p) == XED_MACHINE_MODE_LONG_COMPAT_32);
 }
-  
+
 
 /// Set the machine mode which corresponds to the default data operand size
 /// @ingroup INIT
 static XED_INLINE void  xed_state_set_machine_mode( xed_state_t* p,
-                        xed_machine_mode_enum_t arg_mode)  {
+        xed_machine_mode_enum_t arg_mode)
+{
     p->mmode = arg_mode;
 }
 //@}
@@ -151,31 +161,34 @@ static XED_INLINE void  xed_state_set_machine_mode( xed_state_t* p,
 /// Set the address width
 /// @ingroup INIT
 static XED_INLINE void xed_state_set_address_width(xed_state_t* p,
-                                                   xed_address_width_enum_t arg_addr_width) {
+        xed_address_width_enum_t arg_addr_width)
+{
     (void)p;
     (void)arg_addr_width;
 }
 
 /// return the address width
 /// @ingroup INIT
-static XED_INLINE xed_address_width_enum_t  xed_state_get_address_width(const xed_state_t* p) {
-    switch(xed_state_get_machine_mode(p)) {
-      case XED_MACHINE_MODE_LONG_64:
+static XED_INLINE xed_address_width_enum_t  xed_state_get_address_width(const xed_state_t* p)
+{
+    switch(xed_state_get_machine_mode(p))
+    {
+    case XED_MACHINE_MODE_LONG_64:
         return XED_ADDRESS_WIDTH_64b;
 
-      case XED_MACHINE_MODE_REAL_16:
+    case XED_MACHINE_MODE_REAL_16:
         /* should be 20b... but if you are working w/real mode then you're
            going to have to deal with somehow. Could easily make this be
            20b if anyone cares. */
-        return XED_ADDRESS_WIDTH_32b; 
-
-      case XED_MACHINE_MODE_LEGACY_32:
-      case XED_MACHINE_MODE_LONG_COMPAT_32:
         return XED_ADDRESS_WIDTH_32b;
-      case XED_MACHINE_MODE_LEGACY_16:
-      case XED_MACHINE_MODE_LONG_COMPAT_16:
+
+    case XED_MACHINE_MODE_LEGACY_32:
+    case XED_MACHINE_MODE_LONG_COMPAT_32:
+        return XED_ADDRESS_WIDTH_32b;
+    case XED_MACHINE_MODE_LEGACY_16:
+    case XED_MACHINE_MODE_LONG_COMPAT_16:
         return XED_ADDRESS_WIDTH_16b;
-      default:
+    default:
         return XED_ADDRESS_WIDTH_INVALID;
     }
 }
@@ -187,14 +200,16 @@ static XED_INLINE xed_address_width_enum_t  xed_state_get_address_width(const xe
 /// set the STACK address width
 /// @ingroup INIT
 static XED_INLINE void  xed_state_set_stack_address_width(xed_state_t* p,
-                              xed_address_width_enum_t arg_addr_width) {
+        xed_address_width_enum_t arg_addr_width)
+{
     p->stack_addr_width = arg_addr_width;
 }
 
 
 /// Return the STACK address width
 /// @ingroup INIT
-static XED_INLINE xed_address_width_enum_t  xed_state_get_stack_address_width(const xed_state_t* p) {
+static XED_INLINE xed_address_width_enum_t  xed_state_get_stack_address_width(const xed_state_t* p)
+{
     return p->stack_addr_width;
 }
 //@}

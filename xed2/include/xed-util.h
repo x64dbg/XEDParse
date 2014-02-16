@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -28,8 +28,8 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
-/// @file xed-util.h 
-/// 
+/// @file xed-util.h
+///
 
 
 
@@ -40,13 +40,13 @@ END_LEGAL */
 #include "xed-types.h"
 #include "xed-portability.h"
 
-  
+
 ////////////////////////////////////////////////////////////////////////////
 // DEFINES
 ////////////////////////////////////////////////////////////////////////////
 extern int xed_verbose;
 #if XED_MESSAGES==1
-# include <stdio.h> 
+# include <stdio.h>
 extern  FILE* xed_log_file;
 #endif
 #define XED_EMIT_MESSAGES  (XED_MESSAGES==1 && xed_verbose >= 1)
@@ -111,23 +111,23 @@ extern  FILE* xed_log_file;
 
 
 #else
-# define XED2IMSG(x) 
+# define XED2IMSG(x)
 # define XED2TMSG(x)
 # define XED2VMSG(x)
 # define XED2DIE(x) do { xed_assert(0); } while(0)
 #endif
 
 #if defined(XED_ASSERTS)
-#  define xed_assert(x)  do { if (( x )== 0) xed_internal_assert( #x, __FILE__, __LINE__); } while(0) 
+#  define xed_assert(x)  do { if (( x )== 0) xed_internal_assert( #x, __FILE__, __LINE__); } while(0)
 #else
-#  define xed_assert(x)  do {  } while(0) 
+#  define xed_assert(x)  do {  } while(0)
 #endif
 XED_NORETURN XED_NOINLINE XED_DLL_EXPORT void xed_internal_assert(const char* s, const char* file, int line);
 
 typedef void (*xed_user_abort_function_t)(const char* msg,
-                                          const char* file,
-                                          int line,
-                                          void* other);
+        const char* file,
+        int line,
+        void* other);
 
 /// @ingroup INIT
 /// This is for registering a function to be called during XED's assert
@@ -137,8 +137,8 @@ typedef void (*xed_user_abort_function_t)(const char* msg,
 ///
 /// @param fn This is a function pointer for a function that should handle the
 ///        assertion reporting. The function pointer points to  a function that
-///        takes 4 arguments: 
-///                     (1) msg, the assertion message, 
+///        takes 4 arguments:
+///                     (1) msg, the assertion message,
 ///                     (2) file, the file name,
 ///                     (3) line, the line number (as an integer), and
 ///                     (4) other, a void pointer that is supplied as thei
@@ -149,7 +149,7 @@ typedef void (*xed_user_abort_function_t)(const char* msg,
 ///        to your assertion handler (like FILE* pointers etc.).
 ///
 XED_DLL_EXPORT void xed_register_abort_function(xed_user_abort_function_t fn,
-                                                void* other);
+        void* other);
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -213,10 +213,10 @@ XED_DLL_EXPORT xed_int32_t xed_sign_extend8_32(xed_int8_t x);
 
 XED_DLL_EXPORT xed_int16_t xed_sign_extend8_16(xed_int8_t x);
 
-///arbitrary sign extension from a qty of "bits" length to 32b 
+///arbitrary sign extension from a qty of "bits" length to 32b
 XED_DLL_EXPORT xed_int32_t xed_sign_extend_arbitrary_to_32(xed_uint32_t x, unsigned int bits);
 
-///arbitrary sign extension from a qty of "bits" length to 64b 
+///arbitrary sign extension from a qty of "bits" length to 64b
 XED_DLL_EXPORT xed_int64_t xed_sign_extend_arbitrary_to_64(xed_uint64_t x, unsigned int bits);
 
 
@@ -230,30 +230,32 @@ XED_DLL_EXPORT xed_uint32_t xed_zero_extend8_32(xed_uint8_t x);
 XED_DLL_EXPORT xed_uint16_t xed_zero_extend8_16(xed_uint8_t x);
 
 #if defined(XED_LITTLE_ENDIAN_SWAPPING)
-XED_DLL_EXPORT xed_int32_t 
+XED_DLL_EXPORT xed_int32_t
 xed_little_endian_to_int32(xed_uint64_t x, unsigned int len);
 
-XED_DLL_EXPORT xed_int64_t 
+XED_DLL_EXPORT xed_int64_t
 xed_little_endian_to_int64(xed_uint64_t x, unsigned int len);
-XED_DLL_EXPORT xed_uint64_t 
+XED_DLL_EXPORT xed_uint64_t
 xed_little_endian_to_uint64(xed_uint64_t x, unsigned int len);
 
-XED_DLL_EXPORT xed_int64_t 
+XED_DLL_EXPORT xed_int64_t
 xed_little_endian_hilo_to_int64(xed_uint32_t hi_le, xed_uint32_t lo_le, unsigned int len);
-XED_DLL_EXPORT xed_uint64_t 
+XED_DLL_EXPORT xed_uint64_t
 xed_little_endian_hilo_to_uint64(xed_uint32_t hi_le, xed_uint32_t lo_le, unsigned int len);
 #endif
 
 XED_DLL_EXPORT xed_uint8_t
 xed_get_byte(xed_uint64_t x, unsigned int i, unsigned int len);
 
-static XED_INLINE xed_uint64_t xed_make_uint64(xed_uint32_t hi, xed_uint32_t lo) {
+static XED_INLINE xed_uint64_t xed_make_uint64(xed_uint32_t hi, xed_uint32_t lo)
+{
     xed_union64_t y;
     y.s.lo32= lo;
     y.s.hi32= hi;
     return y.u64;
 }
-static XED_INLINE xed_int64_t xed_make_int64(xed_uint32_t hi, xed_uint32_t lo) {
+static XED_INLINE xed_int64_t xed_make_int64(xed_uint32_t hi, xed_uint32_t lo)
+{
     xed_union64_t y;
     y.s.lo32= lo;
     y.s.hi32= hi;

@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,29 +36,30 @@ END_LEGAL */
 #if !defined(_XED_EXCEPTION_ENUM_H_)
 # define _XED_EXCEPTION_ENUM_H_
 #include "xed-common-hdrs.h"
-typedef enum {
-  XED_EXCEPTION_INVALID,
-  XED_EXCEPTION_AVX_TYPE_1,
-  XED_EXCEPTION_AVX_TYPE_2,
-  XED_EXCEPTION_AVX_TYPE_2D,
-  XED_EXCEPTION_AVX_TYPE_3,
-  XED_EXCEPTION_AVX_TYPE_4,
-  XED_EXCEPTION_AVX_TYPE_4M,
-  XED_EXCEPTION_AVX_TYPE_5,
-  XED_EXCEPTION_AVX_TYPE_6,
-  XED_EXCEPTION_AVX_TYPE_7,
-  XED_EXCEPTION_AVX_TYPE_8,
-  XED_EXCEPTION_AVX_TYPE_9,
-  XED_EXCEPTION_AVX_TYPE_9L,
-  XED_EXCEPTION_SSE_TYPE_1,
-  XED_EXCEPTION_SSE_TYPE_2,
-  XED_EXCEPTION_SSE_TYPE_2D,
-  XED_EXCEPTION_SSE_TYPE_3,
-  XED_EXCEPTION_SSE_TYPE_4,
-  XED_EXCEPTION_SSE_TYPE_4M,
-  XED_EXCEPTION_SSE_TYPE_5,
-  XED_EXCEPTION_SSE_TYPE_7,
-  XED_EXCEPTION_LAST
+typedef enum
+{
+    XED_EXCEPTION_INVALID,
+    XED_EXCEPTION_AVX_TYPE_1,
+    XED_EXCEPTION_AVX_TYPE_2,
+    XED_EXCEPTION_AVX_TYPE_2D,
+    XED_EXCEPTION_AVX_TYPE_3,
+    XED_EXCEPTION_AVX_TYPE_4,
+    XED_EXCEPTION_AVX_TYPE_4M,
+    XED_EXCEPTION_AVX_TYPE_5,
+    XED_EXCEPTION_AVX_TYPE_6,
+    XED_EXCEPTION_AVX_TYPE_7,
+    XED_EXCEPTION_AVX_TYPE_8,
+    XED_EXCEPTION_AVX_TYPE_9,
+    XED_EXCEPTION_AVX_TYPE_9L,
+    XED_EXCEPTION_SSE_TYPE_1,
+    XED_EXCEPTION_SSE_TYPE_2,
+    XED_EXCEPTION_SSE_TYPE_2D,
+    XED_EXCEPTION_SSE_TYPE_3,
+    XED_EXCEPTION_SSE_TYPE_4,
+    XED_EXCEPTION_SSE_TYPE_4M,
+    XED_EXCEPTION_SSE_TYPE_5,
+    XED_EXCEPTION_SSE_TYPE_7,
+    XED_EXCEPTION_LAST
 } xed_exception_enum_t;
 
 /// This converts strings to #xed_exception_enum_t types.

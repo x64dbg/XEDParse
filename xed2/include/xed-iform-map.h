@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -29,7 +29,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
 /// @file xed-iform-map.h
-/// 
+///
 
 #if !defined(_XED_IFORM_MAP_H_)
 # define _XED_IFORM_MAP_H_
@@ -45,12 +45,13 @@ END_LEGAL */
 /// @ingroup IFORM
 /// Statically available information about iforms.
 /// Values are returned by #xed_iform_map().
-typedef struct xed_iform_info_s {
+typedef struct xed_iform_info_s
+{
     xed_iclass_enum_t iclass;
     xed_category_enum_t category;
     xed_extension_enum_t extension;
     xed_isa_set_enum_t isa_set;
-  
+
     /* if nonzero, index in to the disassembly string table */
     xed_uint32_t  string_table_idx;
 } xed_iform_info_t;
@@ -80,11 +81,12 @@ XED_DLL_EXPORT
 xed_uint32_t xed_iform_first_per_iclass(xed_iclass_enum_t iclass);
 
 /// @ingroup IFORM
-/// Return the iclass for a given iform. This 
+/// Return the iclass for a given iform. This
 /// function returns valid data as soon as global data is initialized. (This
 /// function does not require a decoded instruction as input).
 static
-xed_iclass_enum_t XED_INLINE xed_iform_to_iclass(xed_iform_enum_t iform) {
+xed_iclass_enum_t XED_INLINE xed_iform_to_iclass(xed_iform_enum_t iform)
+{
     const xed_iform_info_t* ii = xed_iform_map(iform);
     if (ii)
         return ii->iclass;
@@ -92,7 +94,7 @@ xed_iclass_enum_t XED_INLINE xed_iform_to_iclass(xed_iform_enum_t iform) {
 }
 
 /// @ingroup IFORM
-/// Return the category for a given iform. This 
+/// Return the category for a given iform. This
 /// function returns valid data as soon as global data is initialized. (This
 /// function does not require a decoded instruction as input).
 XED_DLL_EXPORT

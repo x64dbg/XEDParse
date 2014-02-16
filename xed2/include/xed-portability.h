@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -29,7 +29,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
 /// @file xed-portability.h
-/// 
+///
 
 #ifndef _XED_PORTABILITY_H_
 # define _XED_PORTABILITY_H_
@@ -42,7 +42,7 @@ END_LEGAL */
 #define XED_CAST(x,y) ((x) (y))
 
 
-    
+
 XED_DLL_EXPORT xed_uint_t xed_strlen(const char* s);
 XED_DLL_EXPORT void xed_strcat(char* dst, const char* src);
 XED_DLL_EXPORT void xed_strcpy(char* dst, const char* src);
@@ -100,7 +100,7 @@ XED_DLL_EXPORT int xed_strncat(char* dst, const char* src,  int len);
 /* I've had compatibilty problems here so I'm using a trivial indirection */
 #if defined(__GNUC__)
 #  if defined(__CYGWIN__)
-      /* cygwin's gcc 3.4.4 on windows  complains */
+/* cygwin's gcc 3.4.4 on windows  complains */
 #    define XED_FMT_X "%lx"
 #    define XED_FMT_08X "%08lx"
 #    define XED_FMT_D "%ld"
@@ -127,7 +127,7 @@ XED_DLL_EXPORT int xed_strncat(char* dst, const char* src,  int len);
 #elif defined(__LP64__)  // 64b gcc, icc
 # define XED_FMT_SIZET "%lu"
 #elif defined (_M_X64)   // 64b msvs, ICL
-  // MSVS/x64 accepts %llu or %lu, icl/x64 does not)
+// MSVS/x64 accepts %llu or %lu, icl/x64 does not)
 # define XED_FMT_SIZET "%llu"
 #else  // 32b everything else
 # define XED_FMT_SIZET "%u"
@@ -147,7 +147,7 @@ XED_DLL_EXPORT int xed_strncat(char* dst, const char* src,  int len);
 # define XED_FMT_LX16 "%016llx"
 #endif
 
-#if defined(__LP64__) || defined (_M_X64) 
+#if defined(__LP64__) || defined (_M_X64)
 # define XED_64B 1
 #endif
 
@@ -156,27 +156,27 @@ XED_DLL_EXPORT int xed_strncat(char* dst, const char* src,  int len);
 # define XED_FMT_SIZET "%lu"
 #endif
 
-#if defined(__GNUC__)    
-     /* gcc4.2.x has a bug with c99/gnu99 inlining */
+#if defined(__GNUC__)
+/* gcc4.2.x has a bug with c99/gnu99 inlining */
 #  if __GNUC__ == 4 && __GNUC_MINOR__ == 2
 #    define XED_INLINE inline
 #  else
 #    if __GNUC__ == 2
-#       define XED_INLINE 
-#    else 
+#       define XED_INLINE
+#    else
 #       define XED_INLINE inline
 #    endif
 # endif
 # define XED_NORETURN __attribute__ ((noreturn))
 # if __GNUC__ == 2
-#   define XED_NOINLINE 
+#   define XED_NOINLINE
 # else
 #   define XED_NOINLINE __attribute__ ((noinline))
 # endif
 #else
 # define XED_INLINE __inline
 # if defined(XED_MSVC6)
-#   define XED_NOINLINE 
+#   define XED_NOINLINE
 # else
 #   define XED_NOINLINE __declspec(noinline)
 # endif

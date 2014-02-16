@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,29 +36,30 @@ END_LEGAL */
 #if !defined(_XED_REG_CLASS_ENUM_H_)
 # define _XED_REG_CLASS_ENUM_H_
 #include "xed-common-hdrs.h"
-typedef enum {
-  XED_REG_CLASS_INVALID,
-  XED_REG_CLASS_CR,
-  XED_REG_CLASS_DR,
-  XED_REG_CLASS_FLAGS,
-  XED_REG_CLASS_GPR,
-  XED_REG_CLASS_GPR16,
-  XED_REG_CLASS_GPR32,
-  XED_REG_CLASS_GPR64,
-  XED_REG_CLASS_GPR8,
-  XED_REG_CLASS_IP,
-  XED_REG_CLASS_MASK,
-  XED_REG_CLASS_MMX,
-  XED_REG_CLASS_MXCSR,
-  XED_REG_CLASS_PSEUDO,
-  XED_REG_CLASS_PSEUDOX87,
-  XED_REG_CLASS_SR,
-  XED_REG_CLASS_TMP,
-  XED_REG_CLASS_X87,
-  XED_REG_CLASS_XCR,
-  XED_REG_CLASS_XMM,
-  XED_REG_CLASS_YMM,
-  XED_REG_CLASS_LAST
+typedef enum
+{
+    XED_REG_CLASS_INVALID,
+    XED_REG_CLASS_CR,
+    XED_REG_CLASS_DR,
+    XED_REG_CLASS_FLAGS,
+    XED_REG_CLASS_GPR,
+    XED_REG_CLASS_GPR16,
+    XED_REG_CLASS_GPR32,
+    XED_REG_CLASS_GPR64,
+    XED_REG_CLASS_GPR8,
+    XED_REG_CLASS_IP,
+    XED_REG_CLASS_MASK,
+    XED_REG_CLASS_MMX,
+    XED_REG_CLASS_MXCSR,
+    XED_REG_CLASS_PSEUDO,
+    XED_REG_CLASS_PSEUDOX87,
+    XED_REG_CLASS_SR,
+    XED_REG_CLASS_TMP,
+    XED_REG_CLASS_X87,
+    XED_REG_CLASS_XCR,
+    XED_REG_CLASS_XMM,
+    XED_REG_CLASS_YMM,
+    XED_REG_CLASS_LAST
 } xed_reg_class_enum_t;
 
 /// This converts strings to #xed_reg_class_enum_t types.

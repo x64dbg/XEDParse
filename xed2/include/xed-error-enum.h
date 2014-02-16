@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,21 +36,22 @@ END_LEGAL */
 #if !defined(_XED_ERROR_ENUM_H_)
 # define _XED_ERROR_ENUM_H_
 #include "xed-common-hdrs.h"
-typedef enum {
-  XED_ERROR_NONE, ///< There was no error
-  XED_ERROR_BUFFER_TOO_SHORT, ///< There were not enough bytes in the given buffer
-  XED_ERROR_GENERAL_ERROR, ///< XED could not decode the given instruction
-  XED_ERROR_INVALID_FOR_CHIP, ///< The instruciton is not valid for the specified chip
-  XED_ERROR_BAD_REGISTER, ///< XED could not decode the given instruction because an invalid register encoding was used.
-  XED_ERROR_BAD_LOCK_PREFIX, ///< A lock prefix was found where none is allowed.
-  XED_ERROR_BAD_REP_PREFIX, ///< An F2 or F3 prefix was found where none is allowed.
-  XED_ERROR_NO_OUTPUT_POINTER, ///< The output pointer for
-  XED_ERROR_NO_AGEN_CALL_BACK_REGISTERED, ///< One or both of the callbacks for
-  XED_ERROR_BAD_MEMOP_INDEX, ///< Memop indices must be 0 or 1.
-  XED_ERROR_CALLBACK_PROBLEM, ///< The register or segment callback for
-  XED_ERROR_GATHER_REGS, ///< The index, dest and mask regs for AVX2 gathers must be different.
-  XED_ERROR_INSTR_TOO_LONG, ///< Full decode of instruction would exeed 15B.
-  XED_ERROR_LAST
+typedef enum
+{
+    XED_ERROR_NONE, ///< There was no error
+    XED_ERROR_BUFFER_TOO_SHORT, ///< There were not enough bytes in the given buffer
+    XED_ERROR_GENERAL_ERROR, ///< XED could not decode the given instruction
+    XED_ERROR_INVALID_FOR_CHIP, ///< The instruciton is not valid for the specified chip
+    XED_ERROR_BAD_REGISTER, ///< XED could not decode the given instruction because an invalid register encoding was used.
+    XED_ERROR_BAD_LOCK_PREFIX, ///< A lock prefix was found where none is allowed.
+    XED_ERROR_BAD_REP_PREFIX, ///< An F2 or F3 prefix was found where none is allowed.
+    XED_ERROR_NO_OUTPUT_POINTER, ///< The output pointer for
+    XED_ERROR_NO_AGEN_CALL_BACK_REGISTERED, ///< One or both of the callbacks for
+    XED_ERROR_BAD_MEMOP_INDEX, ///< Memop indices must be 0 or 1.
+    XED_ERROR_CALLBACK_PROBLEM, ///< The register or segment callback for
+    XED_ERROR_GATHER_REGS, ///< The index, dest and mask regs for AVX2 gathers must be different.
+    XED_ERROR_INSTR_TOO_LONG, ///< Full decode of instruction would exeed 15B.
+    XED_ERROR_LAST
 } xed_error_enum_t;
 
 /// This converts strings to #xed_error_enum_t types.

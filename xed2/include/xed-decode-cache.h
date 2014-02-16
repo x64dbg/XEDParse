@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -28,7 +28,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
-/// @file xed-decode-cache.h 
+/// @file xed-decode-cache.h
 
 
 #ifndef _XED_DECODE_CACHE_H_
@@ -42,13 +42,15 @@ END_LEGAL */
 // TYPES
 ////////////////////////////////////////////////////////////////////////////
 
-typedef struct {
+typedef struct
+{
     xed_decoded_inst_t d;
     xed_uint8_t array[XED_MAX_INSTRUCTION_BYTES];
     xed_uint8_t length;
 }  xed_decode_cache_entry_t;
 
-typedef struct {
+typedef struct
+{
     xed_decode_cache_entry_t* entries;
     xed_uint32_t limit;
     xed_uint64_t hits;
@@ -73,8 +75,8 @@ typedef struct {
 ///
 /// @ingroup DECODE_CACHE
 XED_DLL_EXPORT xed_error_enum_t
-xed_decode_cache(xed_decoded_inst_t* xedd, 
-                 const xed_uint8_t* itext, 
+xed_decode_cache(xed_decoded_inst_t* xedd,
+                 const xed_uint8_t* itext,
                  const unsigned int bytes,
                  xed_decode_cache_t* cache);
 
@@ -87,8 +89,8 @@ xed_decode_cache(xed_decoded_inst_t* xedd,
 ///  @param n_entries number of   xed_decode_cache_entry_t entries, not bytes.
 ///  @ingroup DECODE_CACHE
 XED_DLL_EXPORT void
-xed_decode_cache_initialize(xed_decode_cache_t* cache, 
-                            xed_decode_cache_entry_t* entries, 
+xed_decode_cache_initialize(xed_decode_cache_t* cache,
+                            xed_decode_cache_entry_t* entries,
                             xed_uint32_t n_entries);
 
 

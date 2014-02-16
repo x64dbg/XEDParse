@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -29,7 +29,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
 /// @file xed-immdis.h
-/// 
+///
 
 
 
@@ -66,7 +66,8 @@ union xed_immdis_values_t
 };
 
 /// Stores immediates and displacements for the encoder & decoder.
-typedef struct xed_immdis_s {
+typedef struct xed_immdis_s
+{
     union xed_immdis_values_t value;
     unsigned int currently_used_space :4; // current number of assigned bytes
     unsigned int max_allocated_space :4; // max allocation, 4 or 8
@@ -88,10 +89,10 @@ XED_DLL_EXPORT unsigned int xed_immdis_get_bytes(const xed_immdis_t* p) ;
 
 /// @name Accessors for the value of the immediate or displacement
 //@{
-XED_DLL_EXPORT xed_int64_t 
+XED_DLL_EXPORT xed_int64_t
 xed_immdis_get_signed64(const xed_immdis_t* p);
 
-XED_DLL_EXPORT xed_uint64_t 
+XED_DLL_EXPORT xed_uint64_t
 xed_immdis_get_unsigned64(const xed_immdis_t* p);
 
 XED_DLL_EXPORT xed_bool_t
@@ -124,19 +125,19 @@ XED_DLL_EXPORT unsigned int    xed_immdis_get_max_length(const xed_immdis_t* p) 
 //@}
 
 /// @name Signed vs Unsigned
-//@{ 
+//@{
 /// Return true if  signed.
 XED_DLL_EXPORT xed_bool_t
 xed_immdis_is_unsigned(const xed_immdis_t* p) ;
 /// Return true if signed.
 XED_DLL_EXPORT xed_bool_t
 xed_immdis_is_signed(const xed_immdis_t* p) ;
-    
+
 /// Set the immediate to be signed; For decoder use only.
-XED_DLL_EXPORT void 
+XED_DLL_EXPORT void
 xed_immdis_set_signed(xed_immdis_t* p) ;
 /// Set the immediate to be unsigned; For decoder use only.
-XED_DLL_EXPORT void 
+XED_DLL_EXPORT void
 xed_immdis_set_unsigned( xed_immdis_t* p) ;
 //@}
 

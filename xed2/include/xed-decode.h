@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -28,7 +28,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
-/// @file xed-decode.h 
+/// @file xed-decode.h
 
 
 #ifndef _XED_DECODE_H_
@@ -71,12 +71,12 @@ END_LEGAL */
 /// to decode with more bytes.  Also sometimes the user process does not
 /// have read access to the next page and this allows the user to prevent
 /// XED from causing process termination by limiting the memory range that
-/// XED will access.  
+/// XED will access.
 ///
 /// @ingroup DEC
 XED_DLL_EXPORT xed_error_enum_t
-xed_decode(xed_decoded_inst_t* xedd, 
-           const xed_uint8_t* itext, 
+xed_decode(xed_decoded_inst_t* xedd,
+           const xed_uint8_t* itext,
            const unsigned int bytes);
 
 
@@ -94,17 +94,17 @@ xed_decode(xed_decoded_inst_t* xedd,
 /// In general this function cannot tell if the instruction is valid or
 /// not. For valid instructions, XED can figure out if enough bytes were
 /// provided to decode the instruction. If not enough were provided,
-/// XED returns #XED_ERROR_BUFFER_TOO_SHORT. 
+/// XED returns #XED_ERROR_BUFFER_TOO_SHORT.
 /// From this function, the #XED_ERROR_GENERAL_ERROR is an indication
 /// that XED could not decode the instruction's length because  the
 /// instruction was so invalid that even its length
 /// may across implmentations.
 ///
 /// @ingroup DEC
-XED_DLL_EXPORT xed_error_enum_t 
-xed_ild_decode(xed_decoded_inst_t* xedd, 
-           const xed_uint8_t* itext, 
-           const unsigned int bytes);
+XED_DLL_EXPORT xed_error_enum_t
+xed_ild_decode(xed_decoded_inst_t* xedd,
+               const xed_uint8_t* itext,
+               const unsigned int bytes);
 
 
 ////////////////////////////////////////////////////////////////////////////

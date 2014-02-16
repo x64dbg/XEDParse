@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,30 +36,31 @@ END_LEGAL */
 #if !defined(_XED_FLAG_ENUM_H_)
 # define _XED_FLAG_ENUM_H_
 #include "xed-common-hdrs.h"
-typedef enum {
-  XED_FLAG_INVALID,
-  XED_FLAG_of, ///<< overflow flag
-  XED_FLAG_sf, ///< sign flag
-  XED_FLAG_zf, ///< zero flag
-  XED_FLAG_af, ///< auxilliary flag
-  XED_FLAG_pf, ///< parity flag
-  XED_FLAG_cf, ///< carry flag
-  XED_FLAG_df, ///< direction flag
-  XED_FLAG_vif, ///< virtual interrupt flag
-  XED_FLAG_iopl, ///< I/O privilege level
-  XED_FLAG_if, ///< interrupt flag
-  XED_FLAG_ac, ///< alignment check
-  XED_FLAG_vm, ///< virtual-8086 mode
-  XED_FLAG_rf, ///< resume flag
-  XED_FLAG_nt, ///< nested task
-  XED_FLAG_tf, ///< traf flag
-  XED_FLAG_id, ///< ID flag
-  XED_FLAG_vip, ///< virtual interrupt pending
-  XED_FLAG_fc0, ///< x87 FC0 flag
-  XED_FLAG_fc1, ///< x87 FC1 flag
-  XED_FLAG_fc2, ///< x87 FC2 flag
-  XED_FLAG_fc3, ///< x87 FC3 flag
-  XED_FLAG_LAST
+typedef enum
+{
+    XED_FLAG_INVALID,
+    XED_FLAG_of, ///<< overflow flag
+    XED_FLAG_sf, ///< sign flag
+    XED_FLAG_zf, ///< zero flag
+    XED_FLAG_af, ///< auxilliary flag
+    XED_FLAG_pf, ///< parity flag
+    XED_FLAG_cf, ///< carry flag
+    XED_FLAG_df, ///< direction flag
+    XED_FLAG_vif, ///< virtual interrupt flag
+    XED_FLAG_iopl, ///< I/O privilege level
+    XED_FLAG_if, ///< interrupt flag
+    XED_FLAG_ac, ///< alignment check
+    XED_FLAG_vm, ///< virtual-8086 mode
+    XED_FLAG_rf, ///< resume flag
+    XED_FLAG_nt, ///< nested task
+    XED_FLAG_tf, ///< traf flag
+    XED_FLAG_id, ///< ID flag
+    XED_FLAG_vip, ///< virtual interrupt pending
+    XED_FLAG_fc0, ///< x87 FC0 flag
+    XED_FLAG_fc1, ///< x87 FC1 flag
+    XED_FLAG_fc2, ///< x87 FC2 flag
+    XED_FLAG_fc3, ///< x87 FC3 flag
+    XED_FLAG_LAST
 } xed_flag_enum_t;
 
 /// This converts strings to #xed_flag_enum_t types.

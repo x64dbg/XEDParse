@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -51,7 +51,7 @@ END_LEGAL */
 #include "xed-attribute-enum.h" // a generated file
 #include "xed-exception-enum.h" // a generated file
 #include "xed-iform-enum.h" // a generated file
-#include "xed-iform-map.h" 
+#include "xed-iform-map.h"
 #include "xed-attributes.h"
 
 struct xed_decoded_inst_s; //fwd-decl
@@ -73,60 +73,67 @@ typedef struct xed_operand_s
     xed_operand_type_enum_t          _type; // IMM, IMM_CONST, NT_LOOKUP_FN, REG, ERROR
     xed_operand_element_xtype_enum_t _xtype; // xed data type: u32, f32, etc.
     xed_uint8_t                      _cvt_idx; //  decoration index
-    union {
+    union
+    {
         xed_uint32_t                 _imm;  // value for some constant immediates
         xed_nonterminal_enum_t       _nt;   // for nt_lookup_fn's
         xed_reg_enum_t               _reg;  // register name
     } _u;
-}  xed_operand_t;    
+}  xed_operand_t;
 
 /// @name xed_inst_t Template Operands Access
-//@{ 
+//@{
 /// @ingroup DEC
-static XED_INLINE xed_operand_enum_t xed_operand_name(const xed_operand_t* p)  { 
-    return p->_name; 
+static XED_INLINE xed_operand_enum_t xed_operand_name(const xed_operand_t* p)
+{
+    return p->_name;
 }
 
 
 /// @ingroup DEC
-static XED_INLINE xed_operand_visibility_enum_t 
-xed_operand_operand_visibility( const xed_operand_t* p) { 
-    return p->_operand_visibility; 
+static XED_INLINE xed_operand_visibility_enum_t
+xed_operand_operand_visibility( const xed_operand_t* p)
+{
+    return p->_operand_visibility;
 }
 
 
 /// @ingroup DEC
-/// @return The #xed_operand_type_enum_t of the operand template. 
+/// @return The #xed_operand_type_enum_t of the operand template.
 /// This is probably not what you want.
-static XED_INLINE xed_operand_type_enum_t xed_operand_type(const xed_operand_t* p)  {
-    return p->_type; 
+static XED_INLINE xed_operand_type_enum_t xed_operand_type(const xed_operand_t* p)
+{
+    return p->_type;
 }
 
 /// @ingroup DEC
-/// @return The #xed_operand_element_xtype_enum_t of the operand template. 
+/// @return The #xed_operand_element_xtype_enum_t of the operand template.
 /// This is probably not what you want.
-static XED_INLINE xed_operand_element_xtype_enum_t xed_operand_xtype(const xed_operand_t* p)  {
-    return p->_xtype; 
+static XED_INLINE xed_operand_element_xtype_enum_t xed_operand_xtype(const xed_operand_t* p)
+{
+    return p->_xtype;
 }
 
 
 /// @ingroup DEC
-static XED_INLINE xed_operand_width_enum_t xed_operand_width(const xed_operand_t* p)  { 
-    return p->_oc2; 
+static XED_INLINE xed_operand_width_enum_t xed_operand_width(const xed_operand_t* p)
+{
+    return p->_oc2;
 }
 
 /// @ingroup DEC
 /// @param p  an operand template,  #xed_operand_t.
-/// @param eosz  effective operand size of the instruction, 0 | 1 | 2 | 3 for 
+/// @param eosz  effective operand size of the instruction, 0 | 1 | 2 | 3 for
 /// 8 | 16 | 32 | 64 bits respectively.
 /// @return  the actual width of operand in bits.
 XED_DLL_EXPORT xed_uint32_t xed_operand_width_bits(const xed_operand_t* p,
-                                                   const xed_uint32_t eosz);
+        const xed_uint32_t eosz);
 
 /// @ingroup DEC
-static XED_INLINE 
-xed_nonterminal_enum_t xed_operand_nonterminal_name(const xed_operand_t* p)  { 
-    return p->_u._nt; 
+static XED_INLINE
+xed_nonterminal_enum_t xed_operand_nonterminal_name(const xed_operand_t* p)
+{
+    return p->_u._nt;
 }
 
 /// @ingroup DEC
@@ -138,7 +145,8 @@ xed_nonterminal_enum_t xed_operand_nonterminal_name(const xed_operand_t* p)  {
 /// that way.
 /// @param p  an operand template,  #xed_operand_t.
 /// @return  the hard-wired (implicit or suppressed) registers, type #xed_reg_enum_t
-static XED_INLINE xed_reg_enum_t xed_operand_reg(const xed_operand_t* p) {
+static XED_INLINE xed_reg_enum_t xed_operand_reg(const xed_operand_t* p)
+{
     return p->_u._reg;
 }
 
@@ -148,20 +156,22 @@ static XED_INLINE xed_reg_enum_t xed_operand_reg(const xed_operand_t* p) {
 /// Careful with this one; See #xed_operand_is_register().
 /// @param p  an operand template,  #xed_operand_t.
 /// @return 1 if the operand template represents are register-type
-/// operand. 
+/// operand.
 ///
 ///  Related functions:
 ///   Use #xed_decoded_inst_get_reg() to get the decoded name of /// the
 ///   register, #xed_reg_enum_t. Use #xed_operand_is_register() to test
 ///   #xed_operand_enum_t names.
-static XED_INLINE xed_uint_t xed_operand_template_is_register(const xed_operand_t* p) {
+static XED_INLINE xed_uint_t xed_operand_template_is_register(const xed_operand_t* p)
+{
     return p->_type == XED_OPERAND_TYPE_NT_LOOKUP_FN || p->_type == XED_OPERAND_TYPE_REG;
 }
 
 /// @ingroup DEC
 /// @param p  an operand template,  #xed_operand_t.
 /// These operands represent branch displacements, memory displacements and various immediates
-static XED_INLINE xed_uint32_t xed_operand_imm(const xed_operand_t* p) {
+static XED_INLINE xed_uint32_t xed_operand_imm(const xed_operand_t* p)
+{
     return p->_u._imm;
 }
 
@@ -177,11 +187,12 @@ XED_DLL_EXPORT void    xed_operand_print(const xed_operand_t* p, char* buf, int 
 /// @ingroup DEC
 /// Tests the enum for inclusion in XED_OPERAND_REG0 through XED_OPERAND_REG15.
 /// @param name the operand name, type #xed_operand_enum_t
-/// @return 1 if the operand name is REG0...REG15, 0 otherwise. 
+/// @return 1 if the operand name is REG0...REG15, 0 otherwise.
 ///
 ///Note there are other registers for memory addressing; See
 /// #xed_operand_is_memory_addressing_register .
-static XED_INLINE xed_uint_t xed_operand_is_register(xed_operand_enum_t name) {
+static XED_INLINE xed_uint_t xed_operand_is_register(xed_operand_enum_t name)
+{
     return name >= XED_OPERAND_REG0 && name <= XED_OPERAND_REG8;
 }
 /// @ingroup DEC
@@ -189,23 +200,25 @@ static XED_INLINE xed_uint_t xed_operand_is_register(xed_operand_enum_t name) {
 /// @param name the operand name, type #xed_operand_enum_t
 /// @return 1 if the operand name is for a memory addressing register operand, 0
 /// otherwise. See also #xed_operand_is_register .
-static XED_INLINE xed_uint_t xed_operand_is_memory_addressing_register(xed_operand_enum_t name) {
-    return  ( name == XED_OPERAND_BASE0 || 
+static XED_INLINE xed_uint_t xed_operand_is_memory_addressing_register(xed_operand_enum_t name)
+{
+    return  ( name == XED_OPERAND_BASE0 ||
               name == XED_OPERAND_INDEX ||
               name == XED_OPERAND_SEG0  ||
-              name == XED_OPERAND_BASE1 || 
+              name == XED_OPERAND_BASE1 ||
               name == XED_OPERAND_SEG1 );
 }
 
 //@}
 
 /// @name xed_inst_t Template Operand Read/Written
-//@{ 
+//@{
 /// @ingroup DEC
 /// Returns the raw R/W action. There are many cases for conditional reads
 /// and writes.
-static XED_INLINE xed_operand_action_enum_t xed_operand_rw(const xed_operand_t* p)  { 
-    return p->_rw; 
+static XED_INLINE xed_operand_action_enum_t xed_operand_rw(const xed_operand_t* p)
+{
+    return p->_rw;
 }
 
 /// @ingroup DEC
@@ -236,24 +249,25 @@ XED_DLL_EXPORT xed_uint_t xed_operand_conditional_write(const xed_operand_t* p);
 /// constant information about a decoded instruction form, including
 /// the pointer to the constant operand properties #xed_operand_t for this
 /// instruction form.
-typedef struct xed_inst_s {
+typedef struct xed_inst_s
+{
 
 
-    // rflags info -- index in to the 2 tables of flags information. 
+    // rflags info -- index in to the 2 tables of flags information.
     // If _flag_complex is true, then the data are in the
     // xed_flags_complex_table[]. Otherwise, the data are in the
     // xed_flags_simple_table[].
 
     //xed_instruction_fixed_bit_confirmer_fn_t _confirmer;
-    
+
     // number of operands in the operands array
-    xed_uint8_t _noperands; 
+    xed_uint8_t _noperands;
     xed_uint8_t _cpl;  // the nominal CPL for the instruction.
-    xed_uint16_t _flag_info_index; 
+    xed_uint16_t _flag_info_index;
 
     xed_iform_enum_t _iform_enum;
     // index into the xed_operand[] array of xed_operand_t structures
-    xed_uint16_t _operand_base; 
+    xed_uint16_t _operand_base;
     xed_uint16_t _flag_complex; /* 1/0 valued, bool type */
 
     // index to table of xed_attributes_t structures
@@ -262,10 +276,10 @@ typedef struct xed_inst_s {
 }  xed_inst_t;
 
 /// @name xed_inst_t Template  Instruction Information
-//@{ 
+//@{
 /// @ingroup DEC
 /// xed_inst_cpl() is DEPRECATED. Please use
-///     "xed_decoded_inst_get_attribute(xedd, XED_ATTRIBUTE_RING0)" 
+///     "xed_decoded_inst_get_attribute(xedd, XED_ATTRIBUTE_RING0)"
 /// instead.
 ///Return the current privilege level (CPL) required for execution, 0 or
 ///3. If the value is zero, then the instruction can only execute in ring 0.
@@ -274,29 +288,35 @@ XED_DLL_EXPORT unsigned int xed_inst_cpl(const xed_inst_t* p) ;
 
 //These next few are not doxygen commented because I want people to use the higher
 //level interface in xed-decoded-inst.h.
-static XED_INLINE xed_iclass_enum_t xed_inst_iclass(const xed_inst_t* p) {
+static XED_INLINE xed_iclass_enum_t xed_inst_iclass(const xed_inst_t* p)
+{
     return xed_iform_to_iclass(p->_iform_enum);
 }
 
-static XED_INLINE xed_category_enum_t xed_inst_category(const xed_inst_t* p) {
+static XED_INLINE xed_category_enum_t xed_inst_category(const xed_inst_t* p)
+{
     return xed_iform_to_category(p->_iform_enum);
 }
 
-static XED_INLINE xed_extension_enum_t xed_inst_extension(const xed_inst_t* p) {
+static XED_INLINE xed_extension_enum_t xed_inst_extension(const xed_inst_t* p)
+{
     return xed_iform_to_extension(p->_iform_enum);
 }
-static XED_INLINE xed_isa_set_enum_t xed_inst_isa_set(const xed_inst_t* p) {
+static XED_INLINE xed_isa_set_enum_t xed_inst_isa_set(const xed_inst_t* p)
+{
     return xed_iform_to_isa_set(p->_iform_enum);
 }
 
-static XED_INLINE xed_iform_enum_t xed_inst_iform_enum(const xed_inst_t* p) {
+static XED_INLINE xed_iform_enum_t xed_inst_iform_enum(const xed_inst_t* p)
+{
     return p->_iform_enum;
 }
 
 
 ///@ingroup DEC
 /// Number of instruction operands
-static XED_INLINE unsigned int xed_inst_noperands(const xed_inst_t* p) {
+static XED_INLINE unsigned int xed_inst_noperands(const xed_inst_t* p)
+{
     return p->_noperands;
 }
 
@@ -316,7 +336,7 @@ XED_DLL_EXPORT xed_uint32_t xed_inst_flag_info_index(const xed_inst_t* p);
 /// @ingroup DEC
 /// Scan for the attribute attr and return 1 if it is found, 0 otherwise.
 XED_DLL_EXPORT xed_uint32_t
-xed_inst_get_attribute(const xed_inst_t* p, 
+xed_inst_get_attribute(const xed_inst_t* p,
                        xed_attribute_enum_t attr);
 
 /// @ingroup DEC
@@ -341,7 +361,8 @@ XED_DLL_EXPORT xed_attribute_enum_t xed_attribute(unsigned int i);
 /// @ingroup DEC
 /// Return #xed_exception_enum_t if present for the specified instruction.
 /// This is currently only used for SSE and AVX instructions.
-static XED_INLINE  xed_exception_enum_t xed_inst_exception(const xed_inst_t* p) {
+static XED_INLINE  xed_exception_enum_t xed_inst_exception(const xed_inst_t* p)
+{
     return p->_exceptions;
 }
 
