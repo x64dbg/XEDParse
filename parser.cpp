@@ -23,7 +23,7 @@ static PREFIX getprefix(const char* text, int* i)
     else if(scmp(text, "repe ") || scmp(text, "repz "))
     {
         *i+=5;
-        return PREFIX_REPEZ;
+        return PREFIX_REP;
     }
     else if(scmp(text, "repne ") || scmp(text, "repnz "))
     {

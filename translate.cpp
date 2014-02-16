@@ -1,4 +1,9 @@
 #include "translate.h"
+extern "C"
+{
+#include "xed2\include\xed-interface.h"
+}
+#include <stdio.h>
 
 static const char* sizetostring(OPSIZE size)
 {
@@ -138,11 +143,54 @@ static const char* prefixtostring(PREFIX prefix)
 
 bool translate(XEDPARSE* XEDParse, INSTRUCTION* instruction, TRANSLATION* translation)
 {
-    if(instruction->operand1.type==TYPE_NONE && instruction->operand2.type==TYPE_NONE) //no arguments
+    //initialize encoder request
+    xed_state_t dstate;
+#ifdef _WIN64
+    dstate.mmode=XED_MACHINE_MODE_LONG_64;
+#else
+    dstate.mmode=XED_MACHINE_MODE_LEGACY_32;
+#endif //_WIN64
+    dstate.stack_addr_width=XED_ADDRESS_WIDTH_32b;
+    xed_encoder_request_t req;
+    xed_encoder_request_zero_set_mode(&req, &dstate);
+    //set prefix
+    switch(instruction->prefix)
     {
-        strcpy(translation->instr, instruction->mnemonic);
-        return true;
+    case PREFIX_LOCK:
+        xed_encoder_request_set_lock(&req);
+        break;
+    case PREFIX_REP:
+        xed_encoder_request_set_rep(&req);
+        break;
+    case PREFIX_REPNEZ:
+        xed_encoder_request_set_repne(&req);
+        break;
     }
-    strcpy(XEDParse->error, "could not translate instruction!");
-    return false;
+    //override instruction mode (for x64 mainly)
+#ifdef _WIN64
+    switch(instruction->operand1.type)
+    {
+    case TYPE_REGISTER:
+        if(instruction->operand1.u.reg.size==SIZE_QWORD) //example: mov rax, rbx
+            xed_encoder_request_set_effective_operand_width(&req, 64);
+        break;
+    case TYPE_MEMORY:
+        if(instruction->operand1.u.mem.size==SIZE_QWORD) //example: mov qword [rax], rbx
+            xed_encoder_request_set_effective_operand_width(&req, 64);
+        break;
+    default:
+        break;
+    }
+#endif //_WIN64
+    //get instruction class
+    _strupr(instruction->mnemonic);
+    xed_iclass_enum_t iclass=str2xed_iclass_enum_t(instruction->mnemonic);
+    if(iclass==XED_ICLASS_INVALID) //unknown instruction
+    {
+        sprintf(XEDParse->error, "unknown instruction \"%s\"!", instruction->mnemonic);
+        return false;
+    }
+    //set instruction class
+    xed_encoder_request_set_iclass(&req, iclass);
+    return true;
 }

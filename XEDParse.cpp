@@ -8,6 +8,10 @@
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
 {
+    //for testing
+    if(!xed_ex3(XEDParse, XEDParse->instr))
+        printf("error: %s\n", XEDParse->error);
+
     INSTRUCTION instr;
     memset(&instr, 0, sizeof(instr));
     if(!parse(XEDParse, &instr))
@@ -21,11 +25,6 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
     puts(recode); //print recoded instruction
     TRANSLATION translation;
     if(!translate(XEDParse, &instr, &translation))
-    {
-        printf("error: %s\n", XEDParse->error);
-        return XEDPARSE_ERROR;
-    }
-    if(!xed_ex3(XEDParse, translation.instr))
     {
         printf("error: %s\n", XEDParse->error);
         return XEDPARSE_ERROR;

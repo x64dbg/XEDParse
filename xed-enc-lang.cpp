@@ -41,7 +41,8 @@ END_LEGAL */
 #include <cassert>
 #include <cstring>
 #include <cstdlib>
-extern "C" {
+extern "C"
+{
 #include "xed2\include\xed-interface.h"
 #include "xed2\include\xed-portability.h"
 #include "xed-examples-util.h"
@@ -439,8 +440,17 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
     for some instructions you need to specify prefixes (like REP or LOCK).
     the operands:
 
-           operand kind (XED_OPERAND_{AGEN,MEM0,MEM1,IMM0,IMM1,
-           RELBR,PTR,REG0...REG15}
+           operand kind (XED_OPERAND_
+                         {
+                         AGEN,
+                         MEM0,
+                         MEM1,
+                         IMM0,
+                         IMM1,
+                         RELBR,
+                         PTR,
+                         REG0...REG15
+                         }
 
            operand order
 
@@ -463,7 +473,7 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
     string first, second;
     unsigned int token_index = 0;
 
-    while(token_index < tokens.size())
+    while(token_index < tokens.size()) //loop over tokens
     {
         slash_split(tokens[token_index], first, second);
         if (CLIENT_VERBOSE3)
@@ -482,6 +492,12 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
             token_index++;
             continue;
         }
+        else if (token_index == 0 && first == "LOCK")
+        {
+            xed_encoder_request_set_lock(&req);
+            token_index++;
+            continue;
+        }
 
         token_index++;
         break;
@@ -497,7 +513,10 @@ xed_encoder_request_t parse_encode_request(ascii_encode_request_t& areq)
     else if (second == "64")
         xed_encoder_request_set_effective_operand_width(&req, 64);
 
-    first = upcase(first);
+    //first=mnemonic
+    first = upcase(first); //first to upper case
+    printf("first: %s\n", first.c_str());
+    //TODO: check this
     xed_iclass_enum_t iclass =  str2xed_iclass_enum_t(first.c_str());
     if (iclass == XED_ICLASS_INVALID)
     {
