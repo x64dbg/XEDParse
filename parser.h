@@ -62,6 +62,14 @@ enum REG
     REG_BP,
     REG_ESP,
     REG_SP,
+#ifndef _WIN64 //x86 only
+    REG_CS,
+    REG_DS,
+    REG_ES,
+    REG_FS,
+    REG_GS,
+    REG_SS,
+#endif //_WIN64
 #ifdef _WIN64
     REG_RAX,
     REG_RBX,

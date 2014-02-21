@@ -81,6 +81,26 @@ static xed_reg_enum_t regtoxed(REG reg)
     case REG_SP:
         return XED_REG_SP;
         break;
+#ifndef _WIN64 //x86 only
+    case REG_CS:
+        return XED_REG_CS;
+        break;
+    case REG_DS:
+        return XED_REG_DS;
+        break;
+    case REG_ES:
+        return XED_REG_ES;
+        break;
+    case REG_FS:
+        return XED_REG_FS;
+        break;
+    case REG_GS:
+        return XED_REG_GS;
+        break;
+    case REG_SS:
+        return XED_REG_SS;
+        break;
+#endif //_WIN64
 #ifdef _WIN64
     case REG_RAX:
         return XED_REG_RAX;
@@ -224,8 +244,37 @@ static xed_reg_enum_t regtoxed(REG reg)
     return XED_REG_INVALID;
 }
 
+static unsigned int opsizetobits(OPSIZE opsize)
+{
+    switch(opsize)
+    {
+    case SIZE_BYTE:
+        return 8;
+        break;
+    case SIZE_WORD:
+        return 16;
+        break;
+    case SIZE_DWORD:
+        return 32;
+        break;
+#ifdef _WIN64
+    case SIZE_QWORD:
+        return 64;
+        break;
+#endif //_WIN64
+    default:
+        break;
+    }
+#ifdef _WIN64
+    return 64;
+#else
+    return 32;
+#endif //_WIN64
+}
+
 static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_request_t* req)
 {
+    //TODO: handle different instructions
     switch(transop->operand->type)
     {
     case TYPE_NONE:
@@ -236,7 +285,13 @@ static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_r
 
     case TYPE_VALUE:
     {
-        strcpy(XEDParse->error, "value operands are not yet supported!");
+        xed_iclass_enum_t iclass=xed_encoder_request_get_iclass(req);
+        if(iclass==XED_ICLASS_RET_NEAR || iclass==XED_ICLASS_RET_FAR) //ret imm16
+            transop->operand->u.val.size=SIZE_WORD;
+        xed_encoder_request_set_uimm0_bits(req, transop->operand->u.val.val, opsizetobits(transop->operand->u.val.size));
+        xed_encoder_request_set_operand_order(req, transop->operand_index, XED_OPERAND_IMM0);
+        transop->operand_index++;
+        return true;
     }
     break;
 
@@ -265,6 +320,25 @@ static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_r
     return false;
 }
 
+static void translatemnemonic(char* mnemonic)
+{
+    if(!_stricmp(mnemonic, "retf"))
+        strcpy(mnemonic, "ret_far");
+    else if(!_stricmp(mnemonic, "ret") || !_stricmp(mnemonic, "retn")) //ret/retn
+        strcpy(mnemonic, "ret_near");
+    else if(!_stricmp(mnemonic, "call")) //call
+        strcpy(mnemonic, "call_near");
+    else if(!_stricmp(mnemonic, "pushf")) //pushfd
+        strcpy(mnemonic, "pushfd");
+    else if(!_stricmp(mnemonic, "popf")) //popfd
+        strcpy(mnemonic, "popfd");
+    else if(!_stricmp(mnemonic, "pusha")) //pushad
+        strcpy(mnemonic, "pushad");
+    else if(!_stricmp(mnemonic, "popa")) //popad
+        strcpy(mnemonic, "popad");
+    _strupr(mnemonic);
+}
+
 static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_encoder_request_t* req)
 {
     //set instruction prefix
@@ -280,24 +354,31 @@ static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_enco
         xed_encoder_request_set_repne(req);
         break;
     }
-    //override instruction mode (for x64 mainly)
-#ifdef _WIN64
+    //override instruction mode
     switch(instruction->operand1.type)
     {
     case TYPE_REGISTER:
-        if(instruction->operand1.u.reg.size==SIZE_QWORD) //example: mov rax, rbx
+        if(instruction->operand1.u.reg.size==SIZE_WORD) //example: mov ax, 123
+            xed_encoder_request_set_effective_operand_width(req, 16);
+#ifdef _WIN64
+        else if(instruction->operand1.u.reg.size==SIZE_QWORD) //example: mov rax, rbx
             xed_encoder_request_set_effective_operand_width(req, 64);
+#endif //_WIN64
         break;
     case TYPE_MEMORY:
+        if(instruction->operand1.u.mem.size==SIZE_WORD) //example: mov word [eax], 1234
+            xed_encoder_request_set_effective_operand_width(req, 16);
+#ifdef _WIN64
         if(instruction->operand1.u.mem.size==SIZE_QWORD) //example: mov qword [rax], rbx
             xed_encoder_request_set_effective_operand_width(req, 64);
+#endif //_WIN64
         break;
     default:
         break;
     }
-#endif //_WIN64
+    //translate mnemonic
+    translatemnemonic(instruction->mnemonic);
     //get instruction class
-    _strupr(instruction->mnemonic);
     xed_iclass_enum_t iclass=str2xed_iclass_enum_t(instruction->mnemonic);
     if(iclass==XED_ICLASS_INVALID) //unknown instruction
     {

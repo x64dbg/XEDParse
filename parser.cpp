@@ -83,6 +83,20 @@ static REG getregister(const char* text)
         return REG_ESP;
     else if(scmp(text, "sp"))
         return REG_SP;
+#ifndef _WIN64 //x86 only
+    else if(scmp(text, "cs"))
+        return REG_CS;
+    else if(scmp(text, "ds"))
+        return REG_DS;
+    else if(scmp(text, "es"))
+        return REG_ES;
+    else if(scmp(text, "fs"))
+        return REG_FS;
+    else if(scmp(text, "gs"))
+        return REG_GS;
+    else if(scmp(text, "ss"))
+        return REG_SS;
+#endif //_WIN64
 #ifdef _WIN64
     else if(scmp(text, "rax"))
         return REG_RAX;

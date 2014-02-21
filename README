@@ -8,10 +8,10 @@ Currently finished:
 - translate the instruction base to XED2;
 - translate registers to XED2;
 - encode the translated structure;
+- translate values;
 
 Todo:
 - translate memory arguments;
-- translate values;
 - translate relative stuff (jumps + calls + rip-relative);
 - more operand types (for XMM, float etc.);
 
