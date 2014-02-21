@@ -429,6 +429,103 @@ static void translatemnemonic(char* mnemonic)
     _strupr(mnemonic);
 }
 
+static OPSIZE getopsize(OPERAND* operand)
+{
+    switch(operand->type)
+    {
+    case TYPE_NONE:
+        break;
+    case TYPE_VALUE:
+        return operand->u.val.size;
+        break;
+    case TYPE_REGISTER:
+        return operand->u.reg.size;
+        break;
+    case TYPE_MEMORY:
+        return operand->u.mem.size;
+        break;
+    }
+    return SIZE_BYTE;
+}
+
+static OPSIZE inttoopsize(int opsize)
+{
+    switch(opsize)
+    {
+    case 1:
+        return SIZE_BYTE;
+        break;
+    case 2:
+        return SIZE_WORD;
+        break;
+    case 4:
+        return SIZE_DWORD;
+        break;
+#ifdef _WIN64
+    case 8:
+        return SIZE_QWORD;
+        break;
+#endif //_WIN64
+    }
+    return SIZE_BYTE;
+}
+
+static void setopsize(OPERAND* operand, int opsize)
+{
+    switch(operand->type)
+    {
+    case TYPE_NONE:
+        break;
+    case TYPE_VALUE:
+        operand->u.val.size=inttoopsize(opsize);
+        break;
+    case TYPE_REGISTER:
+        operand->u.reg.size=inttoopsize(opsize);
+        break;
+    case TYPE_MEMORY:
+        operand->u.mem.size=inttoopsize(opsize);
+        break;
+    }
+}
+
+static void fixopsize(xed_iclass_enum_t iclass, INSTRUCTION* instruction)
+{
+    //TODO: fix operand sizes
+    int opsize1=opsizetoint(getopsize(&instruction->operand1));
+    int opsize2=opsizetoint(getopsize(&instruction->operand2));
+    switch(instruction->operand1.type)
+    {
+    case TYPE_REGISTER:
+        switch(instruction->operand2.type)
+        {
+        case TYPE_VALUE: //mov reg,value
+            break;
+        case TYPE_REGISTER: //mov reg,reg
+            break;
+        case TYPE_MEMORY: //mov reg,[]
+            break;
+        default:
+            break;
+        }
+        break;
+    case TYPE_MEMORY:
+        switch(instruction->operand2.type)
+        {
+        case TYPE_VALUE: //mov [],value
+            break;
+        case TYPE_REGISTER: //mov [],reg
+            break;
+        case TYPE_MEMORY: //mov [],[]
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
+    }
+}
+
 static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_encoder_request_t* req)
 {
     //set instruction prefix
@@ -499,11 +596,21 @@ static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_enco
     translatemnemonic(instruction->mnemonic);
     //get instruction class
     xed_iclass_enum_t iclass=str2xed_iclass_enum_t(instruction->mnemonic);
+    //check instruction class
     if(iclass==XED_ICLASS_INVALID) //unknown instruction
     {
         sprintf(XEDParse->error, "unknown instruction \"%s\"!", instruction->mnemonic);
         return false;
     }
+    else if(iclass==XED_ICLASS_RET_NEAR || iclass==XED_ICLASS_RET_FAR) //some instructions need x32 mode
+    {
+        xed_state_t dstate;
+        dstate.mmode=XED_MACHINE_MODE_LEGACY_32;
+        dstate.stack_addr_width=XED_ADDRESS_WIDTH_32b;
+        xed_encoder_request_zero_set_mode(req, &dstate);
+    }
+    //fix operand size (for example: add eax,12/1 is allowed, but mov eax,12/1 is not)
+    fixopsize(iclass, instruction);
     //set instruction class
     xed_encoder_request_set_iclass(req, iclass);
     return true;

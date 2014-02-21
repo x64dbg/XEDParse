@@ -104,6 +104,8 @@ static REG getregister(const char* text)
         return REG_RBX;
     else if(scmp(text, "rcx"))
         return REG_RCX;
+    else if(scmp(text, "rdx"))
+        return REG_RDX;
     else if(scmp(text, "rsi"))
         return REG_RSI;
     else if(scmp(text, "sil"))
@@ -122,70 +124,70 @@ static REG getregister(const char* text)
         return REG_SPL;
     else if(scmp(text, "rip"))
         return REG_RIP;
-    else if(scmp(text, "r8"))
-        return REG_R8;
     else if(scmp(text, "r8d"))
         return REG_R8D;
     else if(scmp(text, "r8w"))
         return REG_R8W;
     else if(scmp(text, "r8b"))
         return REG_R8B;
-    else if(scmp(text, "r9"))
-        return REG_R9;
+    else if(scmp(text, "r8"))
+        return REG_R8;
     else if(scmp(text, "r9d"))
         return REG_R9D;
     else if(scmp(text, "r9w"))
         return REG_R9W;
     else if(scmp(text, "r9b"))
         return REG_R9B;
-    else if(scmp(text, "r10"))
-        return REG_R10;
+    else if(scmp(text, "r9"))
+        return REG_R9;
     else if(scmp(text, "r10d"))
         return REG_R10D;
     else if(scmp(text, "r10w"))
         return REG_R10W;
     else if(scmp(text, "r10b"))
         return REG_R10B;
-    else if(scmp(text, "r11"))
-        return REG_R11;
+    else if(scmp(text, "r10"))
+        return REG_R10;
     else if(scmp(text, "r11d"))
         return REG_R11D;
     else if(scmp(text, "r11w"))
         return REG_R11W;
     else if(scmp(text, "r11b"))
         return REG_R11B;
-    else if(scmp(text, "r12"))
-        return REG_R12;
+    else if(scmp(text, "r11"))
+        return REG_R11;
     else if(scmp(text, "r12d"))
         return REG_R12D;
     else if(scmp(text, "r12w"))
         return REG_R12W;
     else if(scmp(text, "r12b"))
         return REG_R12B;
-    else if(scmp(text, "r13"))
-        return REG_R13;
+    else if(scmp(text, "r12"))
+        return REG_R12;
     else if(scmp(text, "r13d"))
         return REG_R13D;
     else if(scmp(text, "r13w"))
         return REG_R13W;
     else if(scmp(text, "r13b"))
         return REG_R13B;
-    else if(scmp(text, "r14"))
-        return REG_R14;
+    else if(scmp(text, "r13"))
+        return REG_R13;
     else if(scmp(text, "r14d"))
         return REG_R14D;
     else if(scmp(text, "r14w"))
         return REG_R14W;
     else if(scmp(text, "r14b"))
         return REG_R14B;
-    else if(scmp(text, "r15"))
-        return REG_R15;
+    else if(scmp(text, "r14"))
+        return REG_R14;
     else if(scmp(text, "r15d"))
         return REG_R15D;
     else if(scmp(text, "r15w"))
         return REG_R15W;
     else if(scmp(text, "r15b"))
         return REG_R15B;
+    else if(scmp(text, "r15"))
+        return REG_R15;
 #endif //_WIN64
     return REG_NAN;
 }
