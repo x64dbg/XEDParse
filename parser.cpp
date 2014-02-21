@@ -447,9 +447,39 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         char scale[XEDPARSE_MAXBUFSIZE/2]="";
         char other1[XEDPARSE_MAXBUFSIZE/2]="";
         char other2[XEDPARSE_MAXBUFSIZE/2]="";
+        char other3[XEDPARSE_MAXBUFSIZE/2]="";
+
+        bool skipcheck=false;
 
         if(sscanf(temp, "%s + %s * %s + %s", other1, index, scale, other2)==4)
         {
+        }
+        else if(sscanf(temp, "%s + %s + %s", other1, other2, other3)==3)
+        {
+            skipcheck=true;
+            if(getregister(other1)!=REG_NAN && getregister(other2)!=REG_NAN) //reg + reg + val
+            {
+                operand->u.mem.base=getregister(other1);
+                strcpy(index, other2);
+                strcpy(other1, other3);
+            }
+            else if(getregister(other1)!=REG_NAN && getregister(other3)!=REG_NAN) //reg + val + reg
+            {
+                operand->u.mem.base=getregister(other1);
+                strcpy(index, other3);
+                strcpy(other1, other2);
+            }
+            else if(getregister(other2)!=REG_NAN && getregister(other3)!=REG_NAN) //val + reg + reg
+            {
+                operand->u.mem.base=getregister(other2);
+                strcpy(index, other3);
+            }
+            else
+            {
+                strcpy(raw->error, "invalid stuff inside brackets!");
+                return false;
+            }
+            *other2=0;
         }
         else if(sscanf(temp, "%s + %s * %s", other1, index, scale)==3)
         {
@@ -482,25 +512,28 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
         operand->u.mem.scale=getscale(scale);
         operand->u.mem.index=getregister(index);
 
-        REG reg1=getregister(other1);
-        REG reg2=getregister(other2);
-        if(reg1!=REG_NAN && reg2!=REG_NAN) //both registers
+        if(!skipcheck)
         {
-            strcpy(raw->error, "invalid stuff inside brackets!");
-            return false;
+            REG reg1=getregister(other1);
+            REG reg2=getregister(other2);
+            if(reg1!=REG_NAN && reg2!=REG_NAN) //both registers
+            {
+                strcpy(raw->error, "invalid stuff inside brackets!");
+                return false;
+            }
+            if(reg1!=REG_NAN)
+            {
+                strcpy(other1, other2);
+                *other2=0;
+                operand->u.mem.base=reg1;
+            }
+            else if(reg2!=REG_NAN)
+                operand->u.mem.base=reg2;
         }
-        if(reg1!=REG_NAN)
-        {
-            strcpy(other1, other2);
-            *other2=0;
-            operand->u.mem.base=reg1;
-        }
-        else if(reg2!=REG_NAN)
-            operand->u.mem.base=reg2;
 
         //get value of displacement
         ULONG_PTR value=0;
-        operand->u.mem.displ.size=SIZE_DWORD; //NOTE: displacement is always DWORD
+        operand->u.mem.displ.size=SIZE_DWORD;
         if(!*other1) //no value
             operand->u.mem.displ.val=0;
         else if(valfromstring(other1, &value)) //normal value
@@ -512,7 +545,9 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
             strcpy(raw->error, "invalid displacement inside brackets!");
             return false;
         }
-        operand->u.mem.displ.val&=0xFFFFFFFF; //NOTE: displacement is always DWORD
+        operand->u.mem.displ.val&=0xFFFFFFFF; //NOTE: displacement is always <= DWORD
+        if(operand->u.mem.displ.val<=0xFF) //BYTE is also possible
+            operand->u.mem.displ.size=SIZE_BYTE;
 
         //default segment + size
         operand->u.mem.size=SIZE_UNSET; //for later correction

@@ -272,6 +272,54 @@ static unsigned int opsizetobits(OPSIZE opsize)
 #endif //_WIN64
 }
 
+static int opsizetoint(OPSIZE opsize)
+{
+    switch(opsize)
+    {
+    case SIZE_BYTE:
+        return 1;
+        break;
+    case SIZE_WORD:
+        return 2;
+        break;
+    case SIZE_DWORD:
+        return 4;
+        break;
+#ifdef _WIN64
+    case SIZE_QWORD:
+        return 8;
+        break;
+#endif //_WIN64
+    }
+    return 1;
+}
+
+static xed_reg_enum_t segtoxed(SEG seg)
+{
+    switch(seg)
+    {
+    case SEG_CS:
+        return XED_REG_CS;
+        break;
+    case SEG_DS:
+        return XED_REG_DS;
+        break;
+    case SEG_ES:
+        return XED_REG_ES;
+        break;
+    case SEG_FS:
+        return XED_REG_FS;
+        break;
+    case SEG_GS:
+        return XED_REG_GS;
+        break;
+    case SEG_SS:
+        return XED_REG_SS;
+        break;
+    }
+    return XED_REG_INVALID;
+}
+
 static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_request_t* req)
 {
     //TODO: handle different instructions
@@ -308,7 +356,49 @@ static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_r
 
     case TYPE_MEMORY:
     {
-        strcpy(XEDParse->error, "memory operands are not yet supported!");
+        xed_iclass_enum_t iclass=xed_encoder_request_get_iclass(req);
+        xed_reg_enum_t seg=segtoxed(transop->operand->u.mem.seg);
+        if(iclass==XED_ICLASS_LEA) //LEA uses a special memory operand
+        {
+            xed_encoder_request_set_agen(req);
+            xed_encoder_request_set_operand_order(req, transop->operand_index, XED_OPERAND_AGEN);
+            seg=XED_REG_INVALID; //AGEN cannot have segment stuff
+        }
+        else //normal memory operand
+        {
+            if(!transop->memop) //first memory operand
+            {
+                xed_encoder_request_set_mem0(req);
+                xed_encoder_request_set_operand_order(req, transop->operand_index, XED_OPERAND_MEM0);
+            }
+            else //second memory operand
+            {
+                xed_encoder_request_set_mem1(req);
+                xed_encoder_request_set_operand_order(req, transop->operand_index, XED_OPERAND_MEM1);
+            }
+            xed_encoder_request_set_memory_operand_length(req, opsizetoint(transop->operand->u.mem.size));
+            transop->memop++;
+        }
+        xed_reg_enum_t rbase=regtoxed(transop->operand->u.mem.base);
+        xed_reg_enum_t rindex=regtoxed(transop->operand->u.mem.index);
+
+        xed_reg_class_enum_t rc = xed_gpr_reg_class(rbase);
+        xed_reg_class_enum_t rci = xed_gpr_reg_class(rindex);
+
+        if(rc==XED_REG_CLASS_GPR32 || rci==XED_REG_CLASS_GPR32)
+            xed_encoder_request_set_effective_address_size(req, 32);
+        if(rc==XED_REG_CLASS_GPR16 || rci==XED_REG_CLASS_GPR16)
+            xed_encoder_request_set_effective_address_size(req, 16);
+
+        xed_encoder_request_set_base0(req, rbase);
+        xed_encoder_request_set_index(req, rindex);
+        xed_encoder_request_set_scale(req, opsizetoint(transop->operand->u.mem.scale));
+
+        xed_encoder_request_set_seg0(req, seg);
+        if(transop->operand->u.mem.displ.val)
+            xed_encoder_request_set_memory_displacement(req, transop->operand->u.mem.displ.val, opsizetoint(transop->operand->u.mem.displ.size));
+        transop->operand_index++;
+        return true;
     }
     break;
 
@@ -372,6 +462,35 @@ static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_enco
         if(instruction->operand1.u.mem.size==SIZE_QWORD) //example: mov qword [rax], rbx
             xed_encoder_request_set_effective_operand_width(req, 64);
 #endif //_WIN64
+        if(instruction->operand2.type==TYPE_MEMORY) //mov [],[]
+        {
+#ifdef _WIN64
+            if(instruction->operand1.u.mem.base==REG_RDI && instruction->operand2.u.mem.base==REG_RSI)
+#else
+            if(instruction->operand1.u.mem.base==REG_EDI && instruction->operand2.u.mem.base==REG_ESI)
+#endif //_WIN64
+            {
+                instruction->operand1.type=TYPE_NONE;
+                instruction->operand2.type=TYPE_NONE;
+                switch(instruction->operand1.u.mem.size)
+                {
+                case SIZE_BYTE:
+                    strcpy(instruction->mnemonic, "movsb");
+                    break;
+                case SIZE_WORD:
+                    strcpy(instruction->mnemonic, "movsw");
+                    break;
+                case SIZE_DWORD:
+                    strcpy(instruction->mnemonic, "movsd");
+                    break;
+#ifdef _WIN64
+                case SIZE_QWORD:
+                    strcpy(instruction->mnemonic, "movsq");
+                    break;
+#endif //_WIN64
+                }
+            }
+        }
         break;
     default:
         break;
