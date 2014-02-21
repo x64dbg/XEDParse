@@ -9,9 +9,9 @@ Currently finished:
 - translate registers to XED2;
 - encode the translated structure;
 - translate values;
+- translate memory arguments;
 
 Todo:
-- translate memory arguments;
 - translate relative stuff (jumps + calls + rip-relative);
 - more operand types (for XMM, float etc.);
 
