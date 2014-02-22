@@ -864,7 +864,7 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
         return false;
     }
     int skip=0;
-    if(commacount) //two operands
+    if(commacount==1) //two operands
     {
         char* operand2=strstr(instr, ","); //find comma
         *operand2=0;
@@ -875,12 +875,34 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
             skip++;
         strcpy(parsed->operand2.raw, operand2+skip);
     }
+    else if(commacount==2) //three operands
+    {
+        char* operand2=strstr(instr, ","); //find comma
+        *operand2=0;
+        operand2++;
+        char* operand3=strstr(operand2, ","); //find comma
+        *operand3=0;
+        operand3++;
+        len=strlen(operand2);
+        skip=0;
+        while(operand2[skip]==' ' && skip<len) //skip spaces
+            skip++;
+        strcpy(parsed->operand2.raw, operand2+skip);
+        len=strlen(operand3);
+        skip=0;
+        while(operand3[skip]==' ' && skip<len) //skip spaces
+            skip++;
+        strcpy(parsed->operand3.raw, operand3+skip);
+    }
     strcpy(parsed->operand1.raw, instr);
     formatoperand(&parsed->operand1);
     formatoperand(&parsed->operand2);
+    formatoperand(&parsed->operand3);
     if(!parseoperand(raw, &parsed->operand1))
         return false;
     if(!parseoperand(raw, &parsed->operand2))
+        return false;
+    if(!parseoperand(raw, &parsed->operand3))
         return false;
     if(parsed->operand2.type==TYPE_NONE) //only one operand
         return true;
