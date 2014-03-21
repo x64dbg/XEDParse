@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEDParse", "XEDParse.vcxproj", "{05FD4520-9761-3F68-5034-D8E8EDB3B729}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XEDParseTest", "XEDParseTest\XEDParseTest.vcxproj", "{CB690634-908F-4E23-A178-834CCB189CD5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{05FD4520-9761-3F68-5034-D8E8EDB3B729} = {05FD4520-9761-3F68-5034-D8E8EDB3B729}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
