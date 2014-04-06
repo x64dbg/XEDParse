@@ -272,5 +272,8 @@
     <ClInclude Include="xed2\include\xed-version.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
+    <ClInclude Include="regtable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

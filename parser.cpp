@@ -35,178 +35,33 @@ static PREFIX getprefix(const char* text, int* i)
 
 static REG getregister(const char* text)
 {
-    if(scmp(text, "eax"))
-        return REG_EAX;
-    else if(scmp(text, "ax"))
-        return REG_AX;
-    else if(scmp(text, "ah"))
-        return REG_AH;
-    else if(scmp(text, "al"))
-        return REG_AL;
-    else if(scmp(text, "ebx"))
-        return REG_EBX;
-    else if(scmp(text, "bx"))
-        return REG_BX;
-    else if(scmp(text, "bh"))
-        return REG_BH;
-    else if(scmp(text, "bl"))
-        return REG_BL;
-    else if(scmp(text, "ecx"))
-        return REG_ECX;
-    else if(scmp(text, "cx"))
-        return REG_CX;
-    else if(scmp(text, "ch"))
-        return REG_CH;
-    else if(scmp(text, "cl"))
-        return REG_CL;
-    else if(scmp(text, "edx"))
-        return REG_EDX;
-    else if(scmp(text, "dx"))
-        return REG_DX;
-    else if(scmp(text, "dh"))
-        return REG_DH;
-    else if(scmp(text, "dl"))
-        return REG_DL;
-    else if(scmp(text, "edi"))
-        return REG_EDI;
-    else if(scmp(text, "di"))
-        return REG_DI;
-    else if(scmp(text, "esi"))
-        return REG_ESI;
-    else if(scmp(text, "si"))
-        return REG_SI;
-    else if(scmp(text, "ebp"))
-        return REG_EBP;
-    else if(scmp(text, "bp"))
-        return REG_BP;
-    else if(scmp(text, "esp"))
-        return REG_ESP;
-    else if(scmp(text, "sp"))
-        return REG_SP;
-#ifndef _WIN64 //x86 only
-    else if(scmp(text, "cs"))
-        return REG_CS;
-    else if(scmp(text, "ds"))
-        return REG_DS;
-    else if(scmp(text, "es"))
-        return REG_ES;
-    else if(scmp(text, "fs"))
-        return REG_FS;
-    else if(scmp(text, "gs"))
-        return REG_GS;
-    else if(scmp(text, "ss"))
-        return REG_SS;
-#endif //_WIN64
-#ifdef _WIN64
-    else if(scmp(text, "rax"))
-        return REG_RAX;
-    else if(scmp(text, "rbx"))
-        return REG_RBX;
-    else if(scmp(text, "rcx"))
-        return REG_RCX;
-    else if(scmp(text, "rdx"))
-        return REG_RDX;
-    else if(scmp(text, "rsi"))
-        return REG_RSI;
-    else if(scmp(text, "sil"))
-        return REG_SIL;
-    else if(scmp(text, "rdi"))
-        return REG_RDI;
-    else if(scmp(text, "dil"))
-        return REG_DIL;
-    else if(scmp(text, "rbp"))
-        return REG_RBP;
-    else if(scmp(text, "bpl"))
-        return REG_BPL;
-    else if(scmp(text, "rsp"))
-        return REG_RSP;
-    else if(scmp(text, "spl"))
-        return REG_SPL;
-    else if(scmp(text, "rip"))
-        return REG_RIP;
-    else if(scmp(text, "r8d"))
-        return REG_R8D;
-    else if(scmp(text, "r8w"))
-        return REG_R8W;
-    else if(scmp(text, "r8b"))
-        return REG_R8B;
-    else if(scmp(text, "r8"))
-        return REG_R8;
-    else if(scmp(text, "r9d"))
-        return REG_R9D;
-    else if(scmp(text, "r9w"))
-        return REG_R9W;
-    else if(scmp(text, "r9b"))
-        return REG_R9B;
-    else if(scmp(text, "r9"))
-        return REG_R9;
-    else if(scmp(text, "r10d"))
-        return REG_R10D;
-    else if(scmp(text, "r10w"))
-        return REG_R10W;
-    else if(scmp(text, "r10b"))
-        return REG_R10B;
-    else if(scmp(text, "r10"))
-        return REG_R10;
-    else if(scmp(text, "r11d"))
-        return REG_R11D;
-    else if(scmp(text, "r11w"))
-        return REG_R11W;
-    else if(scmp(text, "r11b"))
-        return REG_R11B;
-    else if(scmp(text, "r11"))
-        return REG_R11;
-    else if(scmp(text, "r12d"))
-        return REG_R12D;
-    else if(scmp(text, "r12w"))
-        return REG_R12W;
-    else if(scmp(text, "r12b"))
-        return REG_R12B;
-    else if(scmp(text, "r12"))
-        return REG_R12;
-    else if(scmp(text, "r13d"))
-        return REG_R13D;
-    else if(scmp(text, "r13w"))
-        return REG_R13W;
-    else if(scmp(text, "r13b"))
-        return REG_R13B;
-    else if(scmp(text, "r13"))
-        return REG_R13;
-    else if(scmp(text, "r14d"))
-        return REG_R14D;
-    else if(scmp(text, "r14w"))
-        return REG_R14W;
-    else if(scmp(text, "r14b"))
-        return REG_R14B;
-    else if(scmp(text, "r14"))
-        return REG_R14;
-    else if(scmp(text, "r15d"))
-        return REG_R15D;
-    else if(scmp(text, "r15w"))
-        return REG_R15W;
-    else if(scmp(text, "r15b"))
-        return REG_R15B;
-    else if(scmp(text, "r15"))
-        return REG_R15;
-#endif //_WIN64
+	// Loop through each entry looking for the register
+	for(int i = 0; i < ARRAYSIZE(RegisterIds); i++)
+	{
+		if (scmp(text, RegisterIds[i].Name))
+			return RegisterIds[i].RegId;
+	}
+
+	// No register found or it was not implemented
     return REG_NAN;
 }
 
 static SEG getsegment(const char* text)
 {
-    if(strstr(text, "cs"))
-        return SEG_CS;
-    else if(strstr(text, "ds"))
-        return SEG_DS;
-    else if(strstr(text, "es"))
-        return SEG_ES;
-    else if(strstr(text, "fs"))
-        return SEG_FS;
-    else if(strstr(text, "gs"))
-        return SEG_GS;
-    else if(strstr(text, "ss"))
-        return SEG_SS;
+	// Loop through each entry looking for the segment register
+	for (int i = 0; i < ARRAYSIZE(SegmentIds); i++)
+	{
+		if (scmp(text, SegmentIds[i].Name))
+			return SegmentIds[i].SegId;
+	}
+
+	// X86 and X64 both default to DS
     return SEG_DS;
+}
+
+static REGSIZE getregsize(REG reg)
+{
+	return RegisterIds[reg].Size;
 }
 
 static bool isinbase(char ch, const char* base)
@@ -310,86 +165,6 @@ static SCALE getscale(const char* text)
         return SIZE_QWORD;
 #endif //_WIN64
     return SIZE_BYTE; //default scale
-}
-
-static REGSIZE getregsize(REG reg)
-{
-    REGSIZE regsizelist[]=
-    {
-        SIZE_BYTE, //REG_NAN
-        SIZE_DWORD, //REG_EAX
-        SIZE_WORD, //REG_AX
-        SIZE_BYTE, //REG_AH
-        SIZE_BYTE, //REG_AL
-        SIZE_DWORD, //REG_EBX
-        SIZE_WORD, //REG_BX
-        SIZE_BYTE, //REG_BH
-        SIZE_BYTE, //REG_BL
-        SIZE_DWORD, //REG_ECX
-        SIZE_WORD, //REG_CX
-        SIZE_BYTE, //REG_CH
-        SIZE_BYTE, //REG_CL
-        SIZE_DWORD, //REG_EDX
-        SIZE_WORD, //REG_DX
-        SIZE_BYTE, //REG_DH
-        SIZE_BYTE, //REG_DL
-        SIZE_DWORD, //REG_EDI
-        SIZE_WORD, //REG_DI
-        SIZE_DWORD, //REG_ESI
-        SIZE_WORD, //REG_SI
-        SIZE_DWORD, //REG_EBP
-        SIZE_WORD, //REG_BP
-        SIZE_DWORD, //REG_ESP
-        SIZE_WORD, //REG_SP
-#ifdef _WIN64
-        SIZE_QWORD, //REG_RAX
-        SIZE_QWORD, //REG_RBX
-        SIZE_QWORD, //REG_RCX
-        SIZE_QWORD, //REG_RDX
-        SIZE_QWORD, //REG_RSI
-        SIZE_BYTE, //REG_SIL
-        SIZE_QWORD, //REG_RDI
-        SIZE_BYTE, //REG_DIL
-        SIZE_QWORD, //REG_RBP
-        SIZE_BYTE, //REG_BPL
-        SIZE_QWORD, //REG_RSP
-        SIZE_BYTE, //REG_SPL
-        SIZE_QWORD, //REG_RIP
-        SIZE_QWORD, //REG_R8
-        SIZE_DWORD, //REG_R8D
-        SIZE_WORD, //REG_R8W
-        SIZE_BYTE, //REG_R8B
-        SIZE_QWORD, //REG_R9
-        SIZE_DWORD, //REG_R9D
-        SIZE_WORD, //REG_R9W
-        SIZE_BYTE, //REG_R9B
-        SIZE_QWORD, //REG_R10
-        SIZE_DWORD, //REG_R10D
-        SIZE_WORD, //REG_R10W
-        SIZE_BYTE, //REG_R10B
-        SIZE_QWORD, //REG_R11
-        SIZE_DWORD, //REG_R11D
-        SIZE_WORD, //REG_R11W
-        SIZE_BYTE, //REG_R11B
-        SIZE_QWORD, //REG_R12
-        SIZE_DWORD, //REG_R12D
-        SIZE_WORD, //REG_R12W
-        SIZE_BYTE, //REG_R12B
-        SIZE_QWORD, //REG_R13
-        SIZE_DWORD, //REG_R13D
-        SIZE_WORD, //REG_R13W
-        SIZE_BYTE, //REG_R13B
-        SIZE_QWORD, //REG_R14
-        SIZE_DWORD, //REG_R14D
-        SIZE_WORD, //REG_R14W
-        SIZE_BYTE, //REG_R14B
-        SIZE_QWORD, //REG_R15
-        SIZE_DWORD, //REG_R15D
-        SIZE_WORD, //REG_R15W
-        SIZE_BYTE, //REG_R15B
-#endif //_WIN64
-    };
-    return regsizelist[reg];
 }
 
 static bool parseoperand(XEDPARSE* raw, OPERAND* operand)

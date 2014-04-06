@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="parser.h" />
     <ClInclude Include="parsetest.h" />
+    <ClInclude Include="regtable.h" />
     <ClInclude Include="translate.h" />
     <ClInclude Include="xed-dot-prep.h" />
     <ClInclude Include="xed-dot.h" />
