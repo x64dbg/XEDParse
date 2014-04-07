@@ -33,37 +33,6 @@ static PREFIX getprefix(const char* text, int* i)
     return PREFIX_NONE;
 }
 
-static REG getregister(const char* text)
-{
-	// Loop through each entry looking for the register
-	for(int i = 0; i < ARRAYSIZE(RegisterIds); i++)
-	{
-		if (scmp(text, RegisterIds[i].Name))
-			return RegisterIds[i].RegId;
-	}
-
-	// No register found or it was not implemented
-    return REG_NAN;
-}
-
-static SEG getsegment(const char* text)
-{
-	// Loop through each entry looking for the segment register
-	for (int i = 0; i < ARRAYSIZE(SegmentIds); i++)
-	{
-		if (scmp(text, SegmentIds[i].Name))
-			return SegmentIds[i].SegId;
-	}
-
-	// X86 and X64 both default to DS
-    return SEG_DS;
-}
-
-static REGSIZE getregsize(REG reg)
-{
-	return RegisterIds[reg].Size;
-}
-
 static bool isinbase(char ch, const char* base)
 {
     int len=strlen(base);
@@ -164,6 +133,12 @@ static SCALE getscale(const char* text)
     else if(scmp(text, "8"))
         return SIZE_QWORD;
 #endif //_WIN64
+	else if (scmp(text, "16"))
+		return SIZE_DQWORD;
+	else if (scmp(text, "32"))
+		return SIZE_YWORD;
+	else if (scmp(text, "64"))
+		return SIZE_ZWORD;
     return SIZE_BYTE; //default scale
 }
 
@@ -389,50 +364,6 @@ static bool parseoperand(XEDPARSE* raw, OPERAND* operand)
     operand->type=TYPE_NONE;
     sprintf(raw->error, "invalid value \"%s\"!", operand->raw);
     return false;
-}
-
-static int opsizetoint(OPSIZE opsize)
-{
-    switch(opsize)
-    {
-    case SIZE_BYTE:
-        return 1;
-        break;
-    case SIZE_WORD:
-        return 2;
-        break;
-    case SIZE_DWORD:
-        return 4;
-        break;
-#ifdef _WIN64
-    case SIZE_QWORD:
-        return 8;
-        break;
-#endif //_WIN64
-    }
-    return 0;
-}
-
-static OPSIZE inttoopsize(int opsize)
-{
-    switch(opsize)
-    {
-    case 1:
-        return SIZE_BYTE;
-        break;
-    case 2:
-        return SIZE_WORD;
-        break;
-    case 4:
-        return SIZE_DWORD;
-        break;
-#ifdef _WIN64
-    case 8:
-        return SIZE_QWORD;
-        break;
-#endif //_WIN64
-    }
-    return SIZE_BYTE;
 }
 
 static OPSIZE getopsize(OPERAND* operand)

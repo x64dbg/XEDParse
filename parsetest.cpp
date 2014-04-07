@@ -1,4 +1,5 @@
 #include "parsetest.h"
+#include "regtable.h"
 #include <stdio.h>
 
 static const char* sizetostring(OPSIZE size)
@@ -8,9 +9,10 @@ static const char* sizetostring(OPSIZE size)
         "byte",
         "word",
         "dword",
-#ifdef _WIN64
-        "qword"
-#endif // _WIN64
+        "qword",
+		"dqword",
+		"yword",
+		"zword",
     };
     return sizelist[size];
 }
@@ -22,22 +24,12 @@ static const char* sizedtostring(OPSIZE size)
         "1",
         "2",
         "4",
-#ifdef _WIN64
-        "8"
-#endif // _WIN64
+        "8",
+		"16",
+		"32",
+		"64",
     };
     return sizelist[size];
-}
-
-
-static const char* regtostring(REG reg)
-{
-	return RegisterIds[reg].Name;
-}
-
-static const char* segtostring(SEG seg)
-{
-	return SegmentIds[seg].Name;
 }
 
 static const char* prefixtostring(PREFIX prefix)

@@ -45,6 +45,12 @@
     <ClCompile Include="translate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="regtable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="opsize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEDParse.h">
@@ -273,6 +279,9 @@
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
     <ClInclude Include="regtable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="opsize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

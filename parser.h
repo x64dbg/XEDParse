@@ -22,19 +22,21 @@ enum OPTYPE
 
 enum OPSIZE
 {
-    SIZE_BYTE,
-    SIZE_WORD,
-    SIZE_DWORD,
-#ifdef _WIN64
-    SIZE_QWORD,
-#endif //_WIN64
-    SIZE_UNSET
+    SIZE_BYTE,		// Byte
+    SIZE_WORD,		// Word
+    SIZE_DWORD,		// Double Word
+    SIZE_QWORD,		// Quad Word
+	SIZE_DQWORD,	// Double Quad Word
+	SIZE_YWORD,		// Y Word
+	SIZE_ZWORD,		// Z Word
+    SIZE_UNSET,
 };
 
 typedef OPSIZE MEMSIZE;
 typedef OPSIZE SCALE;
 typedef OPSIZE REGSIZE;
 
+#include "opsize.h"
 #include "regtable.h"
 
 //structures

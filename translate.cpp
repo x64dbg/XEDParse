@@ -1,66 +1,6 @@
 #include "translate.h"
 #include <stdio.h>
 
-static xed_reg_enum_t regtoxed(REG reg)
-{
-	return RegisterIds[reg].XedId;
-}
-
-static xed_reg_enum_t segtoxed(SEG seg)
-{
-	return SegmentIds[seg].XedId;
-}
-
-static unsigned int opsizetobits(OPSIZE opsize)
-{
-    switch(opsize)
-    {
-    case SIZE_BYTE:
-        return 8;
-        break;
-    case SIZE_WORD:
-        return 16;
-        break;
-    case SIZE_DWORD:
-        return 32;
-        break;
-#ifdef _WIN64
-    case SIZE_QWORD:
-        return 64;
-        break;
-#endif //_WIN64
-    default:
-        break;
-    }
-#ifdef _WIN64
-    return 64;
-#else
-    return 32;
-#endif //_WIN64
-}
-
-static int opsizetoint(OPSIZE opsize)
-{
-    switch(opsize)
-    {
-    case SIZE_BYTE:
-        return 1;
-        break;
-    case SIZE_WORD:
-        return 2;
-        break;
-    case SIZE_DWORD:
-        return 4;
-        break;
-#ifdef _WIN64
-    case SIZE_QWORD:
-        return 8;
-        break;
-#endif //_WIN64
-    }
-    return 1;
-}
-
 static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_request_t* req)
 {
     //TODO: handle different instructions
@@ -126,9 +66,9 @@ static bool translateoperand(XEDPARSE* XEDParse, TRANSOP* transop, xed_encoder_r
         xed_reg_class_enum_t rc = xed_gpr_reg_class(rbase);
         xed_reg_class_enum_t rci = xed_gpr_reg_class(rindex);
 
-        if(rc==XED_REG_CLASS_GPR32 || rci==XED_REG_CLASS_GPR32)
+        if(rc == XED_REG_CLASS_GPR32 || rci == XED_REG_CLASS_GPR32)
             xed_encoder_request_set_effective_address_size(req, 32);
-        if(rc==XED_REG_CLASS_GPR16 || rci==XED_REG_CLASS_GPR16)
+        if(rc == XED_REG_CLASS_GPR16 || rci == XED_REG_CLASS_GPR16)
             xed_encoder_request_set_effective_address_size(req, 16);
 
         xed_encoder_request_set_base0(req, rbase);
@@ -178,36 +118,12 @@ static OPSIZE getopsize(OPERAND* operand)
         break;
     case TYPE_VALUE:
         return operand->u.val.size;
-        break;
     case TYPE_REGISTER:
         return operand->u.reg.size;
-        break;
     case TYPE_MEMORY:
         return operand->u.mem.size;
-        break;
     }
-    return SIZE_BYTE;
-}
 
-static OPSIZE inttoopsize(int opsize)
-{
-    switch(opsize)
-    {
-    case 1:
-        return SIZE_BYTE;
-        break;
-    case 2:
-        return SIZE_WORD;
-        break;
-    case 4:
-        return SIZE_DWORD;
-        break;
-#ifdef _WIN64
-    case 8:
-        return SIZE_QWORD;
-        break;
-#endif //_WIN64
-    }
     return SIZE_BYTE;
 }
 
@@ -282,17 +198,14 @@ static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_enco
         xed_encoder_request_set_repne(req);
         break;
     }
+
     //override instruction mode
     switch(instruction->operand1.type)
     {
     case TYPE_REGISTER:
-        if(instruction->operand1.u.reg.size==SIZE_WORD) //example: mov ax, 123
-            xed_encoder_request_set_effective_operand_width(req, 16);
-#ifdef _WIN64
-        else if(instruction->operand1.u.reg.size==SIZE_QWORD) //example: mov rax, rbx
-            xed_encoder_request_set_effective_operand_width(req, 64);
-#endif //_WIN64
+		xed_encoder_request_set_effective_operand_width(req, opsizetobits(instruction->operand1.u.reg.size));
         break;
+
     case TYPE_MEMORY:
         if(instruction->operand1.u.mem.size==SIZE_WORD) //example: mov word [eax], 1234
             xed_encoder_request_set_effective_operand_width(req, 16);
@@ -300,6 +213,8 @@ static bool translatebase(XEDPARSE* XEDParse, INSTRUCTION* instruction, xed_enco
         if(instruction->operand1.u.mem.size==SIZE_QWORD) //example: mov qword [rax], rbx
             xed_encoder_request_set_effective_operand_width(req, 64);
 #endif //_WIN64
+		if (instruction->operand1.u.mem.size == SIZE_DQWORD) //example: movss xmm0, [eax]
+			xed_encoder_request_set_effective_operand_width(req, 128);
         if(instruction->operand2.type==TYPE_MEMORY) //mov [],[]
         {
 #ifdef _WIN64

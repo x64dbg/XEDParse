@@ -129,6 +129,46 @@ enum REG
 	REG_R15B,
 #endif //_WIN64
 
+	/* Floating point XXM# */
+	REG_XMM0,
+	REG_XMM1,
+	REG_XMM2,
+	REG_XMM3,
+	REG_XMM4,
+	REG_XMM5,
+	REG_XMM6,
+	REG_XMM7,
+#ifdef _WIN64
+	REG_XMM8,
+	REG_XMM9,
+	REG_XMM10,
+	REG_XMM11,
+	REG_XMM12,
+	REG_XMM13,
+	REG_XMM14,
+	REG_XMM15,
+#endif // _WIN64
+
+	/* Advanced vector extensions V1 YMM# */
+	REG_YMM0,
+	REG_YMM1,
+	REG_YMM2,
+	REG_YMM3,
+	REG_YMM4,
+	REG_YMM5,
+	REG_YMM6,
+	REG_YMM7,
+#ifdef _WIN64
+	REG_YMM8,
+	REG_YMM9,
+	REG_YMM10,
+	REG_YMM11,
+	REG_YMM12,
+	REG_YMM13,
+	REG_YMM14,
+	REG_YMM15,
+#endif // _WIN64
+
 	/* Segment registers */
 	REG_CS,
 	REG_DS,
@@ -291,6 +331,49 @@ static RegEntry RegisterIds[] =
 	{ "r15b", REG_R15B, XED_REG_R15B, SIZE_BYTE },
 #endif // _WIN64
 
+	/* Floating point XXM# */
+	{ "xmm0", REG_XMM0, XED_REG_XMM0, SIZE_DQWORD },
+	{ "xmm1", REG_XMM1, XED_REG_XMM1, SIZE_DQWORD },
+	{ "xmm2", REG_XMM2, XED_REG_XMM2, SIZE_DQWORD },
+	{ "xmm3", REG_XMM3, XED_REG_XMM3, SIZE_DQWORD },
+	{ "xmm4", REG_XMM4, XED_REG_XMM4, SIZE_DQWORD },
+	{ "xmm5", REG_XMM5, XED_REG_XMM5, SIZE_DQWORD },
+	{ "xmm6", REG_XMM6, XED_REG_XMM6, SIZE_DQWORD },
+	{ "xmm7", REG_XMM7, XED_REG_XMM7, SIZE_DQWORD },
+#ifdef _WIN64
+	{ "xmm8", REG_XMM8, XED_REG_XMM8, SIZE_DQWORD },
+	{ "xmm9", REG_XMM9, XED_REG_XMM9, SIZE_DQWORD },
+	{ "xmm10", REG_XMM10, XED_REG_XMM10, SIZE_DQWORD },
+	{ "xmm11", REG_XMM11, XED_REG_XMM11, SIZE_DQWORD },
+	{ "xmm12", REG_XMM12, XED_REG_XMM12, SIZE_DQWORD },
+	{ "xmm13", REG_XMM13, XED_REG_XMM13, SIZE_DQWORD },
+	{ "xmm14", REG_XMM14, XED_REG_XMM14, SIZE_DQWORD },
+	{ "xmm15", REG_XMM15, XED_REG_XMM15, SIZE_DQWORD },
+#endif // _WIN64
+
+	/* Advanced vector extensions V1 YMM# */
+	{ "ymm0", REG_YMM0, XED_REG_YMM0, SIZE_YWORD },
+	{ "ymm1", REG_YMM1, XED_REG_YMM1, SIZE_YWORD },
+	{ "ymm2", REG_YMM2, XED_REG_YMM2, SIZE_YWORD },
+	{ "ymm3", REG_YMM3, XED_REG_YMM3, SIZE_YWORD },
+	{ "ymm4", REG_YMM4, XED_REG_YMM4, SIZE_YWORD },
+	{ "ymm5", REG_YMM5, XED_REG_YMM5, SIZE_YWORD },
+	{ "ymm6", REG_YMM6, XED_REG_YMM6, SIZE_YWORD },
+	{ "ymm7", REG_YMM7, XED_REG_YMM7, SIZE_YWORD },
+#ifdef _WIN64
+	{ "ymm8", REG_YMM8, XED_REG_YMM8, SIZE_YWORD },
+	{ "ymm9", REG_YMM9, XED_REG_YMM9, SIZE_YWORD },
+	{ "ymm10", REG_YMM10, XED_REG_YMM10, SIZE_YWORD },
+	{ "ymm11", REG_YMM11, XED_REG_YMM11, SIZE_YWORD },
+	{ "ymm12", REG_YMM12, XED_REG_YMM12, SIZE_YWORD },
+	{ "ymm13", REG_YMM13, XED_REG_YMM13, SIZE_YWORD },
+	{ "ymm14", REG_YMM14, XED_REG_YMM14, SIZE_YWORD },
+	{ "ymm15", REG_YMM15, XED_REG_YMM15, SIZE_YWORD },
+#endif // _WIN64
+
+	/* Advanced vector extensions V2 ZMM# */
+	/* TODO */
+
 	/* Segment registers */
 	{ "cs", REG_CS, XED_REG_CS, SIZE_WORD },
 	{ "ds", REG_DS, XED_REG_DS, SIZE_WORD },
@@ -318,3 +401,15 @@ static SegEntry SegmentIds[] =
 	{ "gs", SEG_GS, XED_REG_GS, SIZE_WORD },
 	{ "ss", SEG_SS, XED_REG_SS, SIZE_WORD },
 };
+
+REG getregister(const char* text);
+SEG getsegment(const char* text);
+
+xed_reg_enum_t regtoxed(REG reg);
+xed_reg_enum_t segtoxed(SEG seg);
+
+const char *regtostring(REG reg);
+const char *segtostring(SEG seg);
+
+REGSIZE getregsize(REG reg);
+REGSIZE getsegsize(SEG seg);
