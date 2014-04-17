@@ -11,10 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Tests.cpp" />
     <ClCompile Include="XEDParseTest.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Tests.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-	<ProjectGuid>{CB690634-908F-4E23-A178-834CCB189CD5}</ProjectGuid>
+    <ProjectGuid>{CB690634-908F-4E23-A178-834CCB189CD5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

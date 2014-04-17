@@ -1,9 +1,19 @@
 #include <windows.h>
 #include "..\XEDParse.h"
+#include "Tests.h"
 #include <stdio.h>
 
 int main(int argc, char* argv[])
 {
+	//SingleInstruction();
+	//CrDrInstruction();
+	//MovRegRegInstruction();
+	//MovMemRegInstruction();
+	//MovImmRegInstruction();
+	//MovXmmXmmInstruction();
+	//MovMemXmmInstruction();
+	//JumpInstruction();
+
     if(argc<2) //no arguments provided
     {
         XEDPARSE parse;

@@ -11,8 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="opsize.cpp" />
     <ClCompile Include="parser.cpp" />
     <ClCompile Include="parsetest.cpp" />
+    <ClCompile Include="regtable.cpp" />
     <ClCompile Include="translate.cpp" />
     <ClCompile Include="xed-dot-prep.c" />
     <ClCompile Include="xed-dot.c" />
@@ -22,8 +24,10 @@
     <ClCompile Include="XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="opsize.h" />
     <ClInclude Include="parser.h" />
     <ClInclude Include="parsetest.h" />
+    <ClInclude Include="regtable.h" />
     <ClInclude Include="translate.h" />
     <ClInclude Include="xed-dot-prep.h" />
     <ClInclude Include="xed-dot.h" />
@@ -99,7 +103,7 @@
     <ClInclude Include="XEDParse.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-	<ProjectGuid>{05FD4520-9761-3F68-5034-D8E8EDB3B729}</ProjectGuid>
+    <ProjectGuid>{05FD4520-9761-3F68-5034-D8E8EDB3B729}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
