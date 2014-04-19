@@ -403,6 +403,7 @@ static void setopsize(OPERAND* operand, int opsize)
     }
 }
 
+//check the operand sizes (TODO: this function needs to use a list of valid operand sizes)
 static bool checkopsize(OPERAND* operand1, OPERAND* operand2)
 {
     int opsize1=opsizetoint(getopsize(operand1));
@@ -458,7 +459,13 @@ static bool checkopsize(OPERAND* operand1, OPERAND* operand2)
             if(opsize1<opsize2) //example: mov [ax],12345678
                 return false;
             if(opsize1!=opsize2) //example: 0x11 can be 0x00000011
+            {
+#ifdef _WIN64
+                if(opsize1==8) //fix mov qword ptr ds:[rax],1
+                    opsize1=4;
+#endif //_WIN64                
                 setopsize(operand2, opsize1);
+            }
             return true;
             break;
         case TYPE_REGISTER: //mov [],reg
@@ -564,7 +571,7 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
     for(int i=0; i<len; i++)
         if(instr[i]==',')
             commacount++;
-    if(commacount>2) //invalid instruction
+    if(commacount>3) //invalid instruction
     {
         strcpy(raw->error, "too many arguments found");
         return false;
@@ -572,9 +579,11 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
     int skip=0;
     if(commacount==1) //two operands
     {
+        //operand2
         char* operand2=strstr(instr, ","); //find comma
         *operand2=0;
         operand2++;
+        //operand2
         len=strlen(operand2);
         skip=0;
         while(operand2[skip]==' ' && skip<len) //skip spaces
@@ -583,32 +592,72 @@ bool parse(XEDPARSE* raw, INSTRUCTION* parsed)
     }
     else if(commacount==2) //three operands
     {
+        //operand2
         char* operand2=strstr(instr, ","); //find comma
         *operand2=0;
         operand2++;
+        //operand3
         char* operand3=strstr(operand2, ","); //find comma
         *operand3=0;
         operand3++;
+        //operand2
         len=strlen(operand2);
         skip=0;
         while(operand2[skip]==' ' && skip<len) //skip spaces
             skip++;
         strcpy(parsed->operand2.raw, operand2+skip);
+        //operand3
         len=strlen(operand3);
         skip=0;
         while(operand3[skip]==' ' && skip<len) //skip spaces
             skip++;
         strcpy(parsed->operand3.raw, operand3+skip);
     }
+    else if(commacount==3) //four operands (certain vm instructions)
+    {
+        //operand2
+        char* operand2=strstr(instr, ","); //find comma
+        *operand2=0;
+        operand2++;
+        //operand3
+        char* operand3=strstr(operand2, ","); //find comma
+        *operand3=0;
+        operand3++;
+        //operand4
+        char* operand4=strstr(operand3, ","); //find comma
+        *operand4=0;
+        operand4++;
+        //operand2
+        len=strlen(operand2);
+        skip=0;
+        while(operand2[skip]==' ' && skip<len) //skip spaces
+            skip++;
+        strcpy(parsed->operand2.raw, operand2+skip);
+        //operand3
+        len=strlen(operand3);
+        skip=0;
+        while(operand3[skip]==' ' && skip<len) //skip spaces
+            skip++;
+        strcpy(parsed->operand3.raw, operand3+skip);
+        //operand4
+        len=strlen(operand4);
+        skip=0;
+        while(operand4[skip]==' ' && skip<len) //skip spaces
+            skip++;
+        strcpy(parsed->operand4.raw, operand4+skip);
+    }
     strcpy(parsed->operand1.raw, instr);
     formatoperand(&parsed->operand1);
     formatoperand(&parsed->operand2);
     formatoperand(&parsed->operand3);
+    formatoperand(&parsed->operand4);
     if(!parseoperand(raw, &parsed->operand1))
         return false;
     if(!parseoperand(raw, &parsed->operand2))
         return false;
     if(!parseoperand(raw, &parsed->operand3))
+        return false;
+    if(!parseoperand(raw, &parsed->operand4))
         return false;
     if(parsed->operand2.type==TYPE_NONE) //only one operand
         return true;

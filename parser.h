@@ -82,6 +82,7 @@ struct INSTRUCTION
     OPERAND operand1;
     OPERAND operand2;
     OPERAND operand3;
+    OPERAND operand4;
 };
 
 //functions
