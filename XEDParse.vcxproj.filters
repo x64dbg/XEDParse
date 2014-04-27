@@ -284,5 +284,11 @@
     <ClInclude Include="opsize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="x86reference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x86reference_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

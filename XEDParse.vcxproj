@@ -29,6 +29,8 @@
     <ClInclude Include="parsetest.h" />
     <ClInclude Include="regtable.h" />
     <ClInclude Include="translate.h" />
+    <ClInclude Include="x86reference.h" />
+    <ClInclude Include="x86reference_data.h" />
     <ClInclude Include="xed-dot-prep.h" />
     <ClInclude Include="xed-dot.h" />
     <ClInclude Include="xed-enc-lang.H" />

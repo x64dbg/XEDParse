@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "x86reference.h"
 #include <stdio.h>
 
 static bool scmp(const char* a, const char* b)
