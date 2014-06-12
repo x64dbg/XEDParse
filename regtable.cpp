@@ -2,10 +2,12 @@
 
 REG getregister(const char* text)
 {
+	size_t textLen = strlen(text);
+
 	// Loop through each entry looking for the register
 	for (int i = 0; i < ARRAYSIZE(RegisterIds); i++)
 	{
-		if (!_strnicmp(text, RegisterIds[i].Name, strlen(RegisterIds[i].Name)))
+		if (!_strnicmp(text, RegisterIds[i].Name, textLen))
 			return RegisterIds[i].RegId;
 	}
 
@@ -15,10 +17,12 @@ REG getregister(const char* text)
 
 SEG getsegment(const char* text)
 {
+	size_t textLen = strlen(text);
+
 	// Loop through each entry looking for the segment register
 	for (int i = 0; i < ARRAYSIZE(SegmentIds); i++)
 	{
-		if (!_strnicmp(text, SegmentIds[i].Name, strlen(SegmentIds[i].Name)))
+		if (!_strnicmp(text, SegmentIds[i].Name, textLen))
 			return SegmentIds[i].SegId;
 	}
 

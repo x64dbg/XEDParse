@@ -29,7 +29,7 @@ enum OPSIZE
 	SIZE_DQWORD,	// Double Quad Word
 	SIZE_YWORD,		// Y Word
 	SIZE_ZWORD,		// Z Word
-    SIZE_UNSET,
+    SIZE_UNSET,		// No size set
 };
 
 typedef OPSIZE MEMSIZE;

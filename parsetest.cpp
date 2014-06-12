@@ -4,7 +4,7 @@
 
 static const char* sizetostring(OPSIZE size)
 {
-    const char* sizelist[]=
+    static const char* sizelist[]=
     {
         "byte",
         "word",
@@ -14,12 +14,13 @@ static const char* sizetostring(OPSIZE size)
 		"yword",
 		"zword",
     };
+
     return sizelist[size];
 }
 
 static const char* sizedtostring(OPSIZE size)
 {
-    const char* sizelist[]=
+    static const char* sizelist[]=
     {
         "1",
         "2",
@@ -29,12 +30,13 @@ static const char* sizedtostring(OPSIZE size)
 		"32",
 		"64",
     };
+
     return sizelist[size];
 }
 
 static const char* prefixtostring(PREFIX prefix)
 {
-    const char* prefixlist[]=
+    static const char* prefixlist[]=
     {
         "",
         "lock ",
@@ -42,6 +44,7 @@ static const char* prefixtostring(PREFIX prefix)
         "repe ",
         "repne "
     };
+
     return prefixlist[prefix];
 }
 
