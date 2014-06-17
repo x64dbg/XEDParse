@@ -20,19 +20,20 @@ struct OpsizeEntry
 {
 	const char *Name;
 	OPSIZE		Size;
+	int			Bytes;
 	int			Bits;
 };
 
 static OpsizeEntry OpsizeEntryTable[] =
 {
-	{ "byte",		SIZE_BYTE,		8	},
-	{ "word",		SIZE_WORD,		16	},
-	{ "dword",		SIZE_DWORD,		32	},
-	{ "qword",		SIZE_QWORD,		64	},
-	{ "xmmword",	SIZE_XMMWORD,	128 },
-	{ "ymmword",	SIZE_YMMWORD,	256 },
-	{ "zmmword",	SIZE_ZMMWORD,	512 },
-	{ "UNSET",		SIZE_UNSET,		8	},
+	{ "byte",		SIZE_BYTE,		1,	8	},
+	{ "word",		SIZE_WORD,		2,	16	},
+	{ "dword",		SIZE_DWORD,		4,	32	},
+	{ "qword",		SIZE_QWORD,		8,	64	},
+	{ "xmmword",	SIZE_XMMWORD,	16, 128 },
+	{ "ymmword",	SIZE_YMMWORD,	32, 256 },
+	{ "zmmword",	SIZE_ZMMWORD,	64, 512 },
+	{ "UNSET",		SIZE_UNSET,		1,	8	},
 };
 
 unsigned int opsizetobits(OPSIZE opsize);

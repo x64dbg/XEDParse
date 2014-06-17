@@ -40,38 +40,32 @@ void OperandToString(char *Buffer, InstOperand *Operand)
 	}
 }
 
-void InstructionToString(Inst *Instruction)
+void InstructionToString(char *Buffer, Inst *Instruction)
 {
-	char buf[XEDPARSE_MAXBUFSIZE];
-	memset(buf, 0, sizeof(buf));
-
 	// Add the prefix is there was one
 	if (Instruction->Prefix != PREFIX_NONE)
 	{
-		strcat(buf, PrefixToString(Instruction->Prefix));
-		strcat(buf, " ");
+		strcat(Buffer, PrefixToString(Instruction->Prefix));
+		strcat(Buffer, " ");
 	}
 
 	// Append mnemonic
-	strcat(buf, Instruction->Mnemonic);
+	strcat(Buffer, Instruction->Mnemonic);
 
 	// Append all operands
 	if (Instruction->OperandCount > 0)
 	{
-		strcat(buf, " ");
+		strcat(Buffer, " ");
 
 		for (int i = 0; i < Instruction->OperandCount; i++)
 		{
 			char op[XEDPARSE_MAXBUFSIZE];
 			OperandToString(op, &Instruction->Operands[i]);
 
-			strcat(buf, op);
-			strcat(buf, ", ");
+			strcat(Buffer, op);
+			strcat(Buffer, ", ");
 		}
 
-		*strrchr(buf, ',') = '\0';
+		*strrchr(Buffer, ',') = '\0';
 	}
-
-	printf("PARSED INSTRUCTION:\n");
-	printf("%s\n", buf);
 }

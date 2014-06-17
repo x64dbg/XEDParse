@@ -29,8 +29,10 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
 		return XEDPARSE_ERROR;
 	}
 
-	InstructionToString(&instruction);
-	
+	char instString[XEDPARSE_MAXBUFSIZE];
+	InstructionToString(instString, &instruction);
+	printf("\nParsed instruction:\n%s\n", instString);
+
 	return XEDPARSE_OK;
 }
 

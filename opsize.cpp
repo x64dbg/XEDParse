@@ -7,7 +7,7 @@ unsigned int opsizetobits(OPSIZE opsize)
 
 int opsizetoint(OPSIZE opsize)
 {
-	return opsizetobits(opsize) / 8;
+	return OpsizeEntryTable[opsize].Bytes;
 }
 
 OPSIZE bitstoopsize(int bits)
