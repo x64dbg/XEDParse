@@ -21,12 +21,6 @@
     <ClCompile Include="XEDParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="parser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="parsetest.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="xed-dot.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,24 +36,36 @@
     <ClCompile Include="xed-ex3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="translate.cpp">
+    <ClCompile Include="MnemonicTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="regtable.cpp">
+    <ClCompile Include="Operand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="opsize.cpp">
+    <ClCompile Include="Prefix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Validator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Translator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RegTable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OpSize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEDParse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="parsetest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xed-dot.h">
@@ -72,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xed-examples-util.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="translate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xed2\include\xed-address-width-enum.h">
@@ -278,16 +281,31 @@
     <ClInclude Include="xed2\include\xed-version.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
-    <ClInclude Include="regtable.h">
+    <ClInclude Include="MnemonicTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="opsize.h">
+    <ClInclude Include="Operand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="x86reference.h">
+    <ClInclude Include="Prefix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="x86reference_data.h">
+    <ClInclude Include="Validator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Translator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RegTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OpSize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,129 +1,77 @@
-#include "parsetest.h"
-#include "regtable.h"
-#include <stdio.h>
+#include "ParseTest.h"
+#include "RegTable.h"
 
-static const char* sizetostring(OPSIZE size)
+void OperandToString(char *Buffer, InstOperand *Operand)
 {
-    static const char* sizelist[]=
-    {
-        "byte",
-        "word",
-        "dword",
-        "qword",
-		"dqword",
-		"yword",
-		"zword",
-    };
+	switch (Operand->Type)
+	{
+	case OPERAND_INVALID:
+		strcpy(Buffer, "(INVALID OPERAND)");
+		break;
 
-    return sizelist[size];
+	case OPERAND_REG:
+		strcpy(Buffer, regtostring(Operand->Reg.Reg));
+		break;
+
+	case OPERAND_IMM:
+		sprintf(Buffer, "0x%llx", Operand->Imm.imm);
+		break;
+
+	case OPERAND_MEM:
+	{
+		char base[32];
+		char scale[32];
+
+		if (Operand->Mem.Base)
+			sprintf(base, "%s + ", regtostring(Operand->Mem.BaseVal));
+
+		if (Operand->Mem.Index)
+			sprintf(scale, "%s * %d + ", regtostring(Operand->Mem.IndexVal), Operand->Mem.ScaleVal);
+
+		sprintf(Buffer, "%s ptr %s:[%s%s0x%llX/%d]",
+			OpsizeToString(Operand->Size),
+			segtostring(Operand->Segment),
+			base,
+			scale,
+			Operand->Mem.DispVal,
+			opsizetobits(Operand->Mem.DispWidth));
+	}
+	break;
+	}
 }
 
-static const char* sizedtostring(OPSIZE size)
+void InstructionToString(Inst *Instruction)
 {
-    static const char* sizelist[]=
-    {
-        "1",
-        "2",
-        "4",
-        "8",
-		"16",
-		"32",
-		"64",
-    };
+	char buf[XEDPARSE_MAXBUFSIZE];
+	memset(buf, 0, sizeof(buf));
 
-    return sizelist[size];
-}
+	// Add the prefix is there was one
+	if (Instruction->Prefix != PREFIX_NONE)
+	{
+		strcat(buf, PrefixToString(Instruction->Prefix));
+		strcat(buf, " ");
+	}
 
-static const char* prefixtostring(PREFIX prefix)
-{
-    static const char* prefixlist[]=
-    {
-        "",
-        "lock ",
-        "rep ",
-        "repe ",
-        "repne "
-    };
+	// Append mnemonic
+	strcat(buf, Instruction->Mnemonic);
 
-    return prefixlist[prefix];
-}
+	// Append all operands
+	if (Instruction->OperandCount > 0)
+	{
+		strcat(buf, " ");
 
-static void operandtostring(OPERAND* operand, char* str)
-{
-    switch(operand->type)
-    {
-    case TYPE_NONE:
-    {
-        *str=0;
-    }
-    break;
+		for (int i = 0; i < Instruction->OperandCount; i++)
+		{
+			char op[XEDPARSE_MAXBUFSIZE];
+			OperandToString(op, &Instruction->Operands[i]);
 
-    case TYPE_REGISTER:
-    {
-        sprintf(str, "%s", regtostring(operand->u.reg.reg));
-    }
-    break;
+			strcat(buf, op);
+			strcat(buf, ", ");
+		}
 
-    case TYPE_VALUE:
-    {
-#ifdef _WIN64
-        sprintf(str, "%llX/%s",
-#else
-        sprintf(str, "%X/%s",
-#endif //_WIN64
-                operand->u.val.val,
-                sizedtostring(operand->u.val.size));
-    }
-    break;
+		*strrchr(buf, ',') = '\0';
+	}
 
-    case TYPE_MEMORY:
-    {
-        char base[20]="";
-        char indexscale[20]="";
-        if(operand->u.mem.base!=REG_NAN)
-            sprintf(base, "%s+",
-                    regtostring(operand->u.mem.base));
-        if(operand->u.mem.index!=REG_NAN)
-            sprintf(indexscale, "%s*%s+",
-                    regtostring(operand->u.mem.index),
-                    sizedtostring(operand->u.mem.scale));
-#ifdef _WIN64
-        sprintf(str, "%s ptr %s:[%s%s%llX/%s]",
-#else
-        sprintf(str, "%s ptr %s:[%s%s%X/%s]",
-#endif //_WIN64
-                sizetostring(operand->u.mem.size),
-                segtostring(operand->u.mem.seg),
-                base,
-                indexscale,
-                operand->u.mem.displ.val,
-                sizedtostring(operand->u.mem.displ.size));
-    }
-    break;
-    }
-}
-
-void parsedisasm(INSTRUCTION* parsed, char* string)
-{
-    char operand1[256]="";
-    operandtostring(&parsed->operand1, operand1);
-    _strlwr(operand1);
-    char operand2[256]="";
-    operandtostring(&parsed->operand2, operand2);
-    _strlwr(operand2);
-    char operand3[256]="";
-    operandtostring(&parsed->operand3, operand3);
-    _strlwr(operand3);
-    char operand4[256]="";
-    operandtostring(&parsed->operand4, operand4);
-    _strlwr(operand4);
-    int j=sprintf(string, "%s%s", prefixtostring(parsed->prefix), parsed->mnemonic);
-    if(*operand1)
-        j+=sprintf(string+j, " %s", operand1);
-    if(*operand2)
-        j+=sprintf(string+j, ",%s", operand2);
-    if(*operand3)
-        j+=sprintf(string+j, ",%s", operand3);
-    if(*operand4)
-        j+=sprintf(string+j, ",%s", operand4);
+	printf("PARSED INSTRUCTION:\n");
+	printf("%s\n", buf);
 }

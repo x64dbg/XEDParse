@@ -3,6 +3,6 @@
 
 #include "parser.h"
 
-void parsedisasm(INSTRUCTION* parsed, char* string);
-
+void OperandToString(char *Buffer, InstOperand *Operand);
+void InstructionToString(Inst *Instruction);
 #endif

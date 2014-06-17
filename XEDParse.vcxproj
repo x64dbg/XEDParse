@@ -11,11 +11,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="opsize.cpp" />
-    <ClCompile Include="parser.cpp" />
-    <ClCompile Include="parsetest.cpp" />
-    <ClCompile Include="regtable.cpp" />
-    <ClCompile Include="translate.cpp" />
+    <ClCompile Include="MnemonicTable.cpp" />
+    <ClCompile Include="Operand.cpp" />
+    <ClCompile Include="OpSize.cpp" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="ParseTest.cpp" />
+    <ClCompile Include="Prefix.cpp" />
+    <ClCompile Include="RegTable.cpp" />
+    <ClCompile Include="Validator.cpp" />
+    <ClCompile Include="Translator.cpp" />
     <ClCompile Include="xed-dot-prep.c" />
     <ClCompile Include="xed-dot.c" />
     <ClCompile Include="xed-enc-lang.cpp" />
@@ -24,13 +28,15 @@
     <ClCompile Include="XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="opsize.h" />
-    <ClInclude Include="parser.h" />
-    <ClInclude Include="parsetest.h" />
-    <ClInclude Include="regtable.h" />
-    <ClInclude Include="translate.h" />
-    <ClInclude Include="x86reference.h" />
-    <ClInclude Include="x86reference_data.h" />
+    <ClInclude Include="MnemonicTable.h" />
+    <ClInclude Include="Operand.h" />
+    <ClInclude Include="OpSize.h" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="ParseTest.h" />
+    <ClInclude Include="Prefix.h" />
+    <ClInclude Include="RegTable.h" />
+    <ClInclude Include="Translator.h" />
+    <ClInclude Include="Validator.h" />
     <ClInclude Include="xed-dot-prep.h" />
     <ClInclude Include="xed-dot.h" />
     <ClInclude Include="xed-enc-lang.H" />
@@ -112,10 +118,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -165,9 +173,10 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>/wd 4244 /wd 4267 %(AdditionalOptions)</AdditionalOptions>
+      <Optimization>MaxSpeed</Optimization>
     </ClCompile>
     <Link>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>

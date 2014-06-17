@@ -2,6 +2,7 @@
 #define _XEDPARSE_H
 
 #include <windows.h>
+#include <stdio.h>
 
 //XEDParse defines
 #ifdef XEDPARSE_BUILD

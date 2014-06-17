@@ -2,90 +2,29 @@
 #define _PARSER_H
 
 #include "XEDParse.h"
+#include "OpSize.h"
+#include "RegTable.h"
+#include "MnemonicTable.h"
+#include "Operand.h"
+#include "Prefix.h"
 
-//enums
-enum PREFIX
+struct Inst
 {
-    PREFIX_NONE,
-    PREFIX_LOCK, //LOCK F0
-    PREFIX_REP, //REP/REPE/REPZ F3
-    PREFIX_REPNEZ //REPNE/REPNZ F2
+	char				Mnemonic[32];
+	xed_iclass_enum_t	Class;
+	PREFIX				Prefix;
+
+	int					OperandCount;
+	InstOperand			Operands[4];
 };
 
-enum OPTYPE
-{
-    TYPE_NONE,
-    TYPE_VALUE,
-    TYPE_REGISTER,
-    TYPE_MEMORY
-};
-
-enum OPSIZE
-{
-    SIZE_BYTE,		// Byte
-    SIZE_WORD,		// Word
-    SIZE_DWORD,		// Double Word
-    SIZE_QWORD,		// Quad Word
-	SIZE_DQWORD,	// Double Quad Word
-	SIZE_YWORD,		// Y Word
-	SIZE_ZWORD,		// Z Word
-    SIZE_UNSET,		// No size set
-};
-
-typedef OPSIZE MEMSIZE;
-typedef OPSIZE SCALE;
-typedef OPSIZE REGSIZE;
-
-#include "opsize.h"
-#include "regtable.h"
-
-//structures
-struct OPVAL
-{
-    OPSIZE size; //value size
-    ULONG_PTR val; //actual data
-};
-
-struct OPMEM //size seg:[base+index*scale+displ]
-{
-    MEMSIZE size; //byte/word/dword/qword
-    SEG seg; //segment
-    REG base; //base register
-    REG index; //index register
-    SCALE scale; //scale
-    OPVAL displ; //displacement
-};
-
-struct OPREG
-{
-    REGSIZE size;
-    REG reg;
-};
-
-struct OPERAND
-{
-    char raw[XEDPARSE_MAXBUFSIZE/2]; //raw text
-    OPTYPE type; //operand type
-    union
-    {
-        OPVAL val;
-        OPREG reg;
-        OPMEM mem;
-    } u;
-};
-
-
-struct INSTRUCTION
-{
-    PREFIX prefix;
-    char mnemonic[10];
-    OPERAND operand1;
-    OPERAND operand2;
-    OPERAND operand3;
-    OPERAND operand4;
-};
+#include "Validator.h"
 
 //functions
-bool parse(XEDPARSE* raw, INSTRUCTION* parsed);
+bool valfromstring(const char* text, ULONG_PTR* value);
+
+char *GrabInstToken(char *Dest, char *Src, bool Operand);
+int InstructionToTokens(const char *Value, char Tokens[8][64]);
+bool ParseInstString(XEDPARSE* Parse, Inst *Instruction);
 
 #endif // _PARSER_H
