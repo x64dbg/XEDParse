@@ -9,6 +9,7 @@ enum OPSIZE
 	SIZE_XMMWORD,	// XMM Word
 	SIZE_YMMWORD,	// YMM Word
 	SIZE_ZMMWORD,	// ZMM Word
+	SIZE_32_64,		// 32 or 64 bits
 	SIZE_UNSET,		// No size set
 };
 
@@ -33,6 +34,7 @@ static OpsizeEntry OpsizeEntryTable[] =
 	{ "xmmword",	SIZE_XMMWORD,	16, 128 },
 	{ "ymmword",	SIZE_YMMWORD,	32, 256 },
 	{ "zmmword",	SIZE_ZMMWORD,	64, 512 },
+	{ "32_64",		SIZE_32_64,		0,	0	},
 	{ "UNSET",		SIZE_UNSET,		1,	8	},
 };
 
@@ -40,6 +42,7 @@ unsigned int opsizetobits(OPSIZE opsize);
 int opsizetoint(OPSIZE opsize);
 OPSIZE bitstoopsize(int bits);
 OPSIZE inttoopsize(int opsize);
+int opsizetoeosz(OPSIZE Value);
 
 OPSIZE StringToOpsize(const char *Value);
 const char *OpsizeToString(OPSIZE Size);

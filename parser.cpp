@@ -19,28 +19,20 @@ static bool isbase(const char* text, const char* base)
     return true;
 }
 
-bool valfromstring(const char* text, ULONG_PTR* value)
+bool valfromstring(const char* text, ULONGLONG* value)
 {
     if(*text=='x') //hexadecimal
     {
         if(!isbase(text+1, "0123456789ABCDEF"))
             return false;
-#ifdef _WIN64
         sscanf(text+1, "%llx", value);
-#else
-        sscanf(text+1, "%x", value);
-#endif // _WIN64
         return true;
     }
     else if(*text=='0' && text[1]=='x') //hexadecimal
     {
         if(!isbase(text+2, "0123456789ABCDEF"))
             return false;
-#ifdef _WIN64
         sscanf(text+2, "%llx", value);
-#else
-        sscanf(text+2, "%x", value);
-#endif // _WIN64
         return true;
     }
     else if(*text=='.') //decimal
@@ -54,11 +46,7 @@ bool valfromstring(const char* text, ULONG_PTR* value)
         }
         if(!isbase(text+skip, "0123456789"))
             return false;
-#ifdef _WIN64
         sscanf(text+1, "%llu", value);
-#else
-        sscanf(text+1, "%u", value);
-#endif // _WIN64
         if(negative)
             *value*=~0; //*-1
         return true;
@@ -67,11 +55,7 @@ bool valfromstring(const char* text, ULONG_PTR* value)
     {
         if(!isbase(text+1, "01234567"))
             return false;
-#ifdef _WIN64
         sscanf(text+1, "%llo", value);
-#else
-        sscanf(text+1, "%o", value);
-#endif // _WIN64
         return true;
     }
     else if(*text=='b') //binary
@@ -81,11 +65,7 @@ bool valfromstring(const char* text, ULONG_PTR* value)
     }
     if(!isbase(text, "0123456789ABCDEF")) //hexadecimal as default
         return false;
-#ifdef _WIN64
     sscanf(text, "%llx", value);
-#else
-    sscanf(text, "%x", value);
-#endif // _WIN64
     return true;
 }
 
@@ -195,7 +175,7 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
 	}
 
 	// Verify and translate the mnemonic this time
-	Instruction->Class = str2xed_iclass_enum_t(TranslateInstMnemonic(Instruction));
+	Instruction->Class = str2xed_iclass_enum_t(TranslateInstMnemonic(Parse, Instruction));
 
 	if (Instruction->Class == XED_ICLASS_INVALID)
 	{

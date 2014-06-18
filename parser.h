@@ -21,7 +21,7 @@ struct Inst
 #include "Validator.h"
 
 //functions
-bool valfromstring(const char* text, ULONG_PTR* value);
+bool valfromstring(const char* text, ULONGLONG* value);
 
 char *GrabInstToken(char *Dest, char *Src, bool Operand);
 int InstructionToTokens(const char *Value, char Tokens[8][64]);

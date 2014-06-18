@@ -1,6 +1,6 @@
 #include "Translator.h"
 
-char *TranslateInstMnemonic(Inst *Instruction)
+char *TranslateInstMnemonic(XEDPARSE *Parse, Inst *Instruction)
 {
 	char *mnemonic = Instruction->Mnemonic;
 
@@ -19,12 +19,12 @@ char *TranslateInstMnemonic(Inst *Instruction)
 	*/
 
 	// Special cases depending on the operands
-	if (!_stricmp(mnemonic, "mov"))
+	for (int i = 0; i < Instruction->OperandCount; i++)
 	{
-		for (int i = 0; i < 2; i++)
-		{
-			InstOperand *operand = &Instruction->Operands[i];
+		InstOperand *operand = &Instruction->Operands[i];
 
+		if (!_stricmp(mnemonic, "mov"))
+		{
 			if (operand->Type == OPERAND_REG)
 			{
 				if (IsControlRegister(operand->Reg.Reg))
@@ -84,11 +84,17 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	// Convert the operands to XED's form first
 	xed_encoder_operand_t ops[4];
 
+	int effectiveWidth = 0;
 	for (int i = 0; i < Instruction->OperandCount; i++)
+	{
+		if (Instruction->Operands[i].Type == OPERAND_REG)
+			effectiveWidth = max(effectiveWidth, opsizetobits(Instruction->Operands[i].Size));
+
 		ops[i] = OperandToXed(&Instruction->Operands[i]);
+	}
 
 	// Create the instruction
-	xed_inst(XedInst, Mode, Instruction->Class, 64, Instruction->OperandCount, ops);
+	xed_inst(XedInst, Mode, Instruction->Class, effectiveWidth, Instruction->OperandCount, ops);
 
 	// Apply any prefixes
 	switch (Instruction->Prefix)
@@ -107,10 +113,10 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	}
 }
 
-bool Translate(XEDPARSE* XEDParse, xed_state_t State, Inst *instruction)
+bool Translate(XEDPARSE* Parse, xed_state_t State, Inst *instruction)
 {
 	// Fix up any operand sizes
-	if (!ValidateInstOperands(XEDParse, instruction))
+	if (!ValidateInstOperands(Parse, instruction))
 		return false;
 
 	// Convert this struct to XED's format
@@ -123,7 +129,7 @@ bool Translate(XEDPARSE* XEDParse, xed_state_t State, Inst *instruction)
 
 	if (!xed_convert_to_encoder_request(&encReq, &xedInst))
 	{
-		strcpy(XEDParse->error, "Failed while converting encoder request");
+		strcpy(Parse->error, "Failed while converting encoder request");
 		return false;
 	}
 
@@ -133,11 +139,11 @@ bool Translate(XEDPARSE* XEDParse, xed_state_t State, Inst *instruction)
 	printf(buf);
 
 	// Finally encode the assembly
-	xed_error_enum_t err = xed_encode(&encReq, XEDParse->dest, XED_MAX_INSTRUCTION_BYTES, &XEDParse->dest_size);
+	xed_error_enum_t err = xed_encode(&encReq, Parse->dest, XED_MAX_INSTRUCTION_BYTES, &Parse->dest_size);
 
 	if (err != XED_ERROR_NONE)
 	{
-		strcpy(XEDParse->error, "Failed to encode instruction!");
+		strcpy(Parse->error, "Failed to encode instruction!");
 		return false;
 	}
 	

@@ -26,10 +26,11 @@ bool ResizeSingleOperand(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand 
 			const xed_operand_t *op			= xed_inst_operand(inst, 0);
 			xed_operand_type_enum_t type	= xed_operand_type(op);
 
-			if (type != XED_OPERAND_TYPE_IMM && type != XED_OPERAND_TYPE_IMM_CONST)
+			if (type != XED_OPERAND_TYPE_IMM &&
+				type != XED_OPERAND_TYPE_IMM_CONST)
 				continue;
 
-			int size = xed_operand_width_bits(op, 3);
+			int size = xed_operand_width_bits(op, Operand->XedEOSZ);
 
 			if (size >= targetSize && size <= fixedSize)
 				fixedSize = size;
@@ -69,7 +70,7 @@ bool ResizeSingleOperand(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand 
 			if (xed_operand_is_memory_addressing(name))
 				memoryOperandCount++;
 
-			memoryOperandSize = max(memoryOperandSize, xed_operand_width_bits(op, 3));
+			memoryOperandSize = max(memoryOperandSize, xed_operand_width_bits(op, Operand->XedEOSZ));
 		}
 
 		// Check if ambiguous
@@ -86,6 +87,82 @@ bool ResizeSingleOperand(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand 
 	}
 
 	return false;
+}
+
+bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand *Operands)
+{
+	IClassType *type = &XedInstLookupTable[IClass];
+
+	const xed_inst_t *inst;
+	const xed_operand_t *xedOp[2];
+
+	switch (Operands[0].Type)
+	{
+	case OPERAND_REG:
+		switch (Operands[1].Type)
+		{
+		case OPERAND_IMM: // <instr> reg, value
+		{
+			int targetSize = opsizetobits(Operands[1].Size);
+			int fixedSize = INT_MAX;
+
+			for (int i = 0; i < type->InstructionCount; i++)
+			{
+				inst		= type->Instructions[i];
+				xedOp[0]	= xed_inst_operand(inst, 0);
+				xedOp[1]	= xed_inst_operand(inst, 1);
+
+				// Match the register first
+				if (!xed_operand_template_is_register(xedOp[0]))
+					continue;
+
+				if (xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ) != opsizetobits(Operands[0].Size))
+					continue;
+
+				// Check compatible immediate types
+				if (xed_operand_type(xedOp[1]) != XED_OPERAND_TYPE_IMM &&
+					xed_operand_type(xedOp[1]) != XED_OPERAND_TYPE_IMM_CONST)
+					continue;
+
+				int size = xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ);
+
+				if (size >= targetSize && size <= fixedSize)
+					fixedSize = size;
+			}
+
+			if (fixedSize == INT_MAX)
+			{
+				strcpy(Parse->error, "Immediate size is too large");
+				return false;
+			}
+
+			Operands[1].Size = bitstoopsize(fixedSize);
+			return true;
+
+			return true;
+		}
+		break;
+
+		case OPERAND_MEM: // <instr> reg, []
+			// ...
+			return true;
+		}
+	break;
+
+	case OPERAND_MEM:
+		switch (Operands[1].Type)
+		{
+		case OPERAND_REG: // <instr> [], reg
+			return true;
+		case OPERAND_IMM: // <instr> [], value
+			// Potential ambiguity
+			return true;
+		}
+	break;
+	}
+
+
+	return true;
 }
 
 bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
@@ -118,13 +195,7 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
 		return ResizeSingleOperand(Parse, Instruction->Class, &Instruction->Operands[0]);
 
 	//
-	// If op[0] is an immediate, then try and match op[1] first
-	// If needed, increase the size of the immediate
-	//
-	// If op[0] is a register, try and match op[0] first
-	//
-	// NOTE: [instr] [mem], [mem] IS NOT POSSIBLE
-	// If op[0] is memory, ....
+	// Check all invalid cases and then pass it to ResizeDoubleOperands
 	//
 	switch (Instruction->Operands[0].Type)
 	{
@@ -132,9 +203,12 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
 		switch (Instruction->Operands[1].Type)
 		{
 		case OPERAND_REG: // <instr> reg, reg
+			// Registers can't be resized
 			return true;
+
 		case OPERAND_IMM: // <instr> reg, value
-			return true;
+			return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
+
 		case OPERAND_MEM: // <instr> reg, []
 			// Don't care if it is already set
 			if (Instruction->Operands[1].Size != SIZE_UNSET)

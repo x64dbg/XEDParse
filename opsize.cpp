@@ -33,6 +33,20 @@ OPSIZE inttoopsize(int opsize)
 	return SIZE_UNSET;
 }
 
+int opsizetoeosz(OPSIZE Value)
+{
+	// Opsize to XED's effective operand size
+	switch (Value)
+	{
+	case SIZE_BYTE:		return 0;
+	case SIZE_WORD:		return 1;
+	case SIZE_DWORD:	return 2;
+	case SIZE_QWORD:	return 3;
+	}
+
+	return 0;
+}
+
 OPSIZE StringToOpsize(const char *Value)
 {
 	for (int i = 0; i < ARRAYSIZE(OpsizeEntryTable); i++)

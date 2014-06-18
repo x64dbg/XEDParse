@@ -14,6 +14,7 @@ struct InstOperand
 	OPERAND_TYPE	Type;
 	SEG				Segment;
 	MEMSIZE			Size;
+	int				XedEOSZ;
 
 	union
 	{

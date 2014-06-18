@@ -4,6 +4,20 @@
 #include "Translator.h"
 #include "ParseTest.h"
 
+void XEDParseSetMode(bool X64, xed_state_t *state)
+{
+	if (X64)
+	{
+		state->mmode = XED_MACHINE_MODE_LONG_64;
+		state->stack_addr_width = XED_ADDRESS_WIDTH_32b;
+	}
+	else
+	{
+		state->mmode = XED_MACHINE_MODE_LEGACY_32;
+		state->stack_addr_width = XED_ADDRESS_WIDTH_32b;
+	}
+}
+
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
 {
 	Inst instruction;
@@ -16,12 +30,7 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
 	}
 
 	xed_state_t state;
-#ifdef _WIN64
-	state.mmode = XED_MACHINE_MODE_LONG_64;
-#else
-	state.mmode = XED_MACHINE_MODE_LEGACY_32;
-#endif //_WIN64
-	state.stack_addr_width = XED_ADDRESS_WIDTH_32b;
+	XEDParseSetMode(XEDParse->x64, &state);
 
 	if (!Translate(XEDParse, state, &instruction))
 	{

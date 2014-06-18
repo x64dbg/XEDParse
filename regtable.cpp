@@ -2,69 +2,27 @@
 
 bool IsControlRegister(REG reg)
 {
-	switch (reg)
-	{
-	case REG_CR0:
-	case REG_CR2:
-	case REG_CR3:
-	case REG_CR4:
-#ifdef _WIN64
-	case REG_CR8:
-#endif
-		return true;
-	}
-
-	return false;
+	return (reg >= REG_CR0 && reg <= REG_CR8);
 }
 
 bool IsDebugRegister(REG reg)
 {
-	switch (reg)
-	{
-	case REG_DR0:
-	case REG_DR1:
-	case REG_DR2:
-	case REG_DR3:
-	case REG_DR6:
-	case REG_DR7:
-		return true;
-	}
-
-	return false;
+	return (reg >= REG_DR0 && reg <= REG_DR7);
 }
 
 bool IsSegmentRegister(REG reg)
 {
-	switch (reg)
-	{
-	case REG_CS:
-	case REG_DS:
-	case REG_ES:
-	case REG_FS:
-	case REG_GS:
-	case REG_SS:
-		return true;
-	}
-
-	return false;
+	return (reg >= REG_CS && reg <= REG_SS);
 }
 
 bool IsXmmRegister(REG reg)
 {
-#ifdef _WIN64
 	return (reg >= REG_XMM0 && reg <= REG_XMM15);
-#else
-	return (reg >= REG_XMM0 && reg <= REG_XMM7);
-#endif
 }
 
 bool IsYmmRegister(REG reg)
 {
-#ifdef _WIN64
 	return (reg >= REG_YMM0 && reg <= REG_YMM15);
-#else
-	return (reg >= REG_YMM0 && reg <= REG_YMM7);
-#endif
 }
 
 REG getregister(const char* text)

@@ -6,7 +6,7 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
 	// Base			= register
 
 	REG registerVal	= getregister(Value);
-	ULONG_PTR disp	= 0;
+	ULONGLONG disp	= 0;
 
 	if (registerVal != REG_INVALID)
 	{
@@ -36,7 +36,7 @@ void SetMemoryIndexOrScale(XEDPARSE *Parse, const char *Value, InstOperand *Oper
 	// Scale = 1, 2, 4, 8
 
 	REG registerVal = getregister(Value);
-	ULONG_PTR scale	= 0;
+	ULONGLONG scale	= 0;
 
 	if (registerVal != REG_INVALID)
 	{
@@ -209,7 +209,7 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 {
 	REG registerVal		= getregister(Value);
-	ULONG_PTR immVal	= 0;
+	ULONGLONG immVal	= 0;
 
 	if (strchr(Value, '[') && strchr(Value, ']'))
 	{
@@ -218,6 +218,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		Operand->Type		= OPERAND_MEM;
 		Operand->Segment	= SEG_DS;
 		Operand->Size		= SIZE_UNSET;
+		Operand->XedEOSZ	= 0;
 
 		return HandleMemoryOperand(Parse, Value, Operand);
 	}
@@ -227,6 +228,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		Operand->Type		= OPERAND_REG;
 		Operand->Segment	= SEG_INVALID;
 		Operand->Size		= getregsize(registerVal);
+		Operand->XedEOSZ	= opsizetoeosz(Operand->Size);
 		Operand->Reg.Reg	= registerVal;
 		Operand->Reg.XedReg = regtoxed(registerVal);
 	}
@@ -235,6 +237,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		// Immediate
 		Operand->Type		= OPERAND_IMM;
 		Operand->Segment	= SEG_INVALID;
+		Operand->XedEOSZ	= (Parse->x64) ? 3 : 2;
 		Operand->Imm.Signed = false;
 		Operand->Imm.imm	= immVal;
 
@@ -242,6 +245,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 			Operand->Size = inttoopsize(xed_shortest_width_signed(immVal, 0xFF));
 		else
 			Operand->Size = inttoopsize(xed_shortest_width_unsigned(immVal, 0xFF));
+
 	}
 	else
 	{

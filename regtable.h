@@ -18,9 +18,7 @@ enum REG
 	REG_CR2,
 	REG_CR3,
 	REG_CR4,
-#ifdef _WIN64
 	REG_CR8,
-#endif
 
 	/* Debug registers */
 	REG_DR0,
@@ -64,7 +62,6 @@ enum REG
 	REG_SP,
 
 	/* X64 general purpose registers */
-#ifdef _WIN64
 	REG_RAX,
 	REG_RBX,
 	REG_RCX,
@@ -123,7 +120,6 @@ enum REG
 	REG_R15D,
 	REG_R15W,
 	REG_R15B,
-#endif //_WIN64
 
 	/* Floating point XXM# */
 	REG_XMM0,
@@ -134,7 +130,6 @@ enum REG
 	REG_XMM5,
 	REG_XMM6,
 	REG_XMM7,
-#ifdef _WIN64
 	REG_XMM8,
 	REG_XMM9,
 	REG_XMM10,
@@ -143,7 +138,6 @@ enum REG
 	REG_XMM13,
 	REG_XMM14,
 	REG_XMM15,
-#endif // _WIN64
 
 	/* Advanced vector extensions V1 YMM# */
 	REG_YMM0,
@@ -154,7 +148,6 @@ enum REG
 	REG_YMM5,
 	REG_YMM6,
 	REG_YMM7,
-#ifdef _WIN64
 	REG_YMM8,
 	REG_YMM9,
 	REG_YMM10,
@@ -163,7 +156,6 @@ enum REG
 	REG_YMM13,
 	REG_YMM14,
 	REG_YMM15,
-#endif // _WIN64
 
 	/* Segment registers */
 	REG_SINVALID,
@@ -200,35 +192,19 @@ static RegEntry RegisterIds[] =
 	{ "rinval", REG_INVALID, XED_REG_INVALID, SIZE_BYTE },
 
 	/* Processor control registers */
-#ifndef _WIN64
-	{ "cr0", REG_CR0, XED_REG_CR0, SIZE_DWORD },
-	{ "cr2", REG_CR2, XED_REG_CR2, SIZE_DWORD },
-	{ "cr3", REG_CR3, XED_REG_CR3, SIZE_DWORD },
-	{ "cr4", REG_CR4, XED_REG_CR4, SIZE_DWORD },
-#else
-	{ "cr0", REG_CR0, XED_REG_CR0, SIZE_QWORD },
-	{ "cr2", REG_CR2, XED_REG_CR2, SIZE_QWORD },
-	{ "cr3", REG_CR3, XED_REG_CR3, SIZE_QWORD },
-	{ "cr4", REG_CR4, XED_REG_CR4, SIZE_QWORD },
+	{ "cr0", REG_CR0, XED_REG_CR0, SIZE_32_64 },
+	{ "cr2", REG_CR2, XED_REG_CR2, SIZE_32_64 },
+	{ "cr3", REG_CR3, XED_REG_CR3, SIZE_32_64 },
+	{ "cr4", REG_CR4, XED_REG_CR4, SIZE_32_64 },
 	{ "cr8", REG_CR8, XED_REG_CR8, SIZE_QWORD },
-#endif // ndef _WIN64
 
 	/* Debug registers */
-#ifndef _WIN64
-	{ "dr0", REG_DR0, XED_REG_DR0, SIZE_DWORD },
-	{ "dr1", REG_DR1, XED_REG_DR1, SIZE_DWORD },
-	{ "dr2", REG_DR2, XED_REG_DR2, SIZE_DWORD },
-	{ "dr3", REG_DR3, XED_REG_DR3, SIZE_DWORD },
-	{ "dr6", REG_DR6, XED_REG_DR6, SIZE_DWORD },
-	{ "dr7", REG_DR7, XED_REG_DR7, SIZE_DWORD },
-#else
-	{ "dr0", REG_DR0, XED_REG_DR0, SIZE_QWORD },
-	{ "dr1", REG_DR1, XED_REG_DR1, SIZE_QWORD },
-	{ "dr2", REG_DR2, XED_REG_DR2, SIZE_QWORD },
-	{ "dr3", REG_DR3, XED_REG_DR3, SIZE_QWORD },
-	{ "dr6", REG_DR6, XED_REG_DR6, SIZE_QWORD },
-	{ "dr7", REG_DR7, XED_REG_DR7, SIZE_QWORD },
-#endif // ndef _WIN64
+	{ "dr0", REG_DR0, XED_REG_DR0, SIZE_32_64 },
+	{ "dr1", REG_DR1, XED_REG_DR1, SIZE_32_64 },
+	{ "dr2", REG_DR2, XED_REG_DR2, SIZE_32_64 },
+	{ "dr3", REG_DR3, XED_REG_DR3, SIZE_32_64 },
+	{ "dr6", REG_DR6, XED_REG_DR6, SIZE_32_64 },
+	{ "dr7", REG_DR7, XED_REG_DR7, SIZE_32_64 },
 
 	/* X86 general purpose registers */
 	{ "eax", REG_EAX, XED_REG_EAX, SIZE_DWORD },
@@ -264,7 +240,6 @@ static RegEntry RegisterIds[] =
 	{ "sp", REG_SP, XED_REG_SP, SIZE_WORD },
 
 	/* X64 general purpose registers */
-#ifdef _WIN64
 	{ "rax", REG_RAX, XED_REG_RAX, SIZE_QWORD },
 	{ "rbx", REG_RBX, XED_REG_RBX, SIZE_QWORD },
 	{ "rcx", REG_RCX, XED_REG_RCX, SIZE_QWORD },
@@ -323,7 +298,6 @@ static RegEntry RegisterIds[] =
 	{ "r15d", REG_R15D, XED_REG_R15D, SIZE_DWORD },
 	{ "r15w", REG_R15W, XED_REG_R15W, SIZE_WORD },
 	{ "r15b", REG_R15B, XED_REG_R15B, SIZE_BYTE },
-#endif // _WIN64
 
 	/* Floating point XXM# */
 	{ "xmm0", REG_XMM0, XED_REG_XMM0, SIZE_XMMWORD },
@@ -334,7 +308,6 @@ static RegEntry RegisterIds[] =
 	{ "xmm5", REG_XMM5, XED_REG_XMM5, SIZE_XMMWORD },
 	{ "xmm6", REG_XMM6, XED_REG_XMM6, SIZE_XMMWORD },
 	{ "xmm7", REG_XMM7, XED_REG_XMM7, SIZE_XMMWORD },
-#ifdef _WIN64
 	{ "xmm8", REG_XMM8, XED_REG_XMM8, SIZE_XMMWORD },
 	{ "xmm9", REG_XMM9, XED_REG_XMM9, SIZE_XMMWORD },
 	{ "xmm10", REG_XMM10, XED_REG_XMM10, SIZE_XMMWORD },
@@ -343,7 +316,6 @@ static RegEntry RegisterIds[] =
 	{ "xmm13", REG_XMM13, XED_REG_XMM13, SIZE_XMMWORD },
 	{ "xmm14", REG_XMM14, XED_REG_XMM14, SIZE_XMMWORD },
 	{ "xmm15", REG_XMM15, XED_REG_XMM15, SIZE_XMMWORD },
-#endif // _WIN64
 
 	/* Advanced vector extensions V1 YMM# */
 	{ "ymm0", REG_YMM0, XED_REG_YMM0, SIZE_YMMWORD },
@@ -354,7 +326,6 @@ static RegEntry RegisterIds[] =
 	{ "ymm5", REG_YMM5, XED_REG_YMM5, SIZE_YMMWORD },
 	{ "ymm6", REG_YMM6, XED_REG_YMM6, SIZE_YMMWORD },
 	{ "ymm7", REG_YMM7, XED_REG_YMM7, SIZE_YMMWORD },
-#ifdef _WIN64
 	{ "ymm8", REG_YMM8, XED_REG_YMM8, SIZE_YMMWORD },
 	{ "ymm9", REG_YMM9, XED_REG_YMM9, SIZE_YMMWORD },
 	{ "ymm10", REG_YMM10, XED_REG_YMM10, SIZE_YMMWORD },
@@ -363,7 +334,6 @@ static RegEntry RegisterIds[] =
 	{ "ymm13", REG_YMM13, XED_REG_YMM13, SIZE_YMMWORD },
 	{ "ymm14", REG_YMM14, XED_REG_YMM14, SIZE_YMMWORD },
 	{ "ymm15", REG_YMM15, XED_REG_YMM15, SIZE_YMMWORD },
-#endif // _WIN64
 
 	/* Advanced vector extensions V2 ZMM# */
 	/* TODO */
