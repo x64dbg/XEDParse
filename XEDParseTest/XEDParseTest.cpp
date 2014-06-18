@@ -5,19 +5,17 @@
 
 int main(int argc, char* argv[])
 {
-	//SingleInstruction();
-	//CrDrInstruction();
-	//MovRegRegInstruction();
-	//MovMemRegInstruction();
-	//MovImmRegInstruction();
-	//MovXmmXmmInstruction();
-	//MovMemXmmInstruction();
-	//JumpInstruction();
-
     if(argc<2) //no arguments provided
     {
         XEDPARSE parse;
         memset(&parse, 0, sizeof(parse));
+
+#ifdef _WIN64
+		parse.x64 = true;
+#else
+		parse.x64 = false;
+#endif
+
         char instr[256]="";
         puts("instruction:");
         fgets(instr, 256, stdin);
@@ -57,15 +55,22 @@ int main(int argc, char* argv[])
     CloseHandle(hFile);
     int len=strlen(filedata);
     char current_instr[XEDPARSE_MAXBUFSIZE]="";
-    XEDPARSE current;
+
     int errors=0;
     DWORD ticks=GetTickCount();
     for(int i=0,j=0; i<len; i++)
     {
         if(filedata[i]=='\n' || filedata[i+1]=='\n') //newline
         {
+			XEDPARSE current;
             memset(&current, 0, sizeof(current));
             strcpy(current.instr, current_instr);
+#ifdef _WIN64
+			current.x64 = true;
+#else
+			current.x64 = false;
+#endif
+
             puts(current_instr);
             if(XEDParseAssemble(&current)==XEDPARSE_ERROR)
                 errors++;

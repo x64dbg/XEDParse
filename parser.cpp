@@ -75,7 +75,7 @@ char *GrabInstToken(char *Dest, char *Src, bool Operand)
 
 	if (Operand)
 	{
-		bufEnd	= strchr(Src, ',');
+		bufEnd = strchr(Src, ',');
 
 		// Skip spaces
 		while (*Src == ' ' || *Src == '\t')
@@ -98,10 +98,15 @@ int InstructionToTokens(const char *Value, char Tokens[8][64])
 {
 	// [PREFIX] INSTRUCTION [SEG]:[MEM/REG/IMM], [SEG]:[MEM/REG/IMM], [REG], [REG]
 
-	char buf[XEDPARSE_MAXBUFSIZE];
-	strcpy_s(buf, Value);
+	// Copy a buffer to edit later
+	// Skip spaces
+	while (*Value == ' ' || *Value == '\t')
+		Value++;
 
-	// Check the length first
+	char buf[XEDPARSE_MAXBUFSIZE];
+	strcpy(buf, Value);
+
+	// Check the length
 	if (strlen(buf) <= 0)
 		return 0;
 
@@ -125,6 +130,20 @@ int InstructionToTokens(const char *Value, char Tokens[8][64])
 	// Happens with a single mnemonic/nothing after prefix
 	if (!bufPtr)
 		return tokenIndex;
+
+	// Obliterate spaces
+	{
+		char *base	= bufPtr;
+		char *ptr	= bufPtr;
+
+		for (; *ptr; ptr++)
+		{
+			if (*ptr != ' ' && *ptr != '\t')
+				*base++ = *ptr;
+		}
+
+		*base = '\0';
+	}
 
 	// Go through each operand (use a max of 6 tokens)
 	for (int i = 0; i < 6; i++)

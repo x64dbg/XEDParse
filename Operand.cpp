@@ -4,7 +4,6 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
 {
 	// Displacement = name or number
 	// Base			= register
-
 	REG registerVal	= getregister(Value);
 	ULONGLONG disp	= 0;
 
@@ -34,7 +33,6 @@ void SetMemoryIndexOrScale(XEDPARSE *Parse, const char *Value, InstOperand *Oper
 {
 	// Index = register
 	// Scale = 1, 2, 4, 8
-
 	REG registerVal = getregister(Value);
 	ULONGLONG scale	= 0;
 
@@ -72,7 +70,7 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 	// Gather any information & check the prefix validity
 	if (strlen(prefix) > 0)
 	{
-		// First remove 'ptr' if it exists and remove spaces/colons
+		// Remove 'ptr' if it exists and remove colons
 		{
 			char *base	= prefix;
 			char *ptr	= prefix;
@@ -82,7 +80,7 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 				if (ptr[0] == 'p' && ptr[1] == 't' && ptr[2] == 'r')
 					ptr += 3;
 
-				if (ptr[0] == ' ' || ptr[0] == ':')
+				if (ptr[0] == ':')
 				{
 					ptr++;
 					continue;
@@ -133,74 +131,51 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 
 	char temp[32];
 	char *base = temp;
-	char lastOp = 0;
+	bool mulFlag = false;
 
 	// This could be done better (TODO)
 	for (char *ptr = calc;; ptr++)
 	{
+		*base = '\0';
+
 		switch (*ptr)
 		{
 		//case '-':
 		//	break;
 
 		case '+':
-			*base = '\0';
 			base = temp;
 
-			if (!lastOp)
-			{
-				// If there was nothing before this and we hit a +: Displacement/Base
-				SetMemoryDisplacementOrBase(Parse, temp, Operand);
-			}
+			if (mulFlag)
+				SetMemoryIndexOrScale(Parse, temp, Operand);
 			else
-			{
-				// If there was something before this and we hit a +: (Mul? -> I/S) (Add? -> D/B)
-				// Override (mul > add)
-				if (lastOp == '*')
-					SetMemoryIndexOrScale(Parse, temp, Operand);
-				else
-					SetMemoryDisplacementOrBase(Parse, temp, Operand);
-			}
+				SetMemoryDisplacementOrBase(Parse, temp, Operand);
 
-			lastOp = *ptr;
+			mulFlag = false;
 			break;
 
 		case '*':
-			*base = '\0';
 			base = temp;
 			
-			if (!lastOp)
-			{
-				// If there was nothing before this and we hit a *: Index/Scale
-				SetMemoryIndexOrScale(Parse, temp, Operand);
-			}
-			else
-			{
-				// If there was something before this and we hit a *: (Mul? -> I/S) (Add? -> D/B)
-				SetMemoryIndexOrScale(Parse, temp, Operand);
-			}
+			SetMemoryIndexOrScale(Parse, temp, Operand);
 
-			lastOp = *ptr;
+			mulFlag = true;
+			break;
+
+		case '\0':
+			if (mulFlag)
+				SetMemoryIndexOrScale(Parse, temp, Operand);
+			else
+				SetMemoryDisplacementOrBase(Parse, temp, Operand);
 			break;
 
 		default:
 			*base++ = *ptr;
-		case ' ':
-			// Skip spaces
 			break;
 		}
 
 		if (*ptr == '\0')
-		{
-			*base = '\0';
-
-			if (lastOp == '+')
-				SetMemoryDisplacementOrBase(Parse, temp, Operand);
-			else if (lastOp == '*')
-				SetMemoryIndexOrScale(Parse, temp, Operand);
-
 			break;
-		}
 	}
 
 	return true;

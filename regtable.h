@@ -121,6 +121,18 @@ enum REG
 	REG_R15W,
 	REG_R15B,
 
+	/* 3DNow! MMX/MM# */
+	/*
+	REG_MM0,
+	REG_MM1,
+	REG_MM2,
+	REG_MM3,
+	REG_MM4,
+	REG_MM5,
+	REG_MM6,
+	REG_MM7,
+	*/
+
 	/* Floating point XXM# */
 	REG_XMM0,
 	REG_XMM1,
@@ -156,6 +168,9 @@ enum REG
 	REG_YMM13,
 	REG_YMM14,
 	REG_YMM15,
+
+	/* Advanced vector extensions V2 ZMM# */
+	/* TODO */
 
 	/* Segment registers */
 	REG_SINVALID,
@@ -299,7 +314,20 @@ static RegEntry RegisterIds[] =
 	{ "r15w", REG_R15W, XED_REG_R15W, SIZE_WORD },
 	{ "r15b", REG_R15B, XED_REG_R15B, SIZE_BYTE },
 
-	/* Floating point XXM# */
+	/* 3DNow! MMX/MM# */
+	/*
+	Not going to be implemented unless if needed
+	{ "mm0", REG_MM0, XED_REG_MMX0, SIZE_MMXWORD },
+	{ "mm1", REG_MM1, XED_REG_MMX1, SIZE_MMXWORD },
+	{ "mm2", REG_MM2, XED_REG_MMX2, SIZE_MMXWORD },
+	{ "mm3", REG_MM3, XED_REG_MMX3, SIZE_MMXWORD },
+	{ "mm4", REG_MM4, XED_REG_MMX4, SIZE_MMXWORD },
+	{ "mm5", REG_MM5, XED_REG_MMX5, SIZE_MMXWORD },
+	{ "mm6", REG_MM6, XED_REG_MMX6, SIZE_MMXWORD },
+	{ "mm7", REG_MM7, XED_REG_MMX7, SIZE_MMXWORD },
+	*/
+
+	/* Floating point XMM# */
 	{ "xmm0", REG_XMM0, XED_REG_XMM0, SIZE_XMMWORD },
 	{ "xmm1", REG_XMM1, XED_REG_XMM1, SIZE_XMMWORD },
 	{ "xmm2", REG_XMM2, XED_REG_XMM2, SIZE_XMMWORD },
