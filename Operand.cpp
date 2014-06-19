@@ -21,7 +21,11 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
 		// 5h = 101b
 		Operand->Mem.Disp		= true;
 		Operand->Mem.DispVal	= disp;
-		Operand->Mem.DispWidth	= inttoopsize(xed_shortest_width_unsigned(disp, 0x5));
+
+		if (Value[0] == '-')
+			Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_signed(disp, 0x5));
+		else
+			Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_unsigned(disp, 0x5));
 	}
 	else
 	{
@@ -130,43 +134,35 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 		return false;
 
 	char temp[32];
-	char *base = temp;
-	bool mulFlag = false;
+	char *base		= temp;
+	bool mulFlag	= false;
 
-	// This could be done better (TODO)
 	for (char *ptr = calc;; ptr++)
 	{
 		*base = '\0';
 
 		switch (*ptr)
 		{
-		//case '-':
-		//	break;
-
+		case '\0':
 		case '+':
-			base = temp;
-
+		case '-':
 			if (mulFlag)
 				SetMemoryIndexOrScale(Parse, temp, Operand);
 			else
 				SetMemoryDisplacementOrBase(Parse, temp, Operand);
 
+			base	= temp;
 			mulFlag = false;
+			
+			if (*ptr == '-')
+				*base++ = *ptr;
 			break;
 
 		case '*':
-			base = temp;
-			
 			SetMemoryIndexOrScale(Parse, temp, Operand);
 
+			base	= temp;
 			mulFlag = true;
-			break;
-
-		case '\0':
-			if (mulFlag)
-				SetMemoryIndexOrScale(Parse, temp, Operand);
-			else
-				SetMemoryDisplacementOrBase(Parse, temp, Operand);
 			break;
 
 		default:
@@ -213,14 +209,13 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		Operand->Type		= OPERAND_IMM;
 		Operand->Segment	= SEG_INVALID;
 		Operand->XedEOSZ	= (Parse->x64) ? 3 : 2;
-		Operand->Imm.Signed = false;
+		Operand->Imm.Signed = (Value[0] == '-');
 		Operand->Imm.imm	= immVal;
 
 		if (Operand->Imm.Signed)
 			Operand->Size = inttoopsize(xed_shortest_width_signed(immVal, 0xFF));
 		else
 			Operand->Size = inttoopsize(xed_shortest_width_unsigned(immVal, 0xFF));
-
 	}
 	else
 	{

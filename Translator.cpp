@@ -85,12 +85,22 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	xed_encoder_operand_t ops[4];
 
 	int effectiveWidth = 0;
-	for (int i = 0; i < Instruction->OperandCount; i++)
+	if (Instruction->OperandCount > 0)
 	{
-		if (Instruction->Operands[i].Type == OPERAND_REG)
-			effectiveWidth = max(effectiveWidth, opsizetobits(Instruction->Operands[i].Size));
+		for (int i = 0; i < Instruction->OperandCount; i++)
+		{
+			if (Instruction->Operands[i].Type != OPERAND_MEM)
+				effectiveWidth = max(effectiveWidth, opsizetobits(Instruction->Operands[i].Size));
 
-		ops[i] = OperandToXed(&Instruction->Operands[i]);
+			ops[i] = OperandToXed(&Instruction->Operands[i]);
+		}
+	}
+	else
+	{
+		if (Mode.mmode == XED_MACHINE_MODE_LONG_64)
+			effectiveWidth = 64;
+		else
+			effectiveWidth = 32;
 	}
 
 	// Create the instruction
@@ -134,9 +144,9 @@ bool Translate(XEDPARSE* Parse, xed_state_t State, Inst *instruction)
 	}
 
 	// Output the request
-	char buf[5000] = "";
-	xed_encode_request_print(&encReq, buf, 5000);
-	printf(buf);
+	//char buf[5000] = "";
+	//xed_encode_request_print(&encReq, buf, 5000);
+	//printf(buf);
 
 	// Finally encode the assembly
 	xed_error_enum_t err = xed_encode(&encReq, Parse->dest, XED_MAX_INSTRUCTION_BYTES, &Parse->dest_size);

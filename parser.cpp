@@ -21,51 +21,60 @@ static bool isbase(const char* text, const char* base)
 
 bool valfromstring(const char* text, ULONGLONG* value)
 {
-    if(*text=='x') //hexadecimal
-    {
-        if(!isbase(text+1, "0123456789ABCDEF"))
-            return false;
-        sscanf(text+1, "%llx", value);
-        return true;
-    }
-    else if(*text=='0' && text[1]=='x') //hexadecimal
-    {
-        if(!isbase(text+2, "0123456789ABCDEF"))
-            return false;
-        sscanf(text+2, "%llx", value);
-        return true;
-    }
-    else if(*text=='.') //decimal
-    {
-        int skip=1;
-        bool negative=false;
-        if(text[skip]=='-')
-        {
-            skip++;
-            negative=true;
-        }
-        if(!isbase(text+skip, "0123456789"))
-            return false;
-        sscanf(text+1, "%llu", value);
-        if(negative)
-            *value*=~0; //*-1
-        return true;
-    }
-    else if(*text=='o') //octal
-    {
-        if(!isbase(text+1, "01234567"))
-            return false;
-        sscanf(text+1, "%llo", value);
-        return true;
-    }
-    else if(*text=='b') //binary
-    {
-        if(!isbase(text+1, "01"))
-            return false;
-    }
-    if(!isbase(text, "0123456789ABCDEF")) //hexadecimal as default
-        return false;
-    sscanf(text, "%llx", value);
+	bool negative = false;
+
+	if (*text == '-')
+	{
+		negative = true;
+		text++;
+	}
+
+	// Hexadecimal with '0x' prefix
+	if (text[0] == '0' && text[1] == 'x')
+		text++;
+
+	switch (tolower(*text++))
+	{
+	default:
+		// Default to hexadecimal
+		text--;
+
+	case 'x':
+		// Hexadecimal
+		if (!isbase(text, "0123456789ABCDEF"))
+			return false;
+
+		sscanf(text, "%llx", value);
+		break;
+
+	case '.':
+		// Decimal
+		if (!isbase(text, "0123456789"))
+			return false;
+
+		sscanf(text, "%llu", value);
+		break;
+
+	case 'o':
+		// Octal
+		if (!isbase(text, "01234567"))
+			return false;
+
+		sscanf(text, "%llo", value);
+		break;
+
+	case 'b':
+		// Binary
+		if(!isbase(text, "01"))
+			return false;
+
+		return false;
+		break;
+	}
+
+	if (negative)
+		*value *= -1;
+
     return true;
 }
 
@@ -143,6 +152,10 @@ int InstructionToTokens(const char *Value, char Tokens[8][64])
 		}
 
 		*base = '\0';
+
+		// Is there anything left in the string?
+		if (base == bufPtr)
+			return tokenIndex;
 	}
 
 	// Go through each operand (use a max of 6 tokens)
@@ -154,7 +167,8 @@ int InstructionToTokens(const char *Value, char Tokens[8][64])
 			return tokenIndex;
 	}
 
-	return tokenIndex;
+	// Too many tokens
+	return 0;
 }
 
 bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)

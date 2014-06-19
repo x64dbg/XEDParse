@@ -19,8 +19,11 @@ void OperandToString(char *Buffer, InstOperand *Operand)
 
 	case OPERAND_MEM:
 	{
-		char base[32];
-		char scale[32];
+		char base[64];
+		char scale[64];
+
+		memset(base, 0, sizeof(base));
+		memset(scale, 0, sizeof(scale));
 
 		if (Operand->Mem.Base)
 			sprintf(base, "%s + ", regtostring(Operand->Mem.BaseVal));
