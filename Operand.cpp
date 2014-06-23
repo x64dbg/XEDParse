@@ -101,19 +101,15 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 
 		if (len > 0)
 		{
-			// Move backwards in order to get the segment (SIZE SG[CALC])
+			// Move backwards in order to get the segment (SIZESEG[CALC])
 			char *segPtr = (prefix + (len - 2));
 
 			// See if the segment is actually valid
-			SEG seg = getsegment(segPtr);
+			Operand->Segment = getsegment(segPtr);
 
-			if (seg != SEG_INVALID)
-			{
-				// End the string here
+			// End the string here
+			if (Operand->Segment != SEG_INVALID)
 				*segPtr = '\0';
-
-				Operand->Segment = seg;
-			}
 		}
 
 		// Determine the prefix size
@@ -155,7 +151,7 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 			mulFlag = false;
 			
 			if (*ptr == '-')
-				*base++ = *ptr;
+				*base++ = '-';
 			break;
 
 		case '*':

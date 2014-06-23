@@ -27,6 +27,7 @@ struct InstOperand
 		struct
 		{
 			bool Signed;
+			bool RelBranch;
 
 			union
 			{

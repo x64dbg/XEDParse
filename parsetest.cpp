@@ -14,7 +14,10 @@ void OperandToString(char *Buffer, InstOperand *Operand)
 		break;
 
 	case OPERAND_IMM:
-		sprintf(Buffer, "0x%llx", Operand->Imm.imm);
+		if (Operand->Imm.Signed)
+			sprintf(Buffer, "-0x%llx", (~Operand->Imm.imm) + 1);
+		else
+			sprintf(Buffer, "0x%llx", Operand->Imm.imm);
 		break;
 
 	case OPERAND_MEM:

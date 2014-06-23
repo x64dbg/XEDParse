@@ -18,6 +18,7 @@ struct Inst
 	InstOperand			Operands[4];
 };
 
+#include "BranchInst.h"
 #include "Validator.h"
 
 //functions

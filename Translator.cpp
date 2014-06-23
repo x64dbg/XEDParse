@@ -38,6 +38,14 @@ char *TranslateInstMnemonic(XEDPARSE *Parse, Inst *Instruction)
 	return _strupr(mnemonic);
 }
 
+LONGLONG TranslateRelativeCip(XEDPARSE *Parse, ULONGLONG Value, bool Signed)
+{
+	if (Signed)
+		return (LONGLONG)((LONGLONG)Value - Parse->cip);
+
+	return (LONGLONG)((ULONGLONG)Value - Parse->cip);
+}
+
 xed_encoder_operand_t OperandToXed(InstOperand *Operand)
 {
 	xed_encoder_operand_t o;
@@ -49,7 +57,10 @@ xed_encoder_operand_t OperandToXed(InstOperand *Operand)
 		return xed_reg(Operand->Reg.XedReg);
 
 	case OPERAND_IMM:
-		return xed_imm0(Operand->Imm.imm, opsizetobits(Operand->Size));
+		if (Operand->Imm.RelBranch)
+			return xed_relbr(Operand->Imm.simm, opsizetobits(Operand->Size));
+		else
+			return xed_imm0(Operand->Imm.imm, opsizetobits(Operand->Size));
 
 	case OPERAND_MEM:
 		// See xed_mem_bisd @ xed-encoder-hl.h
@@ -123,15 +134,19 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	}
 }
 
-bool Translate(XEDPARSE* Parse, xed_state_t State, Inst *instruction)
+bool Translate(XEDPARSE* Parse, xed_state_t State, Inst *Instruction)
 {
+	// Jumps are IP-based and need to be fixed
+	if (!TranslateBranchInst(Parse, Instruction))
+		return false;
+
 	// Fix up any operand sizes
-	if (!ValidateInstOperands(Parse, instruction))
+	if (!ValidateInstOperands(Parse, Instruction))
 		return false;
 
 	// Convert this struct to XED's format
 	xed_encoder_instruction_t xedInst;
-	ConvertInstToXed(instruction, State, &xedInst);
+	ConvertInstToXed(Instruction, State, &xedInst);
 
 	// Conversion request -> encoder request
 	xed_encoder_request_t encReq;

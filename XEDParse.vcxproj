@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BranchInst.cpp" />
     <ClCompile Include="MnemonicTable.cpp" />
     <ClCompile Include="Operand.cpp" />
     <ClCompile Include="OpSize.cpp" />
@@ -28,6 +29,7 @@
     <ClCompile Include="XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BranchInst.h" />
     <ClInclude Include="MnemonicTable.h" />
     <ClInclude Include="Operand.h" />
     <ClInclude Include="OpSize.h" />

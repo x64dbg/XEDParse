@@ -168,11 +168,11 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
 {
 	// Only the first two operands actually matter right now
-	// Instructions with 3+ operands only allow registers for the last ones
+	// Instructions with 3+ operands will be handled later
 
 	// XED IS WRONG (xed_inst_noperands() shouldn't be used)
 	// This is incorrect for now
-	int minimumOperands = XedInstLookupTable[Instruction->Class].MinimumOperands;
+	// int minimumOperands = XedInstLookupTable[Instruction->Class].MinimumOperands;
 
 	// So what happens first?
 	//
