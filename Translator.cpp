@@ -134,7 +134,7 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	}
 }
 
-bool Translate(XEDPARSE* Parse, xed_state_t State, Inst *Instruction)
+bool Translate(XEDPARSE *Parse, xed_state_t State, Inst *Instruction)
 {
 	// Jumps are IP-based and need to be fixed
 	if (!TranslateBranchInst(Parse, Instruction))

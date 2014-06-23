@@ -99,7 +99,7 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 		// Check if the segment can be used
 		size_t len = strlen(prefix);
 
-		if (len > 0)
+		if (len >= 2)
 		{
 			// Move backwards in order to get the segment (SIZESEG[CALC])
 			char *segPtr = (prefix + (len - 2));
