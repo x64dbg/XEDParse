@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "Translator.h"
+#include <stdio.h>
 
 static bool isinbase(char ch, const char* base)
 {

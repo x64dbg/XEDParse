@@ -1,4 +1,5 @@
 #include "Translator.h"
+#include <stdio.h>
 
 void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 {

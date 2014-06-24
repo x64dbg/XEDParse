@@ -1,5 +1,6 @@
 #include "ParseTest.h"
 #include "RegTable.h"
+#include <stdio.h>
 
 void OperandToString(char *Buffer, InstOperand *Operand)
 {

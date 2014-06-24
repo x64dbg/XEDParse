@@ -24,25 +24,20 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
 	memset(&instruction, 0, sizeof(Inst));
 
 	if (!ParseInstString(XEDParse, &instruction))
-	{
-		printf("%s\n", XEDParse->error);
 		return XEDPARSE_ERROR;
-	}
 
 	xed_state_t state;
 	XEDParseSetMode(XEDParse->x64, &state);
 
 	if (!Translate(XEDParse, state, &instruction))
-	{
-		printf("%s\n", XEDParse->error);
 		return XEDPARSE_ERROR;
-	}
 
 	char instString[XEDPARSE_MAXBUFSIZE];
 	memset(instString, 0, sizeof(instString));
 
 	InstructionToString(instString, &instruction);
-	printf("\nParsed instruction:\n%s\n", instString);
+	strcpy(XEDParse->error, instString);
+    _strlwr(XEDParse->error);
 
 	return XEDPARSE_OK;
 }

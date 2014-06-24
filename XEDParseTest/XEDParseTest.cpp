@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
         instr[strlen(instr)-1]=0;
         strcpy(parse.instr, instr);
         XEDParseAssemble(&parse);
+        printf("error:\n%s\n", parse.error);
         puts("bytes:");
         for(unsigned int i=0; i<parse.dest_size; i++)
             printf("%.2X ", parse.dest[i]);
@@ -70,10 +71,10 @@ int main(int argc, char* argv[])
 #else
 			current.x64 = false;
 #endif
-
             puts(current_instr);
             if(XEDParseAssemble(&current)==XEDPARSE_ERROR)
                 errors++;
+            printf("error:\n%s\n", current.error);
             for(unsigned int k=0; k<current.dest_size; k++)
                 printf("%.2X ", current.dest[k]);
             puts("");
