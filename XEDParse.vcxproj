@@ -21,11 +21,6 @@
     <ClCompile Include="RegTable.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="Translator.cpp" />
-    <ClCompile Include="xed-dot-prep.c" />
-    <ClCompile Include="xed-dot.c" />
-    <ClCompile Include="xed-enc-lang.cpp" />
-    <ClCompile Include="xed-ex3.cpp" />
-    <ClCompile Include="xed-examples-util.c" />
     <ClCompile Include="XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -39,10 +34,6 @@
     <ClInclude Include="RegTable.h" />
     <ClInclude Include="Translator.h" />
     <ClInclude Include="Validator.h" />
-    <ClInclude Include="xed-dot-prep.h" />
-    <ClInclude Include="xed-dot.h" />
-    <ClInclude Include="xed-enc-lang.H" />
-    <ClInclude Include="xed-examples-util.h" />
     <ClInclude Include="xed2\include\xed-address-width-enum.h" />
     <ClInclude Include="xed2\include\xed-agen.h" />
     <ClInclude Include="xed2\include\xed-attribute-enum.h" />
@@ -120,12 +111,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
