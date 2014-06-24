@@ -7,7 +7,7 @@ struct IClassType
 	xed_iclass_enum_t	IClass;
 	const xed_inst_t	*Instructions[32];
 	int					InstructionCount;
-	int					MinimumOperands;
+	unsigned int    	MinimumOperands;
 };
 
 extern IClassType XedInstLookupTable[];

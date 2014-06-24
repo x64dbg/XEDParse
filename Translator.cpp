@@ -95,7 +95,7 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	// Convert the operands to XED's form first
 	xed_encoder_operand_t ops[4];
 
-	int effectiveWidth = 0;
+	unsigned int effectiveWidth = 0;
 	if (Instruction->OperandCount > 0)
 	{
 		for (int i = 0; i < Instruction->OperandCount; i++)

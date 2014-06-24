@@ -43,6 +43,7 @@ int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
 	case XED_ICLASS_CALL_NEAR:
 		return 5;
 	}
+    return 0;
 }
 
 bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
@@ -75,7 +76,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
 		// Branches can't have a larger displacement than 32bits
 		if (delta > LONG_MAX || delta < LONG_MIN)
 		{
-			printf("Branch displacement is too large\n");
+            strcpy(Parse->error, "Branch displacement is too large");
 			return false;
 		}
 
