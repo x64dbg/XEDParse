@@ -11,8 +11,6 @@ char *TranslateInstMnemonic(XEDPARSE *Parse, Inst *Instruction)
 	TODO:
 
 	BEXTR_XOP
-	CMPSD_XMM
-	MOVSD_XMM
 	PEXTRW_SSE4
 	PREFETCH_EXCLUSIVE
 	PREFETCH_RESERVED
@@ -23,14 +21,26 @@ char *TranslateInstMnemonic(XEDPARSE *Parse, Inst *Instruction)
 	{
 		InstOperand *operand = &Instruction->Operands[i];
 
-		if (!_stricmp(mnemonic, "mov"))
+		if (operand->Type == OPERAND_REG)
 		{
-			if (operand->Type == OPERAND_REG)
+			if (!_stricmp(mnemonic, "mov"))
 			{
 				if (IsControlRegister(operand->Reg.Reg))
 					strcpy(mnemonic, "mov_cr");
 				else if (IsDebugRegister(operand->Reg.Reg))
 					strcpy(mnemonic, "mov_dr");
+			}
+
+			if (!_stricmp(mnemonic, "cmpsd"))
+			{
+				if (IsXmmRegister(operand->Reg.Reg))
+					strcpy(mnemonic, "cmpsd_xmm");
+			}
+
+			if (!_stricmp(mnemonic, "movsd"))
+			{
+				if (IsXmmRegister(operand->Reg.Reg))
+					strcpy(mnemonic, "movsd_xmm");
 			}
 		}
 	}
