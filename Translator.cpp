@@ -90,12 +90,11 @@ xed_encoder_operand_t OperandToXed(InstOperand *Operand)
 	return o;
 }
 
-void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instruction_t *XedInst)
+void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instruction_t *XedInst, unsigned int effectiveWidth)
 {
 	// Convert the operands to XED's form first
 	xed_encoder_operand_t ops[4];
 
-	unsigned int effectiveWidth = 0;
 	if (Instruction->OperandCount > 0)
 	{
 		for (int i = 0; i < Instruction->OperandCount; i++)
@@ -105,13 +104,6 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 
 			ops[i] = OperandToXed(&Instruction->Operands[i]);
 		}
-	}
-	else
-	{
-		if (Mode.mmode == XED_MACHINE_MODE_LONG_64)
-			effectiveWidth = 64;
-		else
-			effectiveWidth = 32;
 	}
 
 	// Create the instruction
@@ -168,8 +160,31 @@ bool Translate(XEDPARSE *Parse, xed_state_t State, Inst *Instruction)
 
 	if (err != XED_ERROR_NONE)
 	{
-		strcpy(Parse->error, "Failed to encode instruction!");
-		return false;
+        // Convert this struct to XED's format
+        ConvertInstToXed(Instruction, State, &xedInst, 64);
+
+        // Conversion request -> encoder request
+        xed_encoder_request_zero_set_mode(&encReq, &State);
+
+        if (!xed_convert_to_encoder_request(&encReq, &xedInst))
+        {
+            strcpy(Parse->error, "Failed while converting encoder request");
+            return false;
+        }
+
+        // Output the request
+        //char buf[5000] = "";
+        //xed_encode_request_print(&encReq, buf, 5000);
+        //printf(buf);
+
+        // Finally encode the assembly
+        xed_error_enum_t err = xed_encode(&encReq, Parse->dest, XED_MAX_INSTRUCTION_BYTES, &Parse->dest_size);
+
+        if (err != XED_ERROR_NONE)
+        {
+            strcpy(Parse->error, "Failed to encode instruction!");
+            return false;
+        }
 	}
 	
 	return true;
