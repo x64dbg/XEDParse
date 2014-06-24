@@ -29,7 +29,7 @@ enum XEDPARSE_STATUS
 #pragma pack(push,8)
 struct XEDPARSE
 {
-	bool x64; // use 64-bit instructions
+    bool x64; // use 64-bit instructions
     ULONGLONG cip; //instruction pointer (for relative addressing)
     unsigned int dest_size; //destination size (returned by XEDParse)
     CBXEDPARSE_UNKNOWN cbUnknown; //unknown operand callback
