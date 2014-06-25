@@ -191,7 +191,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		Operand->Type		= OPERAND_MEM;
 		Operand->Segment	= SEG_DS;
 		Operand->Size		= SIZE_UNSET;
-		Operand->XedEOSZ	= 0;
+		Operand->XedEOSZ	= (Parse->x64) ? 3 : 2;
 
 		return HandleMemoryOperand(Parse, Value, Operand);
 	}

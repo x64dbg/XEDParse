@@ -1,7 +1,6 @@
 #include <windows.h>
-#include "..\XEDParse.h"
-#include "Tests.h"
 #include <stdio.h>
+#include "..\XEDParse.h"
 
 int main(int argc, char* argv[])
 {

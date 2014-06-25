@@ -194,9 +194,53 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 		switch (Operands[1].Type)
 		{
 		case OPERAND_REG: // <instr> [], reg
+		{
+			//
+			// See above: ResizeSingleOperand(), case OPERAND_MEM
+			//
+			unsigned int memoryOperandCount = 0;
+			unsigned int memoryOperandSize = 0;
+
+			for (int i = 0; i < type->InstructionCount; i++)
+			{
+				inst = type->Instructions[i];
+				xedOp[0] = xed_inst_operand(inst, 0);
+				xedOp[1] = xed_inst_operand(inst, 1);
+
+				// Match the register first
+				if (!xed_operand_template_is_register(xedOp[1]))
+					continue;
+
+				if (xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ) != opsizetobits(Operands[1].Size))
+					continue;
+
+				// Check compatible memory types
+				if (!xed_operand_is_memory_addressing(xed_operand_name(xedOp[0])))
+					continue;
+
+				// Count if there is more than one possible operand size
+				// NOTE: Use the EOSZ of the REGISTER here
+				unsigned int size = xed_operand_width_bits(xedOp[0], Operands[1].XedEOSZ);
+
+				if (size != memoryOperandSize)
+					memoryOperandCount++;
+
+				memoryOperandSize = max(memoryOperandSize, size);
+			}
+
+			// Check if ambiguous
+			if (memoryOperandCount > 1)
+			{
+				strcpy(Parse->error, "Ambiguous memory size");
+				return false;
+			}
+
+			Operands[0].Size = bitstoopsize(memoryOperandSize);
 			return true;
+		}
+		break;
+
 		case OPERAND_IMM: // <instr> [], value
-			// Potential ambiguity
 			return true;
 		}
 	break;
@@ -270,10 +314,16 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
 		{
 		case OPERAND_REG:
 			// INSTRUCTION [], REG
-			return true;
+			// Don't care if it is already set
+			if (Instruction->Operands[0].Size != SIZE_UNSET)
+				return true;
+
+			return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
+
 		case OPERAND_IMM:
 			// INSTRUCTION [], IMM
-			return true;
+			return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
+
 		case OPERAND_MEM:
 			// INSTRUCTION [], []
 			strcpy(Parse->error, "Too many memory references");

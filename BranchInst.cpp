@@ -35,16 +35,19 @@ int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
 	case XED_ICLASS_JRCXZ:
 		return 2;
 
-	//case XED_ICLASS_JMP_FAR:
-	//case XED_ICLASS_CALL_FAR:
-	//	return 0;// ?
-
 	case XED_ICLASS_JMP:
 		return (Imm8) ? 2 : 5;
 
 	case XED_ICLASS_CALL_NEAR:
 		return 5;
+
+	// Both FAR CALL and FAR JMP are 7 bytes long, however
+	// displacement doesn't apply to them
+	case XED_ICLASS_JMP_FAR:
+	case XED_ICLASS_CALL_FAR:
+		return 0;
 	}
+
     return 0;
 }
 
