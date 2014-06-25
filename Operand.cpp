@@ -106,11 +106,16 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 			char *segPtr = (prefix + (len - 2));
 
 			// See if the segment is actually valid
-			Operand->Segment = getsegment(segPtr);
+			SEG segment = getsegment(segPtr);
 
-			// End the string here
-			if (Operand->Segment != SEG_INVALID)
+			if (segment != SEG_INVALID)
+			{
+				// Set the new segment
+				Operand->Segment = segment;
+
+				// End the string here
 				*segPtr = '\0';
+			}
 		}
 
 		// Determine the prefix size

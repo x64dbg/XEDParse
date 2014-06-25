@@ -58,7 +58,7 @@ bool ResizeSingleOperand(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand 
 		//
 		// This defaults to the full size, which is all 32 or all 64 bits,
 		// if the instruction has multiple memory types -> AMBIGUOUS
-		int memoryOperandCount	= 0;
+		unsigned int memoryOperandCount	= 0;
 		unsigned int memoryOperandSize	= 0;
 
 		for (int i = 0; i < type->InstructionCount; i++)
@@ -67,9 +67,10 @@ bool ResizeSingleOperand(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand 
 			const xed_operand_t *op		= xed_inst_operand(inst, 0);
 			xed_operand_enum_t name		= xed_operand_name(op);
 
-			if (xed_operand_is_memory_addressing(name))
-				memoryOperandCount++;
+			if (!xed_operand_is_memory_addressing(name))
+				continue;
 
+			memoryOperandCount++;
 			memoryOperandSize = max(memoryOperandSize, xed_operand_width_bits(op, Operand->XedEOSZ));
 		}
 
@@ -103,8 +104,8 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 		{
 		case OPERAND_IMM: // <instr> reg, value
 		{
-			int targetSize = opsizetobits(Operands[1].Size);
-			int fixedSize = INT_MAX;
+			int targetSize	= opsizetobits(Operands[1].Size);
+			int fixedSize	= INT_MAX;
 
 			for (int i = 0; i < type->InstructionCount; i++)
 			{
@@ -138,16 +139,56 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 
 			Operands[1].Size = bitstoopsize(fixedSize);
 			return true;
-
-			return true;
 		}
 		break;
 
 		case OPERAND_MEM: // <instr> reg, []
-			// ...
+		{
+			//
+			// See above: ResizeSingleOperand(), case OPERAND_MEM
+			//
+			unsigned int memoryOperandCount = 0;
+			unsigned int memoryOperandSize	= 0;
+
+			for (int i = 0; i < type->InstructionCount; i++)
+			{
+				inst		= type->Instructions[i];
+				xedOp[0]	= xed_inst_operand(inst, 0);
+				xedOp[1]	= xed_inst_operand(inst, 1);
+
+				// Match the register first
+				if (!xed_operand_template_is_register(xedOp[0]))
+					continue;
+
+				if (xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ) != opsizetobits(Operands[0].Size))
+					continue;
+
+				// Check compatible memory types
+				if (!xed_operand_is_memory_addressing(xed_operand_name(xedOp[1])))
+					continue;
+
+				// Count if there is more than one possible operand size
+				// NOTE: Use the EOSZ of the REGISTER here
+				unsigned int size = xed_operand_width_bits(xedOp[1], Operands[0].XedEOSZ);
+
+				if (size != memoryOperandSize)
+					memoryOperandCount++;
+
+				memoryOperandSize = max(memoryOperandSize, size);
+			}
+
+			// Check if ambiguous
+			if (memoryOperandCount > 1)
+			{
+				strcpy(Parse->error, "Ambiguous memory size");
+				return false;
+			}
+
+			Operands[1].Size = bitstoopsize(memoryOperandSize);
 			return true;
 		}
-	break;
+		break;
+		}
 
 	case OPERAND_MEM:
 		switch (Operands[1].Type)
@@ -160,7 +201,6 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 		}
 	break;
 	}
-
 
 	return true;
 }
@@ -202,46 +242,40 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
 	case OPERAND_REG:
 		switch (Instruction->Operands[1].Type)
 		{
-		case OPERAND_REG: // <instr> reg, reg
+		case OPERAND_REG:
+			// INSTRUCTION REG, REG
 			// Registers can't be resized
 			return true;
 
-		case OPERAND_IMM: // <instr> reg, value
+		case OPERAND_IMM:
+			// INSTRUCTION REG, IMM
 			return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 
-		case OPERAND_MEM: // <instr> reg, []
+		case OPERAND_MEM:
+			// INSTRUCTION REG, []
 			// Don't care if it is already set
 			if (Instruction->Operands[1].Size != SIZE_UNSET)
 				return true;
 
-			// ...
-			return true;
+			return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 		}
 		break;
 
 	case OPERAND_IMM:
-		switch (Instruction->Operands[1].Type)
-		{
-		case OPERAND_REG:
-		case OPERAND_IMM:
-		case OPERAND_MEM:
-			strcpy(Parse->error, "Operand immediate mismatch");
-			return false;
-
-		//case OPERAND_MEM1:
-		//	return true;
-		}
-		break;
+		strcpy(Parse->error, "Operand immediate mismatch");
+		return false;
 
 	case OPERAND_MEM:
 		switch (Instruction->Operands[1].Type)
 		{
-		case OPERAND_REG: // <instr> [], reg
+		case OPERAND_REG:
+			// INSTRUCTION [], REG
 			return true;
-		case OPERAND_IMM: // <instr> [], value
-			// Potential ambiguity
+		case OPERAND_IMM:
+			// INSTRUCTION [], IMM
 			return true;
-		case OPERAND_MEM: // <instr> [], []
+		case OPERAND_MEM:
+			// INSTRUCTION [], []
 			strcpy(Parse->error, "Too many memory references");
 			return false;
 		}

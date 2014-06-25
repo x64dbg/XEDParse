@@ -32,7 +32,9 @@ int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
 	case XED_ICLASS_JZ:
 		return (Imm8) ? 2 : 6;
 
-	//case XED_ICLASS_JRCXZ:
+	case XED_ICLASS_JRCXZ:
+		return 2;
+
 	//case XED_ICLASS_JMP_FAR:
 	//case XED_ICLASS_CALL_FAR:
 	//	return 0;// ?
@@ -70,6 +72,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
 		//
 		// Modify the delta so that it accommodates for the instruction size
 		// CALL doesn't apply here
+		//
 		// IF DELTA <= 127 [SHORT JUMP]
 		delta -= BranchClassBytes(Instruction->Class, (abs(delta) <= 127));
 
