@@ -24,7 +24,9 @@ OPSIZE inttoopsize(int opsize)
 	case 1:		return SIZE_BYTE;
 	case 2:		return SIZE_WORD;
 	case 4:		return SIZE_DWORD;
+	case 6:		return SIZE_FWORD;
 	case 8:		return SIZE_QWORD;
+	case 10:	return SIZE_TBYTE;
 	case 16:	return SIZE_XMMWORD;
 	case 32:	return SIZE_YMMWORD;
 	case 64:	return SIZE_ZMMWORD;

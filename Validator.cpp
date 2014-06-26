@@ -81,7 +81,8 @@ bool ResizeSingleOperand(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand 
 			return false;
 		}
 
-		Operand->Size = bitstoopsize(memoryOperandSize);
+		Operand->Size		= bitstoopsize(memoryOperandSize);
+		Operand->BitSize	= memoryOperandSize;
 		return true;
 	}
 	break;
@@ -184,7 +185,8 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 				return false;
 			}
 
-			Operands[1].Size = bitstoopsize(memoryOperandSize);
+			Operands[1].Size	= bitstoopsize(memoryOperandSize);
+			Operands[1].BitSize = memoryOperandSize;
 			return true;
 		}
 		break;
@@ -235,7 +237,8 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 				return false;
 			}
 
-			Operands[0].Size = bitstoopsize(memoryOperandSize);
+			Operands[0].Size	= bitstoopsize(memoryOperandSize);
+			Operands[0].BitSize = memoryOperandSize;
 			return true;
 		}
 		break;

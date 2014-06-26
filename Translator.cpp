@@ -61,6 +61,11 @@ xed_encoder_operand_t OperandToXed(InstOperand *Operand)
 	xed_encoder_operand_t o;
 	memset(&o, 0, sizeof(xed_encoder_operand_t));
 
+	// Handle special cases for certain memory operations
+	// Examples: FXSAVE [], FLDENV []
+	int bitsize = (Operand->Size == SIZE_UNSET) ? Operand->BitSize : opsizetobits(Operand->Size);
+
+	// Use the high level encoder interface
 	switch (Operand->Type)
 	{
 	case OPERAND_REG:
@@ -68,15 +73,15 @@ xed_encoder_operand_t OperandToXed(InstOperand *Operand)
 
 	case OPERAND_IMM:
 		if (Operand->Imm.RelBranch)
-			return xed_relbr(Operand->Imm.simm, opsizetobits(Operand->Size));
+			return xed_relbr(Operand->Imm.simm, bitsize);
 		else
-			return xed_imm0(Operand->Imm.imm, opsizetobits(Operand->Size));
+			return xed_imm0(Operand->Imm.imm, bitsize);
 
 	case OPERAND_MEM:
 		// See xed_mem_bisd @ xed-encoder-hl.h
 		o.type		= XED_ENCODER_OPERAND_TYPE_MEM;
 		o.u.mem.seg = segtoxed(Operand->Segment);
-		o.width		= opsizetobits(Operand->Size);
+		o.width		= bitsize;
 
 		if (Operand->Mem.Base)
 			o.u.mem.base = regtoxed(Operand->Mem.BaseVal);
