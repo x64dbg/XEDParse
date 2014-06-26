@@ -74,8 +74,8 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
 		// XED doesn't automatically do this for some reason
 		//
 		// Modify the delta so that it accommodates for the instruction size
-		// CALL doesn't apply here
 		//
+		// CALL doesn't apply here
 		// IF DELTA <= 127 [SHORT JUMP]
 		delta -= BranchClassBytes(Instruction->Class, (abs(delta) <= 127));
 

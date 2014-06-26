@@ -72,7 +72,6 @@ static MnemonicEntry XedMnemonicTable[] =
 	{ "outs",	"out"	},
 	{ "ins",	"in"	},
 	{ "wait",	"mwait" },
-	{ "movs",	"mov"	},
 	{ "cmps",	"cmp"	},
 	{ "xlatb",	"xlat"	},
 	{ "icebp",	"int1"	},
@@ -89,3 +88,4 @@ static MnemonicEntry XedMnemonicTable[] =
 };
 
 const char *MnemonicToXed(const char *Mnemonic);
+char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction);

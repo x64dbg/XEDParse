@@ -198,7 +198,7 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
 	// Operands
 	for (int i = tokenIndex; i < tokenCount; i++)
 	{
-		if (!AnalyzeOperand(Parse, tokens[i], &Instruction->Operands[Instruction->OperandCount++]))
+		if (!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
 			return false;
 	}
 
@@ -209,7 +209,7 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
 	}
 
 	// Verify and translate the mnemonic this time
-	Instruction->Class = str2xed_iclass_enum_t(TranslateInstMnemonic(Parse, Instruction));
+	Instruction->Class = str2xed_iclass_enum_t(InstMnemonicToXed(Parse, Instruction));
 
 	if (Instruction->Class == XED_ICLASS_INVALID)
 	{

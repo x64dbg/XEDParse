@@ -1,5 +1,9 @@
 #pragma once
 
+#define EOSZ_64 3
+#define EOSZ_32 2
+#define EOSZ_64_32(Is64) ((Is64) ? EOSZ_64 : EOSZ_32)
+
 enum OPSIZE
 {
 	SIZE_BYTE,		// Byte

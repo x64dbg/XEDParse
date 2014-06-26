@@ -1,53 +1,5 @@
 #include "Translator.h"
 
-char *TranslateInstMnemonic(XEDPARSE *Parse, Inst *Instruction)
-{
-	char *mnemonic = Instruction->Mnemonic;
-
-	// Convert the name to XED format
-	strcpy(mnemonic, MnemonicToXed(mnemonic));
-
-	/*
-	TODO:
-
-	BEXTR_XOP
-	PEXTRW_SSE4
-	PREFETCH_EXCLUSIVE
-	PREFETCH_RESERVED
-	*/
-
-	// Special cases depending on the operands
-	for (int i = 0; i < Instruction->OperandCount; i++)
-	{
-		InstOperand *operand = &Instruction->Operands[i];
-
-		if (operand->Type == OPERAND_REG)
-		{
-			if (!_stricmp(mnemonic, "mov"))
-			{
-				if (IsControlRegister(operand->Reg.Reg))
-					strcpy(mnemonic, "mov_cr");
-				else if (IsDebugRegister(operand->Reg.Reg))
-					strcpy(mnemonic, "mov_dr");
-			}
-
-			if (!_stricmp(mnemonic, "cmpsd"))
-			{
-				if (IsXmmRegister(operand->Reg.Reg))
-					strcpy(mnemonic, "cmpsd_xmm");
-			}
-
-			if (!_stricmp(mnemonic, "movsd"))
-			{
-				if (IsXmmRegister(operand->Reg.Reg))
-					strcpy(mnemonic, "movsd_xmm");
-			}
-		}
-	}
-
-	return _strupr(mnemonic);
-}
-
 LONGLONG TranslateRelativeCip(XEDPARSE *Parse, ULONGLONG Value, bool Signed)
 {
 	if (Signed)
@@ -125,7 +77,7 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	}
 }
 
-static bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int effectiveWidth)
+bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int effectiveWidth)
 {
     // Convert this struct to XED's format
     xed_encoder_instruction_t xedInst;
@@ -154,6 +106,7 @@ static bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int
         strcpy(Parse->error, "Failed to encode instruction!");
         return false;
     }
+
     return true;
 }
 

@@ -128,6 +128,9 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 			sprintf(Parse->error, "Unknown identifier in '%s'", Value);
 			return false;
 		}
+
+		// Update the effective operand size for XED
+		Operand->XedEOSZ = opsizetoeosz(Operand->Size);
 	}
 
 	// Begin determining the calculation
@@ -191,7 +194,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		Operand->Type		= OPERAND_MEM;
 		Operand->Segment	= SEG_DS;
 		Operand->Size		= SIZE_UNSET;
-		Operand->XedEOSZ	= (Parse->x64) ? 3 : 2;
+		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
 
 		return HandleMemoryOperand(Parse, Value, Operand);
 	}
@@ -210,7 +213,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		// Immediate
 		Operand->Type		= OPERAND_IMM;
 		Operand->Segment	= SEG_INVALID;
-		Operand->XedEOSZ	= (Parse->x64) ? 3 : 2;
+		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
 		Operand->Imm.Signed = (Value[0] == '-');
 		Operand->Imm.imm	= immVal;
 

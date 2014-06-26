@@ -4,7 +4,6 @@
 #include "XEDParse.h"
 #include "OpSize.h"
 #include "RegTable.h"
-#include "MnemonicTable.h"
 #include "Operand.h"
 #include "Prefix.h"
 
@@ -18,6 +17,7 @@ struct Inst
 	InstOperand			Operands[4];
 };
 
+#include "MnemonicTable.h"
 #include "BranchInst.h"
 #include "Validator.h"
 
