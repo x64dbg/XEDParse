@@ -93,6 +93,7 @@ bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int effect
         return false;
     }
 
+    }
     // Output the request
     //char buf[5000] = "";
     //xed_encode_request_print(&encReq, buf, 5000);
@@ -123,6 +124,16 @@ bool Translate(XEDPARSE *Parse, xed_state_t State, Inst *Instruction)
 	//try encoding with various different effectiveWidth values
     if(TryEncode(Parse, State, Instruction, 32))
         return true;
+
+    //fix RIP-relative commands
+    for(int i=0; i<Instruction->OperandCount; i++)
+    {
+        if(Instruction->Operands[i].Type != OPERAND_MEM)
+            continue;
+        if(!Instruction->Operands[i].Mem.DispRipRelative)
+            continue;
+        Instruction->Operands[i].Mem.DispVal--;
+    }
 
     if(Parse->x64 && TryEncode(Parse, State, Instruction, 64))
         return true;

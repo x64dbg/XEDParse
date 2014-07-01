@@ -42,6 +42,7 @@ struct InstOperand
             bool Disp;
             xed_uint64_t DispVal;
             MEMSIZE DispWidth;
+            bool DispRipRelative;
 
             bool Scale;
             xed_uint64_t ScaleVal;
