@@ -179,6 +179,19 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 			break;
 	}
 
+    //use RIP-relative addressing per default when on x64 and when the displacement is set
+    if(Parse->x64 && Operand->Mem.Disp && !Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
+    {
+        long long newDisp = Operand->Mem.DispVal - 7 - Parse->cip;
+        if(newDisp > -0x7FFFFFF8 && newDisp < 0x7FFFFFF8)
+        {
+            Operand->Mem.DispVal = newDisp;
+            Operand->Mem.DispWidth = SIZE_DWORD;
+            Operand->Mem.Base = true;
+            Operand->Mem.BaseVal = REG_RIP;
+        }
+    }
+
 	return true;
 }
 

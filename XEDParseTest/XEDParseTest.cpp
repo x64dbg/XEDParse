@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 #else
 		parse.x64 = false;
 #endif
-
+        parse.cip=(ULONGLONG)main;
         char instr[256]="";
         puts("instruction:");
         fgets(instr, 256, stdin);
