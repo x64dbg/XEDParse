@@ -360,6 +360,12 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
         return ResizeSingleOperand(Parse, Instruction->Class, &Instruction->Operands[0]);
 
     //
+    // Special case for LEA (Segments can't be used here)
+    //
+    if (Instruction->Class == XED_ICLASS_LEA)
+        Instruction->Operands[1].Segment = SEG_INVALID;
+
+    //
     // Check all invalid cases and then pass it to ResizeDoubleOperands
     //
     switch (Instruction->Operands[0].Type)

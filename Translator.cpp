@@ -93,15 +93,6 @@ bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int effect
         return false;
     }
 
-    //fix the LEA instruction
-    if(Instruction->Class == XED_ICLASS_LEA &&
-        Instruction->OperandCount == 2 &&
-        Instruction->Operands[0].Type == OPERAND_REG &&
-        Instruction->Operands[1].Type == OPERAND_MEM)
-    {
-        xed_encoder_request_set_seg0(&encReq, XED_REG_INVALID);
-    }  
-
     // Output the request
     //char buf[5000] = "";
     //xed_encode_request_print(&encReq, buf, 5000);
