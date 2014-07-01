@@ -89,3 +89,4 @@ static MnemonicEntry XedMnemonicTable[] =
 
 const char *MnemonicToXed(const char *Mnemonic);
 char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction);
+void InstMnemonicExplicitFix(Inst *Instruction, const char *Base, const char *Normal);

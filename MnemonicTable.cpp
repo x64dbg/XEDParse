@@ -21,7 +21,6 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
 	/*
 	TODO:
 
-	STOS
 	BEXTR_XOP
 	PEXTRW_SSE4
 	PREFETCH_EXCLUSIVE
@@ -57,26 +56,47 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
 		}
 	}
 
-	// MOVS(B/W/D/Q) case
-	if (!_strnicmp(mnemonic, "movs", 4))
+	// Hidden/non-explicit operands (Ex: (MOVS/CMPS)(B/W/D/Q) case)
+	if (!strstr(mnemonic, "xmm"))
 	{
-		switch (tolower(mnemonic[4]))
-		{
-		case 's':
-		case 'w':
-		case 'd':
-		case 'q':
-			Instruction->OperandCount = 0;
-			break;
-		}
+		InstMnemonicExplicitFix(Instruction, "movs", "mov");
+		InstMnemonicExplicitFix(Instruction, "cmps", "cmp");
+	}
 
-		// MOVS case
+	return _strupr(mnemonic);
+}
+
+void InstMnemonicExplicitFix(Inst *Instruction, const char *Base, const char *Normal)
+{
+	char *mnemonic	= Instruction->Mnemonic;
+	size_t len		= strlen(Base);
+
+	if (_strnicmp(mnemonic, Base, len))
+		return;
+
+	switch (mnemonic[len])
+	{
+	case 's':
+	case 'w':
+	case 'd':
+	case 'q':
+	case 'S':
+	case 'W':
+	case 'D':
+	case 'Q':
+		Instruction->OperandCount = 0;
+		break;
+	}
+
+	// Case
+	if (mnemonic[len] == '\0')
+	{
+		// Default to the "normal" instruction
+		strcpy(mnemonic, Normal);
+
+		// See if there's any explicit operands to convert
 		if (Instruction->OperandCount > 0)
 		{
-			// Default to the normal MOV
-			strcpy(mnemonic, "mov");
-			
-			// See if there's any explicit operands to convert
 			InstOperand *operands = Instruction->Operands;
 
 			if (operands[0].Type == OPERAND_MEM && operands[1].Type == OPERAND_MEM)
@@ -84,12 +104,15 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
 				if ((operands[0].Mem.BaseVal == REG_RDI && operands[1].Mem.BaseVal == REG_RSI) ||
 					(operands[0].Mem.BaseVal == REG_EDI && operands[1].Mem.BaseVal == REG_ESI))
 				{
+					// Apply the base
+					strcpy(mnemonic, Base);
+
 					switch (operands[0].Size)
 					{
-					case SIZE_BYTE:		strcpy(mnemonic, "movsb");	break;
-					case SIZE_WORD:		strcpy(mnemonic, "movsw");	break;
-					case SIZE_DWORD:	strcpy(mnemonic, "movsd");	break;
-					case SIZE_QWORD:	strcpy(mnemonic, "movsq");	break;
+					case SIZE_BYTE:		strcpy(mnemonic, "b");	break;
+					case SIZE_WORD:		strcpy(mnemonic, "w");	break;
+					case SIZE_DWORD:	strcpy(mnemonic, "d");	break;
+					case SIZE_QWORD:	strcpy(mnemonic, "q");	break;
 					}
 
 					Instruction->OperandCount = 0;
@@ -97,7 +120,4 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
 			}
 		}
 	}
-
-
-	return _strupr(mnemonic);
 }
