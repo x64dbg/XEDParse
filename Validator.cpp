@@ -254,8 +254,8 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
 			unsigned int memoryOperandCount = 0;
 			unsigned int memoryOperandSize	= 0;
 
-			int targetSize	= opsizetobits(Operands[1].Size);
-			int fixedSize	= INT_MAX;
+			unsigned int targetSize	= opsizetobits(Operands[1].Size);
+			unsigned int fixedSize	= INT_MAX;
 
 			for (int i = 0; i < type->InstructionCount; i++)
 			{
