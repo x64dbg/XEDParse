@@ -72,7 +72,6 @@ static MnemonicEntry XedMnemonicTable[] =
     { "outs",	"out"	},
     { "ins",	"in"	},
     { "wait",	"mwait" },
-    { "cmps",	"cmp"	},
     { "xlatb",	"xlat"	},
     { "icebp",	"int1"	},
 

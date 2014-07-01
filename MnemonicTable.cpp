@@ -76,11 +76,11 @@ void InstMnemonicExplicitFix(Inst *Instruction, const char *Base, const char *No
 
     switch (mnemonic[len])
     {
-    case 's':
+    case 'b':
     case 'w':
     case 'd':
     case 'q':
-    case 'S':
+    case 'B':
     case 'W':
     case 'D':
     case 'Q':
@@ -102,25 +102,19 @@ void InstMnemonicExplicitFix(Inst *Instruction, const char *Base, const char *No
             if (operands[0].Type == OPERAND_MEM && operands[1].Type == OPERAND_MEM)
             {
                 if ((operands[0].Mem.BaseVal == REG_RDI && operands[1].Mem.BaseVal == REG_RSI) ||
-                        (operands[0].Mem.BaseVal == REG_EDI && operands[1].Mem.BaseVal == REG_ESI))
+                    (operands[0].Mem.BaseVal == REG_EDI && operands[1].Mem.BaseVal == REG_ESI) ||
+                    (operands[0].Mem.BaseVal == REG_RSI && operands[1].Mem.BaseVal == REG_RDI) ||
+                    (operands[0].Mem.BaseVal == REG_ESI && operands[1].Mem.BaseVal == REG_EDI))
                 {
                     // Apply the base
                     strcpy(mnemonic, Base);
 
                     switch (operands[0].Size)
                     {
-                    case SIZE_BYTE:
-                        strcpy(mnemonic, "b");
-                        break;
-                    case SIZE_WORD:
-                        strcpy(mnemonic, "w");
-                        break;
-                    case SIZE_DWORD:
-                        strcpy(mnemonic, "d");
-                        break;
-                    case SIZE_QWORD:
-                        strcpy(mnemonic, "q");
-                        break;
+                    case SIZE_BYTE:  strcat(mnemonic, "b"); break;
+                    case SIZE_WORD:  strcat(mnemonic, "w"); break;
+                    case SIZE_DWORD: strcat(mnemonic, "d"); break;
+                    case SIZE_QWORD: strcat(mnemonic, "q"); break;
                     }
 
                     Instruction->OperandCount = 0;
