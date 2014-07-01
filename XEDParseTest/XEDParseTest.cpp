@@ -10,9 +10,9 @@ int main(int argc, char* argv[])
         memset(&parse, 0, sizeof(parse));
 
 #ifdef _WIN64
-		parse.x64 = true;
+        parse.x64 = true;
 #else
-		parse.x64 = false;
+        parse.x64 = false;
 #endif
         parse.cip=(ULONGLONG)main;
         char instr[256]="";
@@ -62,13 +62,13 @@ int main(int argc, char* argv[])
     {
         if(filedata[i]=='\n' || filedata[i+1]=='\n') //newline
         {
-			XEDPARSE current;
+            XEDPARSE current;
             memset(&current, 0, sizeof(current));
             strcpy(current.instr, current_instr);
 #ifdef _WIN64
-			current.x64 = true;
+            current.x64 = true;
 #else
-			current.x64 = false;
+            current.x64 = false;
 #endif
             puts(current_instr);
             if(XEDParseAssemble(&current)==XEDPARSE_ERROR)

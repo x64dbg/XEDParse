@@ -9,12 +9,12 @@
 
 struct Inst
 {
-	char				Mnemonic[32];
-	xed_iclass_enum_t	Class;
-	PREFIX				Prefix;
+    char				Mnemonic[32];
+    xed_iclass_enum_t	Class;
+    PREFIX				Prefix;
 
-	int					OperandCount;
-	InstOperand			Operands[4];
+    int					OperandCount;
+    InstOperand			Operands[4];
 };
 
 #include "MnemonicTable.h"
