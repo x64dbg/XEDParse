@@ -57,7 +57,7 @@ xed_encoder_operand_t OperandToXed(InstOperand *Operand)
 	return o;
 }
 
-void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instruction_t *XedInst, unsigned int effectiveWidth)
+void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instruction_t *XedInst, unsigned int EffectiveWidth)
 {
 	// Convert the operands to XED's form first
 	xed_encoder_operand_t ops[4];
@@ -66,7 +66,7 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
         ops[i] = OperandToXed(&Instruction->Operands[i]);
 
 	// Create the instruction
-	xed_inst(XedInst, Mode, Instruction->Class, effectiveWidth, Instruction->OperandCount, ops);
+	xed_inst(XedInst, Mode, Instruction->Class, EffectiveWidth, Instruction->OperandCount, ops);
 
 	// Apply any prefixes
 	switch (Instruction->Prefix)
@@ -77,11 +77,11 @@ void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instructi
 	}
 }
 
-bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int effectiveWidth)
+bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int EffectiveWidth)
 {
     // Convert this struct to XED's format
     xed_encoder_instruction_t xedInst;
-    ConvertInstToXed(Instruction, State, &xedInst, effectiveWidth);
+    ConvertInstToXed(Instruction, State, &xedInst, EffectiveWidth);
 
     // Conversion request -> encoder request
     xed_encoder_request_t encReq;
@@ -92,12 +92,6 @@ bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int effect
         strcpy(Parse->error, "Failed while converting encoder request");
         return false;
     }
-
-    }
-    // Output the request
-    //char buf[5000] = "";
-    //xed_encode_request_print(&encReq, buf, 5000);
-    //printf(buf);
 
     // Finally encode the assembly
     xed_error_enum_t err = xed_encode(&encReq, Parse->dest, XED_MAX_INSTRUCTION_BYTES, &Parse->dest_size);
@@ -121,17 +115,19 @@ bool Translate(XEDPARSE *Parse, xed_state_t State, Inst *Instruction)
 	if (!ValidateInstOperands(Parse, Instruction))
 		return false;
 
-	//try encoding with various different effectiveWidth values
+	// Try encoding with various different effectiveWidth values
     if(TryEncode(Parse, State, Instruction, 32))
         return true;
 
-    //fix RIP-relative commands
-    for(int i=0; i<Instruction->OperandCount; i++)
+    // Fix RIP-relative commands
+    for(int i = 0; i<Instruction->OperandCount; i++)
     {
         if(Instruction->Operands[i].Type != OPERAND_MEM)
             continue;
+
         if(!Instruction->Operands[i].Mem.DispRipRelative)
             continue;
+
         Instruction->Operands[i].Mem.DispVal--;
     }
 

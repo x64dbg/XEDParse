@@ -20,8 +20,8 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
         //
         // Displacement is either /8, /32, /64
         // 5h = 101b
-        Operand->Mem.Disp		= true;
-        Operand->Mem.DispVal	= disp;
+        Operand->Mem.Disp       = true;
+        Operand->Mem.DispVal    = disp;
 
         if (Value[0] == '-')
             Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_signed(disp, 0x5));
@@ -179,17 +179,25 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
             break;
     }
 
-    //use RIP-relative addressing per default when on x64 and when the displacement is set
-    if(Parse->x64 && Operand->Mem.Disp && !Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
+    if (Operand->Mem.Disp)
     {
-        long long newDisp = Operand->Mem.DispVal - 6 - Parse->cip;
-        if(newDisp > -0x7FFFFFF8 && newDisp < 0x7FFFFFF8)
-        {
-            Operand->Mem.DispRipRelative = true;
-            Operand->Mem.DispVal = newDisp;
+        // If the base isn't set, the displacement must be 32 bits
+        if (!Operand->Mem.Base)
             Operand->Mem.DispWidth = SIZE_DWORD;
-            Operand->Mem.Base = true;
-            Operand->Mem.BaseVal = REG_RIP;
+
+        // Use RIP-relative addressing per default when on x64 and when the displacement is set
+        if (Parse->x64 && !Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
+        {
+            LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
+
+            if (newDisp > -0x7FFFFFF8 && newDisp < 0x7FFFFFF8)
+            {
+                Operand->Mem.DispRipRelative    = true;
+                Operand->Mem.DispVal            = newDisp;
+                Operand->Mem.DispWidth          = SIZE_DWORD;
+                Operand->Mem.Base               = true;
+                Operand->Mem.BaseVal            = REG_RIP;
+            }
         }
     }
 
