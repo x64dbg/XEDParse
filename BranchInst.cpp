@@ -99,6 +99,12 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
         operand->Imm.RelBranch	= true;
         operand->Imm.simm		= delta;
     }
+    else if (operand->Type == OPERAND_MEM)
+    {
+        //JMP/CALL FAR
+        if(Instruction->Class == XED_ICLASS_CALL_FAR || Instruction->Class == XED_ICLASS_JMP_FAR)
+            operand->Size = SIZE_FWORD; //far word
+    }
 
     return true;
 }

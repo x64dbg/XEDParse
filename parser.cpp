@@ -201,7 +201,7 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
         if(!_strnicmp(tokens[i], "far", 3)) //fixes 'RET FAR'
         {
             sprintf(Instruction->Mnemonic, "%s_far", Instruction->Mnemonic);
-            continue;
+            strcpy(tokens[i], tokens[i]+3);
         }
         if (!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
             return false;
