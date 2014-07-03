@@ -189,8 +189,8 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
         if (Parse->x64 && !Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
         {
             LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
-
-            if (newDisp > -0x7FFFFFF8 && newDisp < 0x7FFFFFF8)
+            ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
+            if(masked == 0 || masked == 0xFFFFFFFF00000000)
             {
                 Operand->Mem.DispRipRelative    = true;
                 Operand->Mem.DispVal            = newDisp;
@@ -198,6 +198,8 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
                 Operand->Mem.Base               = true;
                 Operand->Mem.BaseVal            = REG_RIP;
             }
+            else
+                Operand->Mem.DispWidth = SIZE_QWORD;
         }
     }
 
