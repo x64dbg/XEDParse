@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 #else
     current.x64 = false;
 #endif
-    current.cip=0x10000000;
+    current.cip=0x180001000;
     for(int i=0,j=0; i<len; i++)
     {
         if(filedata[i]=='\n' || filedata[i+1]=='\n') //newline
