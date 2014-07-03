@@ -8,13 +8,12 @@ int main(int argc, char* argv[])
     {
         XEDPARSE parse;
         memset(&parse, 0, sizeof(parse));
-
 #ifdef _WIN64
         parse.x64 = true;
 #else
         parse.x64 = false;
 #endif
-        parse.cip=(ULONGLONG)main;
+        parse.cip=0;
         char instr[256]="";
         puts("instruction:");
         fgets(instr, 256, stdin);
@@ -58,25 +57,27 @@ int main(int argc, char* argv[])
 
     int errors=0;
     DWORD ticks=GetTickCount();
+    XEDPARSE current;
+    memset(&current, 0, sizeof(current));
+#ifdef _WIN64
+    current.x64 = true;
+#else
+    current.x64 = false;
+#endif
+    current.cip=0x10000000;
     for(int i=0,j=0; i<len; i++)
     {
         if(filedata[i]=='\n' || filedata[i+1]=='\n') //newline
         {
-            XEDPARSE current;
-            memset(&current, 0, sizeof(current));
             strcpy(current.instr, current_instr);
-#ifdef _WIN64
-            current.x64 = true;
-#else
-            current.x64 = false;
-#endif
-            puts(current_instr);
             if(XEDParseAssemble(&current)==XEDPARSE_ERROR)
+            {
+                printf("%s\n%s\n\n", current_instr, current.error);
                 errors++;
-            printf("error:\n%s\n", current.error);
-            for(unsigned int k=0; k<current.dest_size; k++)
-                printf("%.2X ", current.dest[k]);
-            puts("");
+                current.cip++;
+            }
+            else
+                current.cip+=current.dest_size;
             while(filedata[i]=='\r' || filedata[i]=='\n')
                 i++;
             i--;
