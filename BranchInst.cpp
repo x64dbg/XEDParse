@@ -77,16 +77,21 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
         //
         // CALL doesn't apply here
         // IF DELTA <= 127 [SHORT JUMP]
-        delta -= BranchClassBytes(Instruction->Class, (abs(delta) <= 127));
+        int branchClass = BranchClassBytes(Instruction->Class, (abs(delta) <= 127));
+        delta -= branchClass;
 
         // Branches can't have a larger displacement than 32bits
-        if (delta > LONG_MAX || delta < LONG_MIN)
+        ULONGLONG masked = delta & 0xFFFFFFFF00000000;
+        if(masked != 0 && masked != 0xFFFFFFFF00000000)
         {
             strcpy(Parse->error, "Branch displacement is too large");
             return false;
         }
 
-        operand->Size			= inttoopsize(xed_shortest_width_signed(delta, 0xFF));
+        if(!Parse->x64) //x32
+            delta &= 0xFFFFFFFF;
+
+        operand->Size			= branchClass == 2 ? SIZE_BYTE : SIZE_DWORD;
         operand->Imm.Signed		= true;
         operand->Imm.RelBranch	= true;
         operand->Imm.simm		= delta;
