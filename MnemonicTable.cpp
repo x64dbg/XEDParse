@@ -61,6 +61,10 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
     {
         InstMnemonicExplicitFix(Instruction, "movs", "mov");
         InstMnemonicExplicitFix(Instruction, "cmps", "cmp");
+        InstMnemonicExplicitFix(Instruction, "scas", "sca");
+        InstMnemonicExplicitFix(Instruction, "stos", "sto");
+        InstMnemonicExplicitFix(Instruction, "lods", "lod");
+        InstMnemonicExplicitFix(Instruction, "outs", "out");
     }
 
     return _strupr(mnemonic);

@@ -2,7 +2,7 @@
 
 bool IsIClassJump(xed_iclass_enum_t IClass)
 {
-    return (IClass >= XED_ICLASS_JB && IClass <= XED_ICLASS_JZ);
+    return (IClass >= XED_ICLASS_JB && IClass <= XED_ICLASS_JZ) || (IClass >= XED_ICLASS_LOOP && IClass <= XED_ICLASS_LOOPNE);
 }
 
 bool IsIClassCall(xed_iclass_enum_t IClass)
@@ -32,6 +32,9 @@ int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
     case XED_ICLASS_JZ:
         return (Imm8) ? 2 : 6;
 
+    case XED_ICLASS_LOOP:
+    case XED_ICLASS_LOOPE:
+    case XED_ICLASS_LOOPNE:
     case XED_ICLASS_JRCXZ:
         return 2;
 

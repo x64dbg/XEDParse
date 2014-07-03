@@ -392,9 +392,12 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
         }
         break;
 
-    case OPERAND_IMM:
+    case OPERAND_IMM: //OUT 0xE9, EAX
+        /*
         strcpy(Parse->error, "Operand immediate mismatch");
         return false;
+        */
+        return true;
 
     case OPERAND_MEM:
         switch (Instruction->Operands[1].Type)
