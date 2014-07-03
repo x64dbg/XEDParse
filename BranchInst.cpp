@@ -63,7 +63,10 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
     // Any branch instruction can only have one operand max
     if (Instruction->OperandCount > 1)
     {
-        strcpy(Parse->error, "Too many operands in branch");
+        if(Instruction->Class == XED_ICLASS_CALL_FAR || Instruction->Class == XED_ICLASS_JMP_FAR)
+            strcpy(Parse->error, "far branches are not yet supported!");
+        else
+            strcpy(Parse->error, "Too many operands in branch");
         return false;
     }
 

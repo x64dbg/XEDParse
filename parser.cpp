@@ -203,6 +203,8 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
             sprintf(Instruction->Mnemonic, "%s_far", Instruction->Mnemonic);
             strcpy(tokens[i], tokens[i]+3);
         }
+        else if(!_strnicmp(tokens[i], "mmx", 3) && strlen(tokens[i])>3) //fixes 'PADDSW MMX0, QWORD PTR [EAX]'
+            sprintf(tokens[i], "mm%c", tokens[i][3]);
         if (!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
             return false;
     }
