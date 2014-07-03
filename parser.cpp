@@ -198,6 +198,11 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
     // Operands
     for (int i = tokenIndex; i < tokenCount; i++)
     {
+        if(!_strnicmp(tokens[i], "far", 3)) //fixes 'RET FAR'
+        {
+            sprintf(Instruction->Mnemonic, "%s_far", Instruction->Mnemonic);
+            continue;
+        }
         if (!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
             return false;
     }

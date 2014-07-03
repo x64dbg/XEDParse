@@ -11,6 +11,7 @@ static MnemonicEntry XedMnemonicTable[] =
     { "retf",	"ret_far"	},
     { "ret",	"ret_near"	},
     { "retn",	"ret_near"	},
+    { "retn_far",	"ret_near"	},
     { "call",	"call_near" },
     { "callf",	"call_far"	},
     { "jmpf",	"jmp_far"	},
