@@ -202,6 +202,12 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
                 Operand->Mem.DispWidth = SIZE_QWORD;
         }
     }
+    else if(!Operand->Mem.Base && Operand->Mem.Index && Operand->Mem.Scale) //MOV EAX, [ECX*8]
+    {
+        Operand->Mem.Disp = true;
+        Operand->Mem.DispVal = 0;
+        Operand->Mem.DispWidth = SIZE_DWORD;
+    }
 
     return true;
 }
