@@ -420,6 +420,9 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
             return false;
         }
         break;
+
+	case OPERAND_SEGSEL:
+		return true;
     }
 
     return false;

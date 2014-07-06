@@ -15,9 +15,6 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
 {
     char *mnemonic = Instruction->Mnemonic;
 
-    // Convert the name to XED format
-    strcpy(mnemonic, MnemonicToXed(mnemonic));
-
     /*
     TODO:
 
@@ -56,16 +53,31 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
         }
     }
 
+	// Far addressing
+	if (Instruction->Far)
+	{
+		if (!_stricmp(Instruction->Mnemonic, "call"))
+			strcpy(Instruction->Mnemonic, "call_far");
+		else if (!_stricmp(Instruction->Mnemonic, "jmp"))
+			strcpy(Instruction->Mnemonic, "jmp_far");
+		else if (!_stricmp(Instruction->Mnemonic, "ret"))
+			strcpy(Instruction->Mnemonic, "ret_far");
+	}
+
     // Hidden/non-explicit operands (Ex: (MOVS/CMPS)(B/W/D/Q) case)
+	// Exclude instructions with XXXXX_XMM
     if (!strstr(mnemonic, "xmm"))
     {
         InstMnemonicExplicitFix(Instruction, "movs", "mov");
         InstMnemonicExplicitFix(Instruction, "cmps", "cmp");
-        InstMnemonicExplicitFix(Instruction, "scas", "sca");
-        InstMnemonicExplicitFix(Instruction, "stos", "sto");
-        InstMnemonicExplicitFix(Instruction, "lods", "lod");
-        InstMnemonicExplicitFix(Instruction, "outs", "out");
+		InstMnemonicExplicitFix(Instruction, "scas", "sca");
+		InstMnemonicExplicitFix(Instruction, "stos", "sto");
+		InstMnemonicExplicitFix(Instruction, "lods", "lod");
+		InstMnemonicExplicitFix(Instruction, "outs", "out");
     }
+
+	// Convert the name to XED format
+	strcpy(mnemonic, MnemonicToXed(mnemonic));
 
     return _strupr(mnemonic);
 }

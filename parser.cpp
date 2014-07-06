@@ -79,6 +79,22 @@ bool valfromstring(const char* text, ULONGLONG* value)
     return true;
 }
 
+bool StrDel(char *Source, char *Needle, char StopAt)
+{
+	// Find the location in the string first
+	char *loc = strstr(Source, Needle);
+
+	if (!loc)
+		return false;
+
+	// "Delete" the word by shifting it over
+	int needleLen = strlen(Needle);
+
+	memcpy(loc, loc + needleLen, strlen(loc) - needleLen + 1);
+
+	return true;
+}
+
 char *GrabInstToken(char *Dest, char *Src, bool Operand)
 {
     char *bufEnd = nullptr;
@@ -174,11 +190,20 @@ int InstructionToTokens(const char *Value, char Tokens[8][64])
 
 bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
 {
+	// Copy a buffer to edit
+	char buf[XEDPARSE_MAXBUFSIZE];
+	strcpy(buf, Parse->instr);
+
+	// Find near/far modifiers
+	Instruction->Near	= StrDel(buf, "near", ' ');
+	Instruction->Far	= StrDel(buf, "far", ' ');
+
+	// Parse into tokens
     char tokens[8][64];
     memset(tokens, 0, sizeof(tokens));
 
     int tokenIndex = 0;
-    int tokenCount = InstructionToTokens(Parse->instr, tokens);
+    int tokenCount = InstructionToTokens(buf, tokens);
 
     if (tokenCount <= 0)
     {
@@ -198,15 +223,6 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
     // Operands
     for (int i = tokenIndex; i < tokenCount; i++)
     {
-        if(!_strnicmp(tokens[i], "far", 3)) //fixes 'RET FAR'
-        {
-            sprintf(Instruction->Mnemonic, "%s_far", Instruction->Mnemonic);
-            strcpy(tokens[i], tokens[i]+3);
-        }
-        else if(!_strnicmp(tokens[i], "near", 4)) //fixes 'RET NEAR'
-            strcpy(tokens[i], tokens[i]+4);
-        else if(!_strnicmp(tokens[i], "mmx", 3) && strlen(tokens[i])>3) //fixes 'PADDSW MMX0, QWORD PTR [EAX]'
-            sprintf(tokens[i], "mm%c", tokens[i][3]);
         if (!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
             return false;
     }

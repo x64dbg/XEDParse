@@ -12,6 +12,7 @@ enum OPSIZE
     SIZE_FWORD,		// Far word 48bits
     SIZE_QWORD,		// Quad Word
     SIZE_TBYTE,		// FPU 80bits
+	SIZE_DQWORD,	// Double quad word
     SIZE_XMMWORD,	// XMM Word
     SIZE_YMMWORD,	// YMM Word
     SIZE_ZMMWORD,	// ZMM Word
@@ -39,7 +40,8 @@ static OpsizeEntry OpsizeEntryTable[] =
     { "fword",		SIZE_FWORD,		6,	48	},
     { "qword",		SIZE_QWORD,		8,	64	},
     { "tbyte",		SIZE_TBYTE,		10, 80	},
-    { "xmmword",	SIZE_XMMWORD,	16, 128 },
+    { "dqword",     SIZE_DQWORD,    16, 128 },
+	{ "xmmword",    SIZE_XMMWORD,   16, 128 },
     { "ymmword",	SIZE_YMMWORD,	32, 256 },
     { "zmmword",	SIZE_ZMMWORD,	64, 512 },
     { "32_64",		SIZE_32_64,		0,	0	},

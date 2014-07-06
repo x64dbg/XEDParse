@@ -131,7 +131,7 @@ enum REG
     REG_ST6,
     REG_ST7,
 
-    /* 3DNow! MMX/MM# */
+    /* 3DNow! MMX/MM# (Same register: both aliases) */
     REG_MM0,
     REG_MM1,
     REG_MM2,
@@ -140,6 +140,15 @@ enum REG
     REG_MM5,
     REG_MM6,
     REG_MM7,
+
+	REG_MMX0,
+	REG_MMX1,
+	REG_MMX2,
+	REG_MMX3,
+	REG_MMX4,
+	REG_MMX5,
+	REG_MMX6,
+	REG_MMX7,
 
     /* Floating point XXM# */
     REG_XMM0,
@@ -332,15 +341,24 @@ static RegEntry RegisterIds[] =
     { "st6", REG_ST6, XED_REG_ST6, SIZE_TBYTE },
     { "st7", REG_ST7, XED_REG_ST7, SIZE_TBYTE },
 
-    /* 3DNow! MMX/MM# */
-    { "mm0", REG_MM0, XED_REG_MMX0, SIZE_QWORD },
-    { "mm1", REG_MM1, XED_REG_MMX1, SIZE_QWORD },
-    { "mm2", REG_MM2, XED_REG_MMX2, SIZE_QWORD },
-    { "mm3", REG_MM3, XED_REG_MMX3, SIZE_QWORD },
-    { "mm4", REG_MM4, XED_REG_MMX4, SIZE_QWORD },
-    { "mm5", REG_MM5, XED_REG_MMX5, SIZE_QWORD },
-    { "mm6", REG_MM6, XED_REG_MMX6, SIZE_QWORD },
-    { "mm7", REG_MM7, XED_REG_MMX7, SIZE_QWORD },
+    /* 3DNow! MMX/MM# (Same register: both aliases) */
+	{ "mm0", REG_MM0, XED_REG_MMX0, SIZE_QWORD },
+	{ "mm1", REG_MM1, XED_REG_MMX1, SIZE_QWORD },
+	{ "mm2", REG_MM2, XED_REG_MMX2, SIZE_QWORD },
+	{ "mm3", REG_MM3, XED_REG_MMX3, SIZE_QWORD },
+	{ "mm4", REG_MM4, XED_REG_MMX4, SIZE_QWORD },
+	{ "mm5", REG_MM5, XED_REG_MMX5, SIZE_QWORD },
+	{ "mm6", REG_MM6, XED_REG_MMX6, SIZE_QWORD },
+	{ "mm7", REG_MM7, XED_REG_MMX7, SIZE_QWORD },
+
+	{ "mmx0", REG_MMX0, XED_REG_MMX0, SIZE_QWORD },
+	{ "mmx1", REG_MMX1, XED_REG_MMX1, SIZE_QWORD },
+	{ "mmx2", REG_MMX2, XED_REG_MMX2, SIZE_QWORD },
+	{ "mmx3", REG_MMX3, XED_REG_MMX3, SIZE_QWORD },
+	{ "mmx4", REG_MMX4, XED_REG_MMX4, SIZE_QWORD },
+	{ "mmx5", REG_MMX5, XED_REG_MMX5, SIZE_QWORD },
+	{ "mmx6", REG_MMX6, XED_REG_MMX6, SIZE_QWORD },
+	{ "mmx7", REG_MMX7, XED_REG_MMX7, SIZE_QWORD },
 
     /* Floating point XMM# */
     { "xmm0", REG_XMM0, XED_REG_XMM0, SIZE_XMMWORD },

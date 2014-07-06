@@ -63,10 +63,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
     // Any branch instruction can only have one operand max
     if (Instruction->OperandCount > 1)
     {
-        if(Instruction->Class == XED_ICLASS_CALL_FAR || Instruction->Class == XED_ICLASS_JMP_FAR)
-            strcpy(Parse->error, "far branches are not yet supported!");
-        else
-            strcpy(Parse->error, "Too many operands in branch");
+        strcpy(Parse->error, "Too many operands in branch");
         return false;
     }
 
@@ -75,7 +72,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
 
     if (operand->Type == OPERAND_IMM)
     {
-        LONGLONG delta = TranslateRelativeCip(Parse, operand->Imm.imm, operand->Imm.Signed);
+        LONGLONG delta = TranslateRelativeCip(Parse, operand->Imm.imm, true);
 
         // XED doesn't automatically do this for some reason
         //
@@ -86,28 +83,38 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
         int branchClass = BranchClassBytes(Instruction->Class, (abs(delta) <= 127));
         delta -= branchClass;
 
-        // Branches can't have a larger displacement than 32bits
+        // Branches can't have a displacement larger than 32 bits
         ULONGLONG masked = delta & 0xFFFFFFFF00000000;
-        if(masked != 0 && masked != 0xFFFFFFFF00000000)
+        if (masked != 0 && masked != 0xFFFFFFFF00000000)
         {
             strcpy(Parse->error, "Branch displacement is too large");
             return false;
         }
 
-        if(!Parse->x64) //x32
+		// 64bit -> 32bit variable mask
+        if (!Parse->x64)
             delta &= 0xFFFFFFFF;
 
         operand->Size			= branchClass == 2 ? SIZE_BYTE : SIZE_DWORD;
-        operand->Imm.Signed		= true;
         operand->Imm.RelBranch	= true;
         operand->Imm.simm		= delta;
     }
     else if (operand->Type == OPERAND_MEM)
     {
-        //JMP/CALL FAR
+        // JMP/CALL FARWORD PTR
         if(Instruction->Class == XED_ICLASS_CALL_FAR || Instruction->Class == XED_ICLASS_JMP_FAR)
-            operand->Size = SIZE_FWORD; //far word
+            operand->Size = SIZE_FWORD;
     }
+	else if (operand->Type == OPERAND_SEGSEL)
+	{
+		// JMP FAR 0000:00000000
+		// This is considered 2 operands by XED
+		Instruction->OperandCount = 2;
+
+		Instruction->Operands[1].Type		= OPERAND_IMM;
+		Instruction->Operands[1].Size		= SIZE_WORD;
+		Instruction->Operands[1].Imm.simm	= Instruction->Operands[0].Sel.Selector;
+	}
 
     return true;
 }

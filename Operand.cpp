@@ -22,11 +22,7 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
         // 5h = 101b
         Operand->Mem.Disp       = true;
         Operand->Mem.DispVal    = disp;
-
-        if (Value[0] == '-')
-            Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_signed(disp, 0x5));
-        else
-            Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_unsigned(disp, 0x5));
+        Operand->Mem.DispWidth	= inttoopsize(xed_shortest_width_signed(disp, 0x5));
     }
     else
     {
@@ -75,34 +71,16 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
     // Gather any information & check the prefix validity
     if (strlen(prefix) > 0)
     {
-        // Remove 'ptr' if it exists and remove colons
-        {
-            char *base	= prefix;
-            char *ptr	= prefix;
-
-            while (*ptr)
-            {
-                if (ptr[0] == 'p' && ptr[1] == 't' && ptr[2] == 'r')
-                    ptr += 3;
-
-                if (ptr[0] == ':')
-                {
-                    ptr++;
-                    continue;
-                }
-
-                *base++ = *ptr++;
-            }
-
-            *base = '\0';
-        }
+        // Remove 'ptr/far/near' if it exists and remove colons
+		StrDel(prefix, "ptr", '\0');
+		StrDel(prefix, ":", '\0');
 
         // Check if the segment can be used
         size_t len = strlen(prefix);
 
         if (len >= 2)
         {
-            // Move backwards in order to get the segment (SIZESEG[CALC])
+            // Move backwards in order to get the segment (SIZE-SEG[CALC])
             char *segPtr = (prefix + (len - 2));
 
             // See if the segment is actually valid
@@ -135,8 +113,11 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 
     // Begin determining the calculation
     // [Base + (Index * Scale) + Displacement] -- IN ANY ORDER
-    if (strlen(calc) <= 0)
-        return false;
+	if (strlen(calc) <= 0)
+	{
+		strcpy(Parse->error, "Invalid memory calculation");
+		return false;
+	}
 
     char temp[32];
     char *base		= temp;
@@ -212,23 +193,63 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
     return true;
 }
 
+bool HandleSegSelctorOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
+{
+	char selector[64];
+	char offset[64];
+
+	// Copy the prefix into a buffer
+	strcpy(selector, Value);
+	*strchr(selector, ':') = '\0';
+
+	// Copy the offset
+	strcpy(offset, strrchr(Value, ':') + 1);
+
+	// The segment selector is always a number
+	if (strlen(selector) > 0)
+	{
+		ULONGLONG selVal = 0;
+
+		if (!valfromstring(selector, &selVal) || abs((LONGLONG)selVal) > USHRT_MAX)
+		{
+			strcpy(Parse->error, "Invalid segment selector value");
+			return false;
+		}
+
+		Operand->Sel.Selector = selVal & 0xFFFF;
+	}
+	else
+	{
+		strcpy(Parse->error, "Invalid segment selector");
+		return false;
+	}
+
+	// Determine offset
+	if (strlen(offset) <= 0)
+	{
+		strcpy(Parse->error, "Invalid offset");
+		return false;
+	}
+
+	// Ex: 033:X86SwitchTo64BitMode
+	ULONGLONG offsetVal = 0;
+
+	if (!valfromstring(offset, &offsetVal) && !(Parse->cbUnknown && Parse->cbUnknown(offset, &offsetVal)))
+	{
+		sprintf(Parse->error, "Unable to parse offset '%s'", offset);
+		return false;
+	}
+
+	Operand->Sel.Offset = offsetVal & 0xFFFFFFFF;
+	return true;
+}
+
 bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 {
     REG registerVal		= getregister(Value);
     ULONGLONG immVal	= 0;
 
-    if (strchr(Value, '[') && strchr(Value, ']'))
-    {
-        // Memory operand
-        // Assume SEG_DS by default
-        Operand->Type		= OPERAND_MEM;
-        Operand->Segment	= SEG_DS;
-        Operand->Size		= SIZE_UNSET;
-        Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
-
-        return HandleMemoryOperand(Parse, Value, Operand);
-    }
-    else if (registerVal != REG_INVALID)
+    if (registerVal != REG_INVALID)
     {
         // Register
         Operand->Type		= OPERAND_REG;
@@ -244,14 +265,30 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
         Operand->Type		= OPERAND_IMM;
         Operand->Segment	= SEG_INVALID;
         Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
-        Operand->Imm.Signed = (Value[0] == '-');
         Operand->Imm.imm	= immVal;
-
-        if (Operand->Imm.Signed)
-            Operand->Size = inttoopsize(xed_shortest_width_signed(immVal, 0xFF));
-        else
-            Operand->Size = inttoopsize(xed_shortest_width_unsigned(immVal, 0xFF));
+		Operand->Size		= inttoopsize(xed_shortest_width_signed(immVal, 0xFF));
     }
+	else if (strchr(Value, '[') && strchr(Value, ']'))
+	{
+		// Memory
+		// Assume SEG_DS by default
+		Operand->Type		= OPERAND_MEM;
+		Operand->Segment	= SEG_DS;
+		Operand->Size		= SIZE_UNSET;
+		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
+
+		return HandleMemoryOperand(Parse, Value, Operand);
+	}
+	else if (strchr(Value, ':'))
+	{
+		// Segment selector operand
+		Operand->Type		= OPERAND_SEGSEL;
+		Operand->Segment	= SEG_INVALID;
+		Operand->Size		= SIZE_DWORD;
+		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
+
+		return HandleSegSelctorOperand(Parse, Value, Operand);
+	}
     else
     {
         // Unknown

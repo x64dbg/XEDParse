@@ -51,6 +51,9 @@ xed_encoder_operand_t OperandToXed(InstOperand *Operand)
 		}
 
 		return o;
+
+	case OPERAND_SEGSEL:
+		return xed_ptr(Operand->Sel.Offset, bitsize);
 	}
 
 	o.type = XED_ENCODER_OPERAND_TYPE_INVALID;
@@ -98,7 +101,7 @@ bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int Effect
 
     if (err != XED_ERROR_NONE)
     {
-        strcpy(Parse->error, "Failed to encode instruction!");
+		strcpy(Parse->error, "Failed to encode instruction!");
         return false;
     }
 
@@ -120,7 +123,7 @@ bool Translate(XEDPARSE *Parse, xed_state_t State, Inst *Instruction)
         return true;
 
     // Fix RIP-relative commands
-    for(int i = 0; i<Instruction->OperandCount; i++)
+    for(int i = 0; i < Instruction->OperandCount; i++)
     {
         if(Instruction->Operands[i].Type != OPERAND_MEM)
             continue;

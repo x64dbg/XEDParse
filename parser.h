@@ -13,6 +13,9 @@ struct Inst
     xed_iclass_enum_t	Class;
     PREFIX				Prefix;
 
+	bool				Near;
+	bool				Far;
+
     int					OperandCount;
     InstOperand			Operands[4];
 };
@@ -23,7 +26,7 @@ struct Inst
 
 //functions
 bool valfromstring(const char* text, ULONGLONG* value);
-
+bool StrDel(char *Src, char *Needle, char StopAt);
 char *GrabInstToken(char *Dest, char *Src, bool Operand);
 int InstructionToTokens(const char *Value, char Tokens[8][64]);
 bool ParseInstString(XEDPARSE* Parse, Inst *Instruction);

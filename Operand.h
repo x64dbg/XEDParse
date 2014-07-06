@@ -7,6 +7,7 @@ enum OPERAND_TYPE
     OPERAND_IMM,
     // OPERAND_IMM1,
     OPERAND_MEM,
+	OPERAND_SEGSEL,
 };
 
 struct InstOperand
@@ -27,7 +28,6 @@ struct InstOperand
 
         struct
         {
-            bool Signed;
             bool RelBranch;
 
             union
@@ -53,6 +53,12 @@ struct InstOperand
             bool Index;
             REG IndexVal;
         } Mem;
+
+		struct
+		{
+			USHORT Selector;
+			xed_int_t Offset;
+		} Sel;
     };
 };
 

@@ -15,7 +15,7 @@ void OperandToString(char *Buffer, InstOperand *Operand)
         break;
 
     case OPERAND_IMM:
-        if (Operand->Imm.Signed && Operand->Imm.simm < 0)
+        if (Operand->Imm.simm < 0)
             sprintf(Buffer, "-0x%llx", (~Operand->Imm.imm) + 1);
         else
             sprintf(Buffer, "0x%llx", Operand->Imm.imm);
@@ -43,7 +43,11 @@ void OperandToString(char *Buffer, InstOperand *Operand)
                 Operand->Mem.DispVal,
                 opsizetobits(Operand->Mem.DispWidth));
     }
-    break;
+	break;
+	
+	case OPERAND_SEGSEL:
+		sprintf(Buffer, "0x%llx", Operand->Sel.Offset);
+		break;
     }
 }
 
