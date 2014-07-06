@@ -22,7 +22,11 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
         // 5h = 101b
         Operand->Mem.Disp       = true;
         Operand->Mem.DispVal    = disp;
-        Operand->Mem.DispWidth	= inttoopsize(xed_shortest_width_signed(disp, 0x5));
+
+		if (Value[0] == '-')
+			Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_signed(disp, 0x5));
+		else
+			Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_unsigned(disp, 0x5));
     }
     else
     {
@@ -162,38 +166,43 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 
     if (Operand->Mem.Disp)
     {
-        // If the base isn't set, the displacement must be 32 bits
+        // If the base isn't set, the displacement must be at least 32 bits
         if (!Operand->Mem.Base)
             Operand->Mem.DispWidth = SIZE_DWORD;
 
         // Use RIP-relative addressing per default when on x64 and when the displacement is set
-        if (Parse->x64 && !Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
-        {
-            LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
-            ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
-            if(masked == 0 || masked == 0xFFFFFFFF00000000)
-            {
-                Operand->Mem.DispRipRelative    = true;
-                Operand->Mem.DispVal            = newDisp;
-                Operand->Mem.DispWidth          = SIZE_DWORD;
-                Operand->Mem.Base               = true;
-                Operand->Mem.BaseVal            = REG_RIP;
-            }
-            else
-                Operand->Mem.DispWidth = SIZE_QWORD;
+		// and when the segment is SEG_DS
+        if (Parse->x64 && Operand->Segment == SEG_DS)
+		{
+			if (!Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
+			{
+				LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
+
+				ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
+				if (masked == 0 || masked == 0xFFFFFFFF00000000)
+				{
+					Operand->Mem.DispRipRelative	= true;
+					Operand->Mem.DispVal			= newDisp;
+					Operand->Mem.DispWidth			= SIZE_DWORD;
+					Operand->Mem.Base				= true;
+					Operand->Mem.BaseVal			= REG_RIP;
+				}
+				else
+					Operand->Mem.DispWidth = SIZE_QWORD;
+			}
         }
     }
-    else if(!Operand->Mem.Base && Operand->Mem.Index && Operand->Mem.Scale) //MOV EAX, [ECX*8]
+    else if(!Operand->Mem.Base && Operand->Mem.Index && Operand->Mem.Scale) // MOV EAX, [ECX*8]
     {
-        Operand->Mem.Disp = true;
-        Operand->Mem.DispVal = 0;
-        Operand->Mem.DispWidth = SIZE_DWORD;
+        Operand->Mem.Disp		= true;
+        Operand->Mem.DispVal	= 0;
+        Operand->Mem.DispWidth	= SIZE_DWORD;
     }
 
     return true;
 }
 
-bool HandleSegSelctorOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
+bool HandleSegSelectorOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 {
 	char selector[64];
 	char offset[64];
@@ -264,9 +273,10 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
         // Immediate
         Operand->Type		= OPERAND_IMM;
         Operand->Segment	= SEG_INVALID;
+		Operand->Size		= ValueToOpsize(immVal);
         Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
+		Operand->Imm.Signed = (Value[0] == '-');
         Operand->Imm.imm	= immVal;
-		Operand->Size		= inttoopsize(xed_shortest_width_signed(immVal, 0xFF));
     }
 	else if (strchr(Value, '[') && strchr(Value, ']'))
 	{
@@ -287,7 +297,7 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		Operand->Size		= SIZE_DWORD;
 		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
 
-		return HandleSegSelctorOperand(Parse, Value, Operand);
+		return HandleSegSelectorOperand(Parse, Value, Operand);
 	}
     else
     {

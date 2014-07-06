@@ -96,6 +96,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
             delta &= 0xFFFFFFFF;
 
         operand->Size			= branchClass == 2 ? SIZE_BYTE : SIZE_DWORD;
+		operand->Imm.Signed		= true;
         operand->Imm.RelBranch	= true;
         operand->Imm.simm		= delta;
     }
@@ -113,7 +114,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
 
 		Instruction->Operands[1].Type		= OPERAND_IMM;
 		Instruction->Operands[1].Size		= SIZE_WORD;
-		Instruction->Operands[1].Imm.simm	= Instruction->Operands[0].Sel.Selector;
+		Instruction->Operands[1].Imm.imm	= Instruction->Operands[0].Sel.Selector;
 	}
 
     return true;

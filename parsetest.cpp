@@ -15,7 +15,7 @@ void OperandToString(char *Buffer, InstOperand *Operand)
         break;
 
     case OPERAND_IMM:
-        if (Operand->Imm.simm < 0)
+        if (Operand->Imm.Signed && Operand->Imm.simm < 0)
             sprintf(Buffer, "-0x%llx", (~Operand->Imm.imm) + 1);
         else
             sprintf(Buffer, "0x%llx", Operand->Imm.imm);

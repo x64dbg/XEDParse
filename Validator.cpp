@@ -168,8 +168,7 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
                     continue;
 
                 // Count if there is more than one possible operand size
-                // NOTE: Use the EOSZ of the REGISTER here
-                unsigned int size = xed_operand_width_bits(xedOp[1], Operands[0].XedEOSZ);
+                unsigned int size = xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ);
 
                 if (size != memoryOperandSize)
                     memoryOperandCount++;
@@ -221,8 +220,7 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
                     continue;
 
                 // Count if there is more than one possible operand size
-                // NOTE: Use the EOSZ of the REGISTER here
-                unsigned int size = xed_operand_width_bits(xedOp[0], Operands[1].XedEOSZ);
+                unsigned int size = xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ);
 
                 if (size != memoryOperandSize)
                     memoryOperandCount++;
@@ -271,9 +269,8 @@ bool ResizeDoubleOperands(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand
                 if (!xed_operand_type_is_immediate(xed_operand_type(xedOp[1])))
                     continue;
 
-                // NOTE: Use the EOSZ of the MEMORY here
                 unsigned int memSize = xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ);
-                unsigned int immSize = xed_operand_width_bits(xedOp[1], Operands[0].XedEOSZ);
+                unsigned int immSize = xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ);
 
                 // Skip sizes smaller than the immediate
                 if (immSize < targetSize)
@@ -380,6 +377,9 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
 
         case OPERAND_IMM:
             // INSTRUCTION REG, IMM
+			// Use EOSZ of the register
+			Instruction->Operands[1].XedEOSZ = Instruction->Operands[0].XedEOSZ;
+
             return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 
         case OPERAND_MEM:
@@ -387,6 +387,9 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
             // Don't care if it is already set
             if (Instruction->Operands[1].Size != SIZE_UNSET)
                 return true;
+
+			// Use EOSZ of the register
+			Instruction->Operands[1].XedEOSZ = Instruction->Operands[0].XedEOSZ;
 
             return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
         }
@@ -408,10 +411,16 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
             if (Instruction->Operands[0].Size != SIZE_UNSET)
                 return true;
 
+			// Use EOSZ of the register
+			Instruction->Operands[0].XedEOSZ = Instruction->Operands[1].XedEOSZ;
+
             return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 
         case OPERAND_IMM:
             // INSTRUCTION [], IMM
+			// Use EOSZ of the memory
+			Instruction->Operands[1].XedEOSZ = Instruction->Operands[0].XedEOSZ;
+
             return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 
         case OPERAND_MEM:

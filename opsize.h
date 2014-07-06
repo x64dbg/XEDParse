@@ -21,7 +21,6 @@ enum OPSIZE
 };
 
 typedef OPSIZE MEMSIZE;
-typedef OPSIZE SCALE;
 typedef OPSIZE REGSIZE;
 
 struct OpsizeEntry
@@ -56,3 +55,5 @@ int opsizetoeosz(OPSIZE Value);
 
 OPSIZE StringToOpsize(const char *Value);
 const char *OpsizeToString(OPSIZE Size);
+
+OPSIZE ValueToOpsize(LONGLONG Value);
