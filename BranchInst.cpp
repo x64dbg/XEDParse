@@ -72,6 +72,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
             Instruction->Operands[1].Size		= SIZE_WORD;
             return true;
         }
+
         strcpy(Parse->error, "Too many operands in branch");
         return false;
     }
@@ -119,8 +120,7 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
 	{
 		// JMP FAR 0000:00000000
 		// This is considered 2 operands by XED
-		Instruction->OperandCount = 2;
-
+		Instruction->OperandCount			= 2;
 		Instruction->Operands[1].Type		= OPERAND_IMM;
 		Instruction->Operands[1].Size		= SIZE_WORD;
 		Instruction->Operands[1].Imm.imm	= Instruction->Operands[0].Sel.Selector;

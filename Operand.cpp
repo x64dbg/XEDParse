@@ -268,16 +268,6 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
         Operand->Reg.Reg	= registerVal;
         Operand->Reg.XedReg = regtoxed(registerVal);
     }
-    else if (valfromstring(Value, &immVal) || (Parse->cbUnknown && Parse->cbUnknown(Value, &immVal)))
-    {
-        // Immediate
-        Operand->Type		= OPERAND_IMM;
-        Operand->Segment	= SEG_INVALID;
-		Operand->Size		= ValueToOpsize(immVal);
-        Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
-		Operand->Imm.Signed = (Value[0] == '-');
-        Operand->Imm.imm	= immVal;
-    }
 	else if (strchr(Value, '[') && strchr(Value, ']'))
 	{
 		// Memory
@@ -298,6 +288,16 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
 
 		return HandleSegSelectorOperand(Parse, Value, Operand);
+	}
+	else if (valfromstring(Value, &immVal) || (Parse->cbUnknown && Parse->cbUnknown(Value, &immVal)))
+	{
+		// Immediate
+		Operand->Type		= OPERAND_IMM;
+		Operand->Segment	= SEG_INVALID;
+		Operand->Size		= ValueToOpsize(immVal);
+		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
+		Operand->Imm.Signed = (Value[0] == '-');
+		Operand->Imm.imm	= immVal;
 	}
     else
     {
