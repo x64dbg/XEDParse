@@ -69,15 +69,20 @@ int main(int argc, char* argv[])
     {
         if(filedata[i]=='\n' || filedata[i+1]=='\n') //newline
         {
-            strcpy(current.instr, current_instr);
-            if(XEDParseAssemble(&current)==XEDPARSE_ERROR)
-            {
-                printf("%s\n%s\n\n", current_instr, current.error);
-                errors++;
-                current.cip++;
-            }
+            if(strstr(current_instr, "base:"))
+                sscanf(current_instr, "base:0x%llX", &current.cip);
             else
-                current.cip+=current.dest_size;
+            {
+                strcpy(current.instr, current_instr);
+                if(XEDParseAssemble(&current)==XEDPARSE_ERROR)
+                {
+                    printf("%s\n%s\n\n", current_instr, current.error);
+                    errors++;
+                    current.cip++;
+                }
+                else
+                    current.cip+=current.dest_size;
+            }
             while(filedata[i]=='\r' || filedata[i]=='\n')
                 i++;
             i--;

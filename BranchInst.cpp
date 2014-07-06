@@ -63,6 +63,15 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
     // Any branch instruction can only have one operand max
     if (Instruction->OperandCount > 1)
     {
+        if(Instruction->OperandCount == 2 && Instruction->Far) //jmp far 0xea231000, 0x1000
+        {
+            Instruction->OperandCount           = 2;
+            Instruction->Operands[0].Type       = OPERAND_SEGSEL;
+            Instruction->Operands[0].Sel.Offset = Instruction->Operands[0].Imm.imm;
+            Instruction->Operands[1].Type		= OPERAND_IMM;
+            Instruction->Operands[1].Size		= SIZE_WORD;
+            return true;
+        }
         strcpy(Parse->error, "Too many operands in branch");
         return false;
     }
