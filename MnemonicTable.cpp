@@ -64,6 +64,14 @@ char *InstMnemonicToXed(XEDPARSE *Parse, Inst *Instruction)
 			strcpy(Instruction->Mnemonic, "ret_far");
 	}
 
+    if(!_stricmp(Instruction->Mnemonic, "pushf") || !_stricmp(Instruction->Mnemonic, "popf"))
+    {
+        if(Parse->x64)
+            strcat(Instruction->Mnemonic, "q");
+        else
+            strcat(Instruction->Mnemonic, "d");
+    }
+
     // Hidden/non-explicit operands (Ex: (MOVS/CMPS)(B/W/D/Q) case)
 	// Exclude instructions with XXXXX_XMM
     if (!strstr(mnemonic, "xmm"))
