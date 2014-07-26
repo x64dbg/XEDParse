@@ -10,6 +10,15 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
 
     if (registerVal != REG_INVALID)
     {
+		// If the base is already set, then use IMPLICIT scale
+		// REG + (REG * 1)
+		if (Operand->Mem.Base)
+		{
+			SetMemoryIndexOrScale(Parse, Value, Operand);
+			SetMemoryIndexOrScale(Parse, "1", Operand);
+			return;
+		}
+
         // It's the base
         Operand->Mem.Base		= true;
         Operand->Mem.BaseVal	= registerVal;
@@ -22,11 +31,28 @@ void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand
         // 5h = 101b
         Operand->Mem.Disp       = true;
         Operand->Mem.DispVal    = disp;
+		bool sign				= (Value[0] == '-');
 
-		if (Value[0] == '-')
+		if (sign)
 			Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_signed(disp, 0x5));
 		else
 			Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_unsigned(disp, 0x5));
+
+		// half		= pow(2, n_bits - 1);
+		// minhalf	= -half;
+		xed_uint64_t maxhalf = 1 << (opsizetobits(Operand->Mem.DispWidth) - 1);
+		xed_uint64_t minhalf = 1 + (~maxhalf);
+
+		// Values that are <  than -(MAX_VALUE/2) need to use the next biggest size
+		// Values that are >= than +(MAX_VALUE/2) need to use the next biggest size
+		if ((sign && disp < minhalf) || (!sign && disp >= maxhalf))
+		{
+			switch (Operand->Mem.DispWidth)
+			{
+			case SIZE_BYTE:		Operand->Mem.DispWidth = SIZE_DWORD;	break;
+			case SIZE_DWORD:	Operand->Mem.DispWidth = SIZE_QWORD;	break;
+			}
+		}
     }
     else
     {
@@ -75,7 +101,7 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
     // Gather any information & check the prefix validity
     if (strlen(prefix) > 0)
     {
-        // Remove 'ptr/far/near' if it exists and remove colons
+        // Remove 'ptr' if it exists and remove colons
 		StrDel(prefix, "ptr", '\0');
 		StrDel(prefix, ":", '\0');
 
@@ -136,8 +162,8 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
         case '\0':
         case '+':
         case '-':
-            if (mulFlag)
-                SetMemoryIndexOrScale(Parse, temp, Operand);
+			if (mulFlag)
+				SetMemoryIndexOrScale(Parse, temp, Operand);
             else
                 SetMemoryDisplacementOrBase(Parse, temp, Operand);
 
