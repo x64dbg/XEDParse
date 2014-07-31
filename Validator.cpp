@@ -439,6 +439,10 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
 
 void LookupTableInit()
 {
+    static bool bInitialized = false;
+    if(bInitialized)
+        return;
+
     xed_tables_init();
 
     // Initialize everything
@@ -463,4 +467,6 @@ void LookupTableInit()
 
         type->Instructions[type->InstructionCount++] = inst;
     }
+
+    bInitialized = true;
 }

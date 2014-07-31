@@ -20,6 +20,10 @@ void XEDParseSetMode(bool X64, xed_state_t *State)
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
 {
+    // Initialize all of the tables only once
+    // This is mainly independent to everything else
+    LookupTableInit();
+
     Inst instruction;
     memset(&instruction, 0, sizeof(Inst));
 
@@ -44,19 +48,5 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
 
 extern "C" __declspec(dllexport) BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
-    switch(fdwReason)
-    {
-    case DLL_PROCESS_ATTACH:
-        // Initialize all of the tables only once
-        // This is mainly independent to everything else
-        LookupTableInit();
-        break;
-    case DLL_PROCESS_DETACH:
-        break;
-    case DLL_THREAD_ATTACH:
-        break;
-    case DLL_THREAD_DETACH:
-        break;
-    }
     return TRUE;
 }
