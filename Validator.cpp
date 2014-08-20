@@ -362,6 +362,21 @@ bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction)
     if (Instruction->Class == XED_ICLASS_LEA)
         Instruction->Operands[1].Segment = SEG_INVALID;
 
+	//
+	// Special case for XCHG (Flip memory operand)
+	//
+	if (Instruction->Class == XED_ICLASS_XCHG)
+	{
+		if (Instruction->Operands[1].Type == OPERAND_MEM)
+		{
+			InstOperand save;
+
+			memcpy(&save, &Instruction->Operands[0], sizeof(InstOperand));
+			memcpy(&Instruction->Operands[0], &Instruction->Operands[1], sizeof(InstOperand));
+			memcpy(&Instruction->Operands[1], &save, sizeof(InstOperand));
+		}
+	}
+
     //
     // Check all invalid cases and then pass it to ResizeDoubleOperands
     //

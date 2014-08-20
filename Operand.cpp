@@ -190,6 +190,22 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
             break;
     }
 
+	// Fix up the operand segment
+	if (Operand->Segment == SEG_INVALID)
+	{
+		if (Operand->Mem.BaseVal == REG_ESP)
+		{
+			// If the segment isn't set and the base is ESP,
+			// set the segment to SS
+			Operand->Segment = SEG_SS;
+		}
+		else
+		{
+			// Default to DS
+			Operand->Segment = SEG_DS;
+		}
+	}
+
     if (Operand->Mem.Disp)
     {
         // If the base isn't set, the displacement must be at least 32 bits
@@ -203,8 +219,8 @@ bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operan
 			if (!Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
 			{
 				LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
-
 				ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
+
 				if (masked == 0 || masked == 0xFFFFFFFF00000000)
 				{
 					Operand->Mem.DispRipRelative	= true;
@@ -297,9 +313,8 @@ bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand)
 	else if (strchr(Value, '[') && strchr(Value, ']'))
 	{
 		// Memory
-		// Assume SEG_DS by default
 		Operand->Type		= OPERAND_MEM;
-		Operand->Segment	= SEG_DS;
+		Operand->Segment	= SEG_INVALID;
 		Operand->Size		= SIZE_UNSET;
 		Operand->XedEOSZ	= EOSZ_64_32(Parse->x64);
 
