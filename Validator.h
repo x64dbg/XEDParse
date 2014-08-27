@@ -4,10 +4,10 @@
 
 struct IClassType
 {
-    xed_iclass_enum_t	IClass;
-    const xed_inst_t	*Instructions[32];
-    int					InstructionCount;
-    unsigned int    	MinimumOperands;
+    xed_iclass_enum_t   IClass;
+    const xed_inst_t*    Instructions[32];
+    int                 InstructionCount;
+    unsigned int        MinimumOperands;
 };
 
 extern IClassType XedInstLookupTable[];
@@ -22,6 +22,6 @@ static XED_INLINE xed_uint_t xed_operand_type_is_immediate(xed_operand_type_enum
     return (type == XED_OPERAND_TYPE_IMM || type == XED_OPERAND_TYPE_IMM_CONST);
 }
 
-bool ResizeSingleOperand(XEDPARSE *Parse, xed_iclass_enum_t IClass, InstOperand *Operand);
-bool ValidateInstOperands(XEDPARSE *Parse, Inst *Instruction);
+bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand* Operand);
+bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction);
 void LookupTableInit();

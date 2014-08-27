@@ -111,7 +111,7 @@ void xed_dot_edge(xed_dot_graph_t* g,
 void xed_dot_dump(FILE* f, xed_dot_graph_t* g)
 {
     xed_dot_edge_t* p = g->edges;
-    fprintf(f,"digraph {\n");
+    fprintf(f, "digraph {\n");
     while(p)
     {
         fprintf(f, "\"%s\" -> \"%s\"",
@@ -136,5 +136,5 @@ void xed_dot_dump(FILE* f, xed_dot_graph_t* g)
 
         p = p->next;
     }
-    fprintf(f,"}\n");
+    fprintf(f, "}\n");
 }

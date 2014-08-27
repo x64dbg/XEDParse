@@ -28,9 +28,9 @@ bool IsYmmRegister(REG reg)
 REG getregister(const char* text)
 {
     // Loop through each entry looking for the register
-    for (int i = 0; i < ARRAYSIZE(RegisterIds); i++)
+    for(int i = 0; i < ARRAYSIZE(RegisterIds); i++)
     {
-        if (!_stricmp(RegisterIds[i].Name, text))
+        if(!_stricmp(RegisterIds[i].Name, text))
             return RegisterIds[i].RegId;
     }
 
@@ -41,9 +41,9 @@ REG getregister(const char* text)
 SEG getsegment(const char* text)
 {
     // Loop through each entry looking for the segment register
-    for (int i = 0; i < ARRAYSIZE(SegmentIds); i++)
+    for(int i = 0; i < ARRAYSIZE(SegmentIds); i++)
     {
-        if (!_stricmp(SegmentIds[i].Name, text))
+        if(!_stricmp(SegmentIds[i].Name, text))
             return SegmentIds[i].SegId;
     }
 
@@ -61,12 +61,12 @@ xed_reg_enum_t segtoxed(SEG seg)
     return SegmentIds[seg].XedId;
 }
 
-const char *regtostring(REG reg)
+const char* regtostring(REG reg)
 {
     return RegisterIds[reg].Name;
 }
 
-const char *segtostring(SEG seg)
+const char* segtostring(SEG seg)
 {
     return SegmentIds[seg].Name;
 }

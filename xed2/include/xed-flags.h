@@ -48,43 +48,43 @@ union  xed_flag_set_s
 {
     struct
     {
-        xed_uint32_t cf:1; ///< bit 0
-        xed_uint32_t must_be_1:1;
-        xed_uint32_t pf:1;
-        xed_uint32_t must_be_0a:1;
+        xed_uint32_t cf: 1; ///< bit 0
+        xed_uint32_t must_be_1: 1;
+        xed_uint32_t pf: 1;
+        xed_uint32_t must_be_0a: 1;
 
-        xed_uint32_t af:1; ///< bit 4
-        xed_uint32_t must_be_0b:1;
-        xed_uint32_t zf:1;
-        xed_uint32_t sf:1;
+        xed_uint32_t af: 1; ///< bit 4
+        xed_uint32_t must_be_0b: 1;
+        xed_uint32_t zf: 1;
+        xed_uint32_t sf: 1;
 
-        xed_uint32_t tf:1;  ///< bit 8
-        xed_uint32_t _if:1;  ///< underscore to avoid token clash
-        xed_uint32_t df:1;
-        xed_uint32_t of:1;
+        xed_uint32_t tf: 1; ///< bit 8
+        xed_uint32_t _if: 1; ///< underscore to avoid token clash
+        xed_uint32_t df: 1;
+        xed_uint32_t of: 1;
 
-        xed_uint32_t iopl:2; ///< A 2-bit field, bits 12-13
-        xed_uint32_t nt:1;
-        xed_uint32_t must_be_0c:1;
+        xed_uint32_t iopl: 2; ///< A 2-bit field, bits 12-13
+        xed_uint32_t nt: 1;
+        xed_uint32_t must_be_0c: 1;
 
-        xed_uint32_t rf:1; ///< bit 16
-        xed_uint32_t vm:1;
-        xed_uint32_t ac:1;
-        xed_uint32_t vif:1;
+        xed_uint32_t rf: 1; ///< bit 16
+        xed_uint32_t vm: 1;
+        xed_uint32_t ac: 1;
+        xed_uint32_t vif: 1;
 
-        xed_uint32_t vip:1; ///< bit 20
-        xed_uint32_t id:1;   ///< bit 21
-        xed_uint32_t must_be_0d:2;  ///< bits 22-23
+        xed_uint32_t vip: 1; ///< bit 20
+        xed_uint32_t id: 1;  ///< bit 21
+        xed_uint32_t must_be_0d: 2; ///< bits 22-23
 
-        xed_uint32_t must_be_0e:4;  ///< bits 24-27
+        xed_uint32_t must_be_0e: 4; ///< bits 24-27
 
         // fc0,fc1,fc2,fc3 are not really part of rflags but I put them
         // here to save space. These bits are only used for x87
         // instructions.
-        xed_uint32_t fc0:1;  ///< x87 flag FC0 (not really part of rflags)
-        xed_uint32_t fc1:1;  ///< x87 flag FC1 (not really part of rflags)
-        xed_uint32_t fc2:1;  ///< x87 flag FC2 (not really part of rflags)
-        xed_uint32_t fc3:1;  ///< x87 flag FC3 (not really part of rflags)
+        xed_uint32_t fc0: 1; ///< x87 flag FC0 (not really part of rflags)
+        xed_uint32_t fc1: 1; ///< x87 flag FC1 (not really part of rflags)
+        xed_uint32_t fc2: 1; ///< x87 flag FC2 (not really part of rflags)
+        xed_uint32_t fc3: 1; ///< x87 flag FC3 (not really part of rflags)
     } s;
     xed_uint32_t flat;
 };
@@ -139,7 +139,7 @@ XED_DLL_EXPORT int xed_flag_action_print(const xed_flag_action_t* p, char* buf, 
 /// @ingroup FLAGS
 /// returns true if either action is a read
 XED_DLL_EXPORT xed_bool_t
-xed_flag_action_read_flag(const xed_flag_action_t* p );
+xed_flag_action_read_flag(const xed_flag_action_t* p);
 /// @ingroup FLAGS
 /// returns true if either action is a write
 XED_DLL_EXPORT xed_bool_t
@@ -148,11 +148,11 @@ xed_flag_action_writes_flag(const xed_flag_action_t* p);
 /// @ingroup FLAGS
 /// test to see if the specific action is a read
 XED_DLL_EXPORT xed_bool_t
-xed_flag_action_read_action( xed_flag_action_enum_t a);
+xed_flag_action_read_action(xed_flag_action_enum_t a);
 /// @ingroup FLAGS
 /// test to see if a specific action is a write
 XED_DLL_EXPORT xed_bool_t
-xed_flag_action_write_action( xed_flag_action_enum_t a);
+xed_flag_action_write_action(xed_flag_action_enum_t a);
 //@}
 
 ////////////////////////////////////////////////////////////////////////////

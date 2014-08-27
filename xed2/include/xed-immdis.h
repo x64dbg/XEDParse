@@ -69,8 +69,8 @@ union xed_immdis_values_t
 typedef struct xed_immdis_s
 {
     union xed_immdis_values_t value;
-    unsigned int currently_used_space :4; // current number of assigned bytes
-    unsigned int max_allocated_space :4; // max allocation, 4 or 8
+    unsigned int currently_used_space : 4; // current number of assigned bytes
+    unsigned int max_allocated_space : 4; // max allocation, 4 or 8
     xed_bool_t present : 1;
     xed_bool_t immediate_is_unsigned : 1;
 } xed_immdis_t;
@@ -138,7 +138,7 @@ XED_DLL_EXPORT void
 xed_immdis_set_signed(xed_immdis_t* p) ;
 /// Set the immediate to be unsigned; For decoder use only.
 XED_DLL_EXPORT void
-xed_immdis_set_unsigned( xed_immdis_t* p) ;
+xed_immdis_set_unsigned(xed_immdis_t* p) ;
 //@}
 
 
@@ -165,7 +165,7 @@ xed_immdis_add_shortest_width_signed(xed_immdis_t* p, xed_int64_t x, xed_uint8_t
 
 /// See add_shortest_width_signed()
 XED_DLL_EXPORT void
-xed_immdis_add_shortest_width_unsigned(xed_immdis_t* p, xed_uint64_t x, xed_uint8_t legal_widths );
+xed_immdis_add_shortest_width_unsigned(xed_immdis_t* p, xed_uint64_t x, xed_uint8_t legal_widths);
 
 
 /// add an 8 bit value to the byte array

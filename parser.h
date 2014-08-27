@@ -9,15 +9,15 @@
 
 struct Inst
 {
-    char				Mnemonic[32];
-    xed_iclass_enum_t	Class;
-    PREFIX				Prefix;
+    char                Mnemonic[32];
+    xed_iclass_enum_t   Class;
+    PREFIX              Prefix;
 
-	bool				Near;
-	bool				Far;
+    bool                Near;
+    bool                Far;
 
-    int					OperandCount;
-    InstOperand			Operands[4];
+    int                 OperandCount;
+    InstOperand         Operands[4];
 };
 
 #include "MnemonicTable.h"
@@ -26,9 +26,9 @@ struct Inst
 
 //functions
 bool valfromstring(const char* text, ULONGLONG* value);
-bool StrDel(char *Src, char *Needle, char StopAt);
-char *GrabInstToken(char *Dest, char *Src, bool Operand);
-int InstructionToTokens(const char *Value, char Tokens[8][64]);
-bool ParseInstString(XEDPARSE* Parse, Inst *Instruction);
+bool StrDel(char* Src, char* Needle, char StopAt);
+char* GrabInstToken(char* Dest, char* Src, bool Operand);
+int InstructionToTokens(const char* Value, char Tokens[8][64]);
+bool ParseInstString(XEDPARSE* Parse, Inst* Instruction);
 
 #endif // _PARSER_H

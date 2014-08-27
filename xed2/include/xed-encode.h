@@ -56,15 +56,15 @@ typedef xed_decoded_inst_t xed_encoder_request_t;
 
 /// @ingroup ENC
 XED_DLL_EXPORT xed_iclass_enum_t
-xed_encoder_request_get_iclass( const xed_encoder_request_t* p);
+xed_encoder_request_get_iclass(const xed_encoder_request_t* p);
 
 /////////////////////////////////////////////////////////
 // set functions
 
 /// @ingroup ENC
 XED_DLL_EXPORT void
-xed_encoder_request_set_iclass( xed_encoder_request_t* p,
-                                xed_iclass_enum_t iclass);
+xed_encoder_request_set_iclass(xed_encoder_request_t* p,
+                               xed_iclass_enum_t iclass);
 
 /// @name Prefixes
 //@{
@@ -85,10 +85,10 @@ XED_DLL_EXPORT void xed_encoder_request_clear_rep(xed_encoder_request_t* p);
 /// @name Primary Encode Functions
 //@{
 /// @ingroup ENC
-XED_DLL_EXPORT void  xed_encoder_request_set_effective_operand_width( xed_encoder_request_t* p,
+XED_DLL_EXPORT void  xed_encoder_request_set_effective_operand_width(xed_encoder_request_t* p,
         xed_uint_t width_bits);
 /// @ingroup ENC
-XED_DLL_EXPORT void  xed_encoder_request_set_effective_address_size( xed_encoder_request_t* p,
+XED_DLL_EXPORT void  xed_encoder_request_set_effective_address_size(xed_encoder_request_t* p,
         xed_uint_t width_bits);
 /*! @ingroup ENC
  * Set the operands array element indexed by operand to the actual register name reg.

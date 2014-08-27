@@ -51,7 +51,7 @@ typedef struct
 /// a memory displacement (not for branches)
 static XED_INLINE
 xed_enc_displacement_t xed_disp(xed_uint64_t   displacement,
-                                xed_uint32_t   displacement_width   )
+                                xed_uint32_t   displacement_width)
 {
     xed_enc_displacement_t x;
     x.displacement = displacement;
@@ -243,7 +243,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_b(xed_reg_enum_t base,
     o.type = XED_ENCODER_OPERAND_TYPE_MEM;
     o.u.mem.base = base;
     o.u.mem.seg = XED_REG_INVALID;
-    o.u.mem.index= XED_REG_INVALID;
+    o.u.mem.index = XED_REG_INVALID;
     o.u.mem.scale = 0;
     o.u.mem.disp.displacement = 0;
     o.u.mem.disp.displacement_width = 0;
@@ -261,9 +261,9 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_bd(xed_reg_enum_t base,
     o.type = XED_ENCODER_OPERAND_TYPE_MEM;
     o.u.mem.base = base;
     o.u.mem.seg = XED_REG_INVALID;
-    o.u.mem.index= XED_REG_INVALID;
+    o.u.mem.index = XED_REG_INVALID;
     o.u.mem.scale = 0;
-    o.u.mem.disp =disp;
+    o.u.mem.disp = disp;
     o.width = width;
     return o;
 }
@@ -280,7 +280,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_bisd(xed_reg_enum_t base,
     o.type = XED_ENCODER_OPERAND_TYPE_MEM;
     o.u.mem.base = base;
     o.u.mem.seg = XED_REG_INVALID;
-    o.u.mem.index= index;
+    o.u.mem.index = index;
     o.u.mem.scale = scale;
     o.u.mem.disp = disp;
     o.width = width;
@@ -298,7 +298,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_gb(xed_reg_enum_t seg,
     o.type = XED_ENCODER_OPERAND_TYPE_MEM;
     o.u.mem.base = base;
     o.u.mem.seg = seg;
-    o.u.mem.index= XED_REG_INVALID;
+    o.u.mem.index = XED_REG_INVALID;
     o.u.mem.scale = 0;
     o.u.mem.disp.displacement = 0;
     o.u.mem.disp.displacement_width = 0;
@@ -317,7 +317,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_gbd(xed_reg_enum_t seg,
     o.type = XED_ENCODER_OPERAND_TYPE_MEM;
     o.u.mem.base = base;
     o.u.mem.seg = seg;
-    o.u.mem.index= XED_REG_INVALID;
+    o.u.mem.index = XED_REG_INVALID;
     o.u.mem.scale = 0;
     o.u.mem.disp = disp;
     o.width = width;
@@ -334,7 +334,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_gd(xed_reg_enum_t seg,
     o.type = XED_ENCODER_OPERAND_TYPE_MEM;
     o.u.mem.base = XED_REG_INVALID;
     o.u.mem.seg = seg;
-    o.u.mem.index= XED_REG_INVALID;
+    o.u.mem.index = XED_REG_INVALID;
     o.u.mem.scale = 0;
     o.u.mem.disp = disp;
     o.width = width;
@@ -354,7 +354,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_gbisd(xed_reg_enum_t seg,
     o.type = XED_ENCODER_OPERAND_TYPE_MEM;
     o.u.mem.base = base;
     o.u.mem.seg = seg;
-    o.u.mem.index= index;
+    o.u.mem.index = index;
     o.u.mem.scale = scale;
     o.u.mem.disp = disp;
     o.width = width;
@@ -366,11 +366,11 @@ typedef union
 {
     struct
     {
-        xed_uint32_t rep               :1;
-        xed_uint32_t repne             :1;
-        xed_uint32_t lock              :1;
-        xed_uint32_t br_hint_taken     :1;
-        xed_uint32_t br_hint_not_taken :1;
+        xed_uint32_t rep               : 1;
+        xed_uint32_t repne             : 1;
+        xed_uint32_t lock              : 1;
+        xed_uint32_t br_hint_taken     : 1;
+        xed_uint32_t br_hint_not_taken : 1;
     } s;
     xed_uint32_t i;
 }  xed_encoder_prefixes_t;
@@ -413,19 +413,19 @@ static XED_INLINE void xed_addr(xed_encoder_instruction_t* x,
 /// @ingroup ENCHL
 static XED_INLINE  void xed_rep(xed_encoder_instruction_t* x)
 {
-    x->prefixes.s.rep=1;
+    x->prefixes.s.rep = 1;
 }
 
 /// @ingroup ENCHL
 static XED_INLINE  void xed_repne(xed_encoder_instruction_t* x)
 {
-    x->prefixes.s.repne=1;
+    x->prefixes.s.repne = 1;
 }
 
 /// @ingroup ENCHL
 static XED_INLINE  void xed_lock(xed_encoder_instruction_t* x)
 {
-    x->prefixes.s.lock=1;
+    x->prefixes.s.lock = 1;
 }
 
 
@@ -458,7 +458,7 @@ static XED_INLINE  void xed_inst0(
     xed_uint_t effective_operand_width)
 {
 
-    inst->mode=mode;
+    inst->mode = mode;
     inst->iclass = iclass;
     inst->effective_operand_width = effective_operand_width;
     inst->effective_address_width = 0;
@@ -476,7 +476,7 @@ static XED_INLINE  void xed_inst1(
     xed_encoder_operand_t op0)
 {
 
-    inst->mode=mode;
+    inst->mode = mode;
     inst->iclass = iclass;
     inst->effective_operand_width = effective_operand_width;
     inst->effective_address_width = 0;
@@ -496,7 +496,7 @@ static XED_INLINE  void xed_inst2(
     xed_encoder_operand_t op1)
 {
 
-    inst->mode=mode;
+    inst->mode = mode;
     inst->iclass = iclass;
     inst->effective_operand_width = effective_operand_width;
     inst->effective_address_width = 0;
@@ -518,7 +518,7 @@ static XED_INLINE  void xed_inst3(
     xed_encoder_operand_t op2)
 {
 
-    inst->mode=mode;
+    inst->mode = mode;
     inst->iclass = iclass;
     inst->effective_operand_width = effective_operand_width;
     inst->effective_address_width = 0;
@@ -543,7 +543,7 @@ static XED_INLINE  void xed_inst4(
     xed_encoder_operand_t op3)
 {
 
-    inst->mode=mode;
+    inst->mode = mode;
     inst->iclass = iclass;
     inst->effective_operand_width = effective_operand_width;
     inst->effective_address_width = 0;
@@ -569,7 +569,7 @@ static XED_INLINE  void xed_inst5(
     xed_encoder_operand_t op4)
 {
 
-    inst->mode=mode;
+    inst->mode = mode;
     inst->iclass = iclass;
     inst->effective_operand_width = effective_operand_width;
     inst->effective_address_width = 0;
@@ -596,13 +596,13 @@ static XED_INLINE  void xed_inst(
 {
 
     xed_uint_t i;
-    inst->mode=mode;
+    inst->mode = mode;
     inst->iclass = iclass;
     inst->effective_operand_width = effective_operand_width;
     inst->effective_address_width = 0;
     inst->prefixes.i = 0;
     xed_assert(number_of_operands < XED_ENCODER_OPERANDS_MAX);
-    for(i=0; i<number_of_operands; i++)
+    for(i = 0; i < number_of_operands; i++)
     {
         inst->operands[i] = operand_array[i];
     }

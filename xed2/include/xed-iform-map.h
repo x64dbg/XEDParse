@@ -88,7 +88,7 @@ static
 xed_iclass_enum_t XED_INLINE xed_iform_to_iclass(xed_iform_enum_t iform)
 {
     const xed_iform_info_t* ii = xed_iform_map(iform);
-    if (ii)
+    if(ii)
         return ii->iclass;
     return XED_ICLASS_INVALID;
 }

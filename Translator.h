@@ -4,9 +4,9 @@
 #include "XEDParse.h"
 #include "Parser.h"
 
-LONGLONG TranslateRelativeCip(XEDPARSE *Parse, ULONGLONG Value, bool Signed);
-xed_encoder_operand_t OperandToXed(InstOperand *Operand);
-void ConvertInstToXed(Inst *Instruction, xed_state_t Mode, xed_encoder_instruction_t *XedInst, unsigned int EffectiveWidth);
-bool TryEncode(XEDPARSE *Parse, xed_state_t State, Inst *Instruction, int EffectiveWidth);
-bool Translate(XEDPARSE *Parse, xed_state_t State, Inst *Instruction);
+LONGLONG TranslateRelativeCip(XEDPARSE* Parse, ULONGLONG Value, bool Signed);
+xed_encoder_operand_t OperandToXed(InstOperand* Operand);
+void ConvertInstToXed(Inst* Instruction, xed_state_t Mode, xed_encoder_instruction_t* XedInst, unsigned int EffectiveWidth);
+bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, int EffectiveWidth);
+bool Translate(XEDPARSE* Parse, xed_state_t State, Inst* Instruction);
 #endif

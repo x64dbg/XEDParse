@@ -62,7 +62,7 @@ static XED_INLINE  xed_uint64_t xed_get_time(void)
     // __STRICT_ANSI__ comes from the -std=c99
 #   if defined(__GNUC__) //&& !defined(__STRICT_ANSI__)
 #      if defined(__i386__) || defined(i386) || defined(i686) || defined(__x86_64__)
-    __asm__ volatile ("rdtsc":"=a" (ticks.s.lo32), "=d"(ticks.s.hi32));
+    __asm__ volatile("rdtsc":"=a"(ticks.s.lo32), "=d"(ticks.s.hi32));
 #         define FOUND_RDTSC
 #      endif
 #   endif

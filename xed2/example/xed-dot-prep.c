@@ -43,7 +43,7 @@ xed_dot_graph_supp_t* xed_dot_graph_supp_create(
     xed_dot_graph_supp_t* gs = 0;
 
     gs = (xed_dot_graph_supp_t*)malloc(sizeof(xed_dot_graph_supp_t));
-    assert( gs != 0 );
+    assert(gs != 0);
     gs->g = xed_dot_graph();
     gs->syntax = syntax;
     memset(gs->xed_reg_to_node,
@@ -56,7 +56,7 @@ xed_dot_graph_supp_t* xed_dot_graph_supp_create(
 
 void xed_dot_graph_supp_deallocate(xed_dot_graph_supp_t* gg)
 {
-    if (!gg)
+    if(!gg)
         return;
     xed_dot_graph_deallocate(gg->g);
 }
@@ -73,9 +73,9 @@ static xed_bool_t add_edge(xed_dot_graph_supp_t* gg,
     /* add edge to n */
     r_enclosing = xed_get_largest_enclosing_register(r);
     src = gg->xed_reg_to_node[r_enclosing];
-    if (src)
+    if(src)
     {
-        xed_dot_edge(gg->g,src,n,s);
+        xed_dot_edge(gg->g, src, n, s);
         found = 1;
     }
     return found;
@@ -92,16 +92,16 @@ static void add_read_operands(xed_dot_graph_supp_t* gg,
     xi = xed_decoded_inst_inst(xedd);
     noperands = xed_inst_noperands(xi);
 
-    for( i=0; i < noperands ; i++)
+    for(i = 0; i < noperands ; i++)
     {
         int memop = -1;
-        const xed_operand_t* op = xed_inst_operand(xi,i);
+        const xed_operand_t* op = xed_inst_operand(xi, i);
         xed_operand_enum_t opname = xed_operand_name(op);
-        if (xed_operand_is_register(opname) ||
+        if(xed_operand_is_register(opname) ||
                 xed_operand_is_memory_addressing_register(opname))
         {
 
-            if (xed_operand_read(op))
+            if(xed_operand_read(op))
             {
                 /* add edge to n */
                 r = xed_decoded_inst_get_reg(xedd, opname);
@@ -109,27 +109,27 @@ static void add_read_operands(xed_dot_graph_supp_t* gg,
             }
             continue;
         }
-        if (opname == XED_OPERAND_MEM0)
+        if(opname == XED_OPERAND_MEM0)
             memop = 0;
-        else if (opname == XED_OPERAND_MEM1 )
+        else if(opname == XED_OPERAND_MEM1)
             memop = 1;
 
-        if (memop != -1)
+        if(memop != -1)
         {
             /* get reads of base/index regs,  if any */
             xed_reg_enum_t base, indx;
 
-            base = xed_decoded_inst_get_base_reg(xedd,memop);
-            indx = xed_decoded_inst_get_index_reg(xedd,memop);
-            if (base != XED_REG_INVALID)
+            base = xed_decoded_inst_get_base_reg(xedd, memop);
+            indx = xed_decoded_inst_get_index_reg(xedd, memop);
+            if(base != XED_REG_INVALID)
                 found |= add_edge(gg, n, base, XED_DOT_EDGE_SOLID);
 
-            indx = xed_decoded_inst_get_index_reg(xedd,memop);
-            if (indx != XED_REG_INVALID)
+            indx = xed_decoded_inst_get_index_reg(xedd, memop);
+            if(indx != XED_REG_INVALID)
                 found |= add_edge(gg, n, indx, XED_DOT_EDGE_SOLID);
         }
     } /* for */
-    if (!found)
+    if(!found)
     {
         /* add an edge from start */
         xed_dot_edge(gg->g, gg->start, n, XED_DOT_EDGE_SOLID);
@@ -146,22 +146,22 @@ static void add_write_operands(xed_dot_graph_supp_t* gg,
     xi = xed_decoded_inst_inst(xedd);
     noperands = xed_inst_noperands(xi);
 
-    for( i=0; i < noperands ; i++)
+    for(i = 0; i < noperands ; i++)
     {
-        const xed_operand_t* op = xed_inst_operand(xi,i);
+        const xed_operand_t* op = xed_inst_operand(xi, i);
         xed_operand_enum_t opname = xed_operand_name(op);
-        if (xed_operand_is_register(opname) ||
+        if(xed_operand_is_register(opname) ||
                 xed_operand_is_memory_addressing_register(opname))
         {
 
-            if (xed_operand_written(op))
+            if(xed_operand_written(op))
             {
                 /* set n as the source of the value. */
                 /* ignoring partial writes */
                 r = xed_decoded_inst_get_reg(xedd, opname);
 
                 /* output dependences */
-                (void) add_edge(gg,n,r,XED_DOT_EDGE_DASHED);
+                (void) add_edge(gg, n, r, XED_DOT_EDGE_DASHED);
 
                 r_enclosing = xed_get_largest_enclosing_register(r);
                 gg->xed_reg_to_node[r_enclosing] = n;
@@ -222,14 +222,14 @@ void xed_dot_graph_add_instruction(
                             remaining_buffer_bytes,
                             runtime_instr_addr,
                             caller_data);
-    if (!ok)
+    if(!ok)
     {
-        (void)xed_strncpy(disasm_str,"???", XED_DOT_TMP_BUF_LEN);
+        (void)xed_strncpy(disasm_str, "???", XED_DOT_TMP_BUF_LEN);
     }
 
     n = xed_dot_node(gg->g, disasm_str);
-    add_read_operands(gg,xedd,n);
-    add_write_operands(gg,xedd,n);
+    add_read_operands(gg, xedd, n);
+    add_write_operands(gg, xedd, n);
 }
 
 void xed_dot_graph_dump(

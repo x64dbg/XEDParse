@@ -58,7 +58,7 @@ bool xed_ex3(XEDPARSE* XEDParse, const char* command)
 #else
     areq.dstate.mmode = XED_MACHINE_MODE_LEGACY_32;
 #endif //_WIN64
-    areq.command=command;
+    areq.command = command;
     areq.dstate.stack_addr_width = XED_ADDRESS_WIDTH_32b;
     xed_encoder_request_t req = parse_encode_request(areq);
 
@@ -71,35 +71,35 @@ bool xed_ex3(XEDPARSE* XEDParse, const char* command)
     xed_uint8_t array[XED_MAX_INSTRUCTION_BYTES];
 
     xed_error_enum_t xed_error =  xed_encode(&req, array, ilen, &olen);
-    xed_bool_t encode_okay = ( xed_error == XED_ERROR_NONE);
-    if (!encode_okay)
+    xed_bool_t encode_okay = (xed_error == XED_ERROR_NONE);
+    if(!encode_okay)
     {
         strcpy(XEDParse->error, "failed to encode instruction!");
         cout << "Could not encode" << endl;
         return false;
     }
-    XEDParse->dest_size=olen;
+    XEDParse->dest_size = olen;
     memcpy(XEDParse->dest, array, olen);
     xed_print_hex_line(buf, array, olen, XED_EX3_BUFLEN);
     cout << "Encodable! " << buf << endl;
 
-//#define TEST_DISPLACEMENT_MODIFICATION
-//#define TEST_IMMEDIATE_MODIFICATION
+    //#define TEST_DISPLACEMENT_MODIFICATION
+    //#define TEST_IMMEDIATE_MODIFICATION
 #if defined(TEST_DISPLACEMENT_MODIFICATION) || defined(TEST_IMMEDIATE_MODIFICATION)
 # if defined(TEST_DISPLACEMENT_MODIFICATION)
-    if (req.has_disp())
+    if(req.has_disp())
     {
         INT64 new_disp = 0x11223344;
         unsigned int new_disp_length = 4;
         xed_bool_t update_okay = req.update_displacement(new_disp, new_disp_length, array);
 # elif defined(TEST_IMMEDIATE_MODIFICATION)
-    if (req.has_immed())
+    if(req.has_immed())
     {
         INT64 new_immed = 0x11223344;
         unsigned int new_immed_length = 4;
         xed_bool_t update_okay = req.update_immediate(new_immed, new_immed_length, array);
 # endif
-        if (update_okay)
+        if(update_okay)
         {
             cout << "Update succeeded" << endl;
             ostringstream os;

@@ -4,17 +4,17 @@
 
 static bool isinbase(char ch, const char* base)
 {
-    int len=strlen(base);
-    for(int i=0; i<len; i++)
-        if(tolower(ch)==tolower(base[i]))
+    int len = strlen(base);
+    for(int i = 0; i < len; i++)
+        if(tolower(ch) == tolower(base[i]))
             return true;
     return false;
 }
 
 static bool isbase(const char* text, const char* base)
 {
-    int len=strlen(text);
-    for(int i=0; i<len; i++)
+    int len = strlen(text);
+    for(int i = 0; i < len; i++)
         if(!isinbase(text[i], base))
             return false;
     return true;
@@ -24,17 +24,17 @@ bool valfromstring(const char* text, ULONGLONG* value)
 {
     bool negative = false;
 
-    if (*text == '-')
+    if(*text == '-')
     {
         negative = true;
         text++;
     }
 
     // Hexadecimal with '0x' prefix
-    if (text[0] == '0' && text[1] == 'x')
+    if(text[0] == '0' && text[1] == 'x')
         text++;
 
-    switch (tolower(*text++))
+    switch(tolower(*text++))
     {
     default:
         // Default to hexadecimal
@@ -42,7 +42,7 @@ bool valfromstring(const char* text, ULONGLONG* value)
 
     case 'x':
         // Hexadecimal
-        if (!isbase(text, "0123456789ABCDEF"))
+        if(!isbase(text, "0123456789ABCDEF"))
             return false;
 
         sscanf(text, "%llx", value);
@@ -50,7 +50,7 @@ bool valfromstring(const char* text, ULONGLONG* value)
 
     case '.':
         // Decimal
-        if (!isbase(text, "0123456789"))
+        if(!isbase(text, "0123456789"))
             return false;
 
         sscanf(text, "%llu", value);
@@ -58,7 +58,7 @@ bool valfromstring(const char* text, ULONGLONG* value)
 
     case 'o':
         // Octal
-        if (!isbase(text, "01234567"))
+        if(!isbase(text, "01234567"))
             return false;
 
         sscanf(text, "%llo", value);
@@ -73,38 +73,38 @@ bool valfromstring(const char* text, ULONGLONG* value)
         break;
     }
 
-    if (negative)
+    if(negative)
         *value *= -1;
 
     return true;
 }
 
-bool StrDel(char *Source, char *Needle, char StopAt)
+bool StrDel(char* Source, char* Needle, char StopAt)
 {
-	// Find the location in the string first
-	char *loc = strstr(Source, Needle);
+    // Find the location in the string first
+    char* loc = strstr(Source, Needle);
 
-	if (!loc)
-		return false;
+    if(!loc)
+        return false;
 
-	// "Delete" the word by shifting it over
-	int needleLen = strlen(Needle);
+    // "Delete" the word by shifting it over
+    int needleLen = strlen(Needle);
 
-	memcpy(loc, loc + needleLen, strlen(loc) - needleLen + 1);
+    memcpy(loc, loc + needleLen, strlen(loc) - needleLen + 1);
 
-	return true;
+    return true;
 }
 
-char *GrabInstToken(char *Dest, char *Src, bool Operand)
+char* GrabInstToken(char* Dest, char* Src, bool Operand)
 {
-    char *bufEnd = nullptr;
+    char* bufEnd = nullptr;
 
-    if (Operand)
+    if(Operand)
     {
         bufEnd = strchr(Src, ',');
 
         // Skip spaces
-        while (*Src == ' ' || *Src == '\t')
+        while(*Src == ' ' || *Src == '\t')
             Src++;
     }
     else
@@ -112,7 +112,7 @@ char *GrabInstToken(char *Dest, char *Src, bool Operand)
         bufEnd = strchr(Src, ' ');
     }
 
-    if (bufEnd)
+    if(bufEnd)
         *bufEnd = '\0';
 
     strcpy(Dest, Src);
@@ -120,33 +120,33 @@ char *GrabInstToken(char *Dest, char *Src, bool Operand)
     return ((bufEnd) ? (bufEnd + 1) : nullptr);
 }
 
-int InstructionToTokens(const char *Value, char Tokens[8][64])
+int InstructionToTokens(const char* Value, char Tokens[8][64])
 {
     // [PREFIX] INSTRUCTION [SEG]:[MEM/REG/IMM], [SEG]:[MEM/REG/IMM], [REG], [REG]
 
     // Copy a buffer to edit later
     // Skip spaces
-    while (*Value == ' ' || *Value == '\t')
+    while(*Value == ' ' || *Value == '\t')
         Value++;
 
     char buf[XEDPARSE_MAXBUFSIZE];
     strcpy(buf, Value);
 
     // Check the length
-    if (strlen(buf) <= 0)
+    if(strlen(buf) <= 0)
         return 0;
 
-    char *bufPtr	= buf;
-    int tokenIndex	= 0;
+    char* bufPtr    = buf;
+    int tokenIndex  = 0;
 
     // Grab the prefix or mnemonic
     bufPtr = GrabInstToken(Tokens[tokenIndex], bufPtr, false);
 
     // See if it was a prefix
-    if (StringToPrefix(Tokens[tokenIndex++]) != PREFIX_NONE)
+    if(StringToPrefix(Tokens[tokenIndex++]) != PREFIX_NONE)
     {
         // There was a prefix but nothing after it
-        if (!bufPtr)
+        if(!bufPtr)
             return 0;
 
         // A prefix exists, move on to the next token
@@ -154,33 +154,33 @@ int InstructionToTokens(const char *Value, char Tokens[8][64])
     }
 
     // Happens with a single mnemonic/nothing after prefix
-    if (!bufPtr)
+    if(!bufPtr)
         return tokenIndex;
 
     // Obliterate spaces
     {
-        char *base	= bufPtr;
-        char *ptr	= bufPtr;
+        char* base  = bufPtr;
+        char* ptr   = bufPtr;
 
-        for (; *ptr; ptr++)
+        for(; *ptr; ptr++)
         {
-            if (*ptr != ' ' && *ptr != '\t')
+            if(*ptr != ' ' && *ptr != '\t')
                 *base++ = *ptr;
         }
 
         *base = '\0';
 
         // Is there anything left in the string?
-        if (base == bufPtr)
+        if(base == bufPtr)
             return tokenIndex;
     }
 
     // Go through each operand (use a max of 6 tokens)
-    for (int i = 0; i < 6; i++)
+    for(int i = 0; i < 6; i++)
     {
         bufPtr = GrabInstToken(Tokens[tokenIndex++], bufPtr, true);
 
-        if (!bufPtr)
+        if(!bufPtr)
             return tokenIndex;
     }
 
@@ -188,24 +188,24 @@ int InstructionToTokens(const char *Value, char Tokens[8][64])
     return 0;
 }
 
-bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
+bool ParseInstString(XEDPARSE* Parse, Inst* Instruction)
 {
-	// Copy a buffer to edit
-	char buf[XEDPARSE_MAXBUFSIZE];
-	strcpy(buf, Parse->instr);
+    // Copy a buffer to edit
+    char buf[XEDPARSE_MAXBUFSIZE];
+    strcpy(buf, Parse->instr);
 
-	// Find near/far modifiers
-	Instruction->Near	= StrDel(buf, "near", ' ');
-	Instruction->Far	= StrDel(buf, "far", ' ');
+    // Find near/far modifiers
+    Instruction->Near   = StrDel(buf, "near", ' ');
+    Instruction->Far    = StrDel(buf, "far", ' ');
 
-	// Parse into tokens
+    // Parse into tokens
     char tokens[8][64];
     memset(tokens, 0, sizeof(tokens));
 
     int tokenIndex = 0;
     int tokenCount = InstructionToTokens(buf, tokens);
 
-    if (tokenCount <= 0)
+    if(tokenCount <= 0)
     {
         strcpy(Parse->error, "Malformed or invalid instruction");
         return false;
@@ -214,20 +214,20 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
     // Prefix
     Instruction->Prefix = StringToPrefix(tokens[tokenIndex]);
 
-    if (Instruction->Prefix != PREFIX_NONE)
+    if(Instruction->Prefix != PREFIX_NONE)
         tokenIndex++;
 
     // Mnemonic
     strcpy(Instruction->Mnemonic, tokens[tokenIndex++]);
 
     // Operands
-    for (int i = tokenIndex; i < tokenCount; i++)
+    for(int i = tokenIndex; i < tokenCount; i++)
     {
-        if (!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
+        if(!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
             return false;
     }
 
-    if (Instruction->OperandCount > 4)
+    if(Instruction->OperandCount > 4)
     {
         strcpy(Parse->error, "Instruction has more than 4 operands");
         return false;
@@ -236,7 +236,7 @@ bool ParseInstString(XEDPARSE *Parse, Inst *Instruction)
     // Verify and translate the mnemonic this time
     Instruction->Class = str2xed_iclass_enum_t(InstMnemonicToXed(Parse, Instruction));
 
-    if (Instruction->Class == XED_ICLASS_INVALID)
+    if(Instruction->Class == XED_ICLASS_INVALID)
     {
         sprintf(Parse->error, "Unknown instruction mnemonic '%s'", Instruction->Mnemonic);
         return false;

@@ -1,8 +1,8 @@
 #include "Translator.h"
 
-const char *PrefixToString(PREFIX prefix)
+const char* PrefixToString(PREFIX prefix)
 {
-    switch (prefix)
+    switch(prefix)
     {
     case PREFIX_LOCK:
         return "lock";
@@ -15,18 +15,18 @@ const char *PrefixToString(PREFIX prefix)
     return "";
 }
 
-PREFIX StringToPrefix(const char *Value)
+PREFIX StringToPrefix(const char* Value)
 {
-    if (!_stricmp(Value, "lock"))
+    if(!_stricmp(Value, "lock"))
         return PREFIX_LOCK;
 
-    if (!_stricmp(Value, "rep"))
+    if(!_stricmp(Value, "rep"))
         return PREFIX_REP;
 
-    if (!_stricmp(Value, "repe") || !_stricmp(Value, "repz"))
+    if(!_stricmp(Value, "repe") || !_stricmp(Value, "repz"))
         return PREFIX_REP;
 
-    if (!_stricmp(Value, "repne") || !_stricmp(Value, "repnz"))
+    if(!_stricmp(Value, "repne") || !_stricmp(Value, "repnz"))
         return PREFIX_REPNEZ;
 
     return PREFIX_NONE;

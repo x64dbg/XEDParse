@@ -46,7 +46,7 @@ END_LEGAL */
 #  define xed_uint32_t  uint32_t
 #  define xed_uint64_t  uint64_t
 #  define xed_int8_t     int8_t
-#  define xed_int16_t 	 int16_t
+#  define xed_int16_t    int16_t
 #  define xed_int32_t    int32_t
 #  define xed_int64_t    int64_t
 #elif defined(_WIN32)

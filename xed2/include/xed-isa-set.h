@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -33,7 +33,7 @@ END_LEGAL */
 
 #if !defined(_XED_ISA_SET_H_)
 # define _XED_ISA_SET_H_
-    
+
 #include "xed-common-hdrs.h"
 #include "xed-types.h"
 #include "xed-isa-set-enum.h"     /* generated */
@@ -46,5 +46,5 @@ XED_DLL_EXPORT xed_bool_t
 xed_isa_set_is_valid_for_chip(xed_isa_set_enum_t isa_set,
                               xed_chip_enum_t chip);
 
-    
+
 #endif

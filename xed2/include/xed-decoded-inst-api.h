@@ -47,13 +47,13 @@ END_LEGAL */
 //@{
 /// @ingroup DEC
 /// Return true if the instruction is valid
-static XED_INLINE xed_bool_t xed_decoded_inst_valid(const xed_decoded_inst_t* p )
+static XED_INLINE xed_bool_t xed_decoded_inst_valid(const xed_decoded_inst_t* p)
 {
-    return XED_STATIC_CAST(xed_bool_t,(p->_inst != 0));
+    return XED_STATIC_CAST(xed_bool_t, (p->_inst != 0));
 }
 /// @ingroup DEC
 /// Return the #xed_inst_t structure for this instruction. This is the route to the basic operands form information.
-static XED_INLINE const xed_inst_t* xed_decoded_inst_inst( const xed_decoded_inst_t* p)
+static XED_INLINE const xed_inst_t* xed_decoded_inst_inst(const xed_decoded_inst_t* p)
 {
     return p->_inst;
 }
@@ -68,21 +68,21 @@ static XED_INLINE xed_category_enum_t xed_decoded_inst_get_category(const xed_de
 }
 /// @ingroup DEC
 /// Return the instruction #xed_extension_enum_t enumeration
-static XED_INLINE xed_extension_enum_t xed_decoded_inst_get_extension( const xed_decoded_inst_t* p)
+static XED_INLINE xed_extension_enum_t xed_decoded_inst_get_extension(const xed_decoded_inst_t* p)
 {
     xed_assert(p->_inst != 0);
     return xed_inst_extension(p->_inst);
 }
 /// @ingroup DEC
 /// Return the instruction #xed_isa_set_enum_t enumeration
-static XED_INLINE xed_isa_set_enum_t xed_decoded_inst_get_isa_set( const xed_decoded_inst_t* p)
+static XED_INLINE xed_isa_set_enum_t xed_decoded_inst_get_isa_set(const xed_decoded_inst_t* p)
 {
     xed_assert(p->_inst != 0);
     return xed_inst_isa_set(p->_inst);
 }
 /// @ingroup DEC
 /// Return the instruction #xed_iclass_enum_t enumeration.
-static XED_INLINE xed_iclass_enum_t xed_decoded_inst_get_iclass( const xed_decoded_inst_t* p)
+static XED_INLINE xed_iclass_enum_t xed_decoded_inst_get_iclass(const xed_decoded_inst_t* p)
 {
     xed_assert(p->_inst != 0);
     return xed_inst_iclass(p->_inst);
@@ -290,8 +290,8 @@ xed_decoded_inst_get_byte(const xed_decoded_inst_t* p, xed_uint_t byte_index)
 static XED_INLINE xed_uint_t xed_decoded_inst_get_machine_mode_bits(const xed_decoded_inst_t* p)
 {
     xed_uint8_t mode = xed3_operand_get_mode(p);
-    if (mode == 2) return 64;
-    if (mode == 1) return 32;
+    if(mode == 2) return 64;
+    if(mode == 1) return 32;
     return 16;
 }
 /// @ingroup DEC
@@ -300,8 +300,8 @@ static XED_INLINE xed_uint_t xed_decoded_inst_get_machine_mode_bits(const xed_de
 static XED_INLINE xed_uint_t xed_decoded_inst_get_stack_address_mode_bits(const xed_decoded_inst_t* p)
 {
     xed_uint8_t smode = xed3_operand_get_smode(p);
-    if (smode == 2) return 64;
-    if (smode == 1) return 32;
+    if(smode == 2) return 64;
+    if(smode == 1) return 32;
     return 16;
 }
 
@@ -323,7 +323,7 @@ static XED_INLINE xed_chip_enum_t xed_decoded_inst_get_input_chip(const xed_deco
 /// @ingroup DEC
 static XED_INLINE void xed_decoded_inst_set_input_chip(xed_decoded_inst_t* p,  xed_chip_enum_t chip)
 {
-    xed3_operand_set_chip(p,chip);
+    xed3_operand_set_chip(p, chip);
 }
 
 
@@ -499,7 +499,7 @@ XED_DLL_EXPORT xed_reg_enum_t xed_decoded_inst_get_reg(const xed_decoded_inst_t*
 /// See the comment on xed_decoded_inst_uses_rflags(). This can return
 /// 0 if the flags are really not used by this instruction.
 /// @ingroup DEC
-XED_DLL_EXPORT const xed_simple_flag_t* xed_decoded_inst_get_rflags_info( const xed_decoded_inst_t* p );
+XED_DLL_EXPORT const xed_simple_flag_t* xed_decoded_inst_get_rflags_info(const xed_decoded_inst_t* p);
 
 /// This returns 1 if the flags are read or written. This will return 0
 /// otherwise. This will return 0 if the flags are really not used by this

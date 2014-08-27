@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -29,7 +29,7 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
 /// @file xed-disas.h
-/// 
+///
 
 #if !defined(_XED_DISAS_H_)
 # define _XED_DISAS_H_
@@ -40,7 +40,7 @@ END_LEGAL */
 /// A #xed_disassembly_callback_fn_t takes an address, a pointer to a
 /// symbol buffer of buffer_length bytes, and a pointer to an offset. The
 /// function fills in the symbol_buffer and sets the offset to the desired
-/// offset for that symbol.  If the function succeeds, it returns 1. 
+/// offset for that symbol.  If the function succeeds, it returns 1.
 //  The call back should return 0 if the buffer is not long enough to
 //  include the null termination.If no symbolic information is
 //  located, the function returns zero.
@@ -49,10 +49,10 @@ END_LEGAL */
 ///                       with a null byte.
 ///  @param buffer_length The maximum length of the symbol_buffer including then null
 ///  @param offset A pointer to a xed_uint64_t to hold the offset from the provided symbol.
-///  @param context This void* pointer passed to the disassembler's new interface so that the caller can identify 
-///                     the proper context against which to resolve the symbols. 
+///  @param context This void* pointer passed to the disassembler's new interface so that the caller can identify
+///                     the proper context against which to resolve the symbols.
 ///                     The disassembler passes this value to
-///                     the callback. The legacy formatters 
+///                     the callback. The legacy formatters
 ///                     that do not have context will pass zero for this parameter.
 ///  @return 0 on failure, 1 on success.
 typedef  int (*xed_disassembly_callback_fn_t)(

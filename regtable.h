@@ -141,14 +141,14 @@ enum REG
     REG_MM6,
     REG_MM7,
 
-	REG_MMX0,
-	REG_MMX1,
-	REG_MMX2,
-	REG_MMX3,
-	REG_MMX4,
-	REG_MMX5,
-	REG_MMX6,
-	REG_MMX7,
+    REG_MMX0,
+    REG_MMX1,
+    REG_MMX2,
+    REG_MMX3,
+    REG_MMX4,
+    REG_MMX5,
+    REG_MMX6,
+    REG_MMX7,
 
     /* Floating point XXM# */
     REG_XMM0,
@@ -212,10 +212,10 @@ enum SEG
 
 struct RegEntry
 {
-    const char		*Name;
-    REG				RegId;
-    xed_reg_enum_t	XedId;
-    REGSIZE			Size;
+    const char*      Name;
+    REG             RegId;
+    xed_reg_enum_t  XedId;
+    REGSIZE         Size;
 };
 
 static RegEntry RegisterIds[] =
@@ -342,23 +342,23 @@ static RegEntry RegisterIds[] =
     { "st7", REG_ST7, XED_REG_ST7, SIZE_TBYTE },
 
     /* 3DNow! MMX/MM# (Same register: both aliases) */
-	{ "mm0", REG_MM0, XED_REG_MMX0, SIZE_QWORD },
-	{ "mm1", REG_MM1, XED_REG_MMX1, SIZE_QWORD },
-	{ "mm2", REG_MM2, XED_REG_MMX2, SIZE_QWORD },
-	{ "mm3", REG_MM3, XED_REG_MMX3, SIZE_QWORD },
-	{ "mm4", REG_MM4, XED_REG_MMX4, SIZE_QWORD },
-	{ "mm5", REG_MM5, XED_REG_MMX5, SIZE_QWORD },
-	{ "mm6", REG_MM6, XED_REG_MMX6, SIZE_QWORD },
-	{ "mm7", REG_MM7, XED_REG_MMX7, SIZE_QWORD },
+    { "mm0", REG_MM0, XED_REG_MMX0, SIZE_QWORD },
+    { "mm1", REG_MM1, XED_REG_MMX1, SIZE_QWORD },
+    { "mm2", REG_MM2, XED_REG_MMX2, SIZE_QWORD },
+    { "mm3", REG_MM3, XED_REG_MMX3, SIZE_QWORD },
+    { "mm4", REG_MM4, XED_REG_MMX4, SIZE_QWORD },
+    { "mm5", REG_MM5, XED_REG_MMX5, SIZE_QWORD },
+    { "mm6", REG_MM6, XED_REG_MMX6, SIZE_QWORD },
+    { "mm7", REG_MM7, XED_REG_MMX7, SIZE_QWORD },
 
-	{ "mmx0", REG_MMX0, XED_REG_MMX0, SIZE_QWORD },
-	{ "mmx1", REG_MMX1, XED_REG_MMX1, SIZE_QWORD },
-	{ "mmx2", REG_MMX2, XED_REG_MMX2, SIZE_QWORD },
-	{ "mmx3", REG_MMX3, XED_REG_MMX3, SIZE_QWORD },
-	{ "mmx4", REG_MMX4, XED_REG_MMX4, SIZE_QWORD },
-	{ "mmx5", REG_MMX5, XED_REG_MMX5, SIZE_QWORD },
-	{ "mmx6", REG_MMX6, XED_REG_MMX6, SIZE_QWORD },
-	{ "mmx7", REG_MMX7, XED_REG_MMX7, SIZE_QWORD },
+    { "mmx0", REG_MMX0, XED_REG_MMX0, SIZE_QWORD },
+    { "mmx1", REG_MMX1, XED_REG_MMX1, SIZE_QWORD },
+    { "mmx2", REG_MMX2, XED_REG_MMX2, SIZE_QWORD },
+    { "mmx3", REG_MMX3, XED_REG_MMX3, SIZE_QWORD },
+    { "mmx4", REG_MMX4, XED_REG_MMX4, SIZE_QWORD },
+    { "mmx5", REG_MMX5, XED_REG_MMX5, SIZE_QWORD },
+    { "mmx6", REG_MMX6, XED_REG_MMX6, SIZE_QWORD },
+    { "mmx7", REG_MMX7, XED_REG_MMX7, SIZE_QWORD },
 
     /* Floating point XMM# */
     { "xmm0", REG_XMM0, XED_REG_XMM0, SIZE_XMMWORD },
@@ -411,10 +411,10 @@ static RegEntry RegisterIds[] =
 
 struct SegEntry
 {
-    const char		*Name;
-    SEG				SegId;
-    xed_reg_enum_t	XedId;
-    REGSIZE			Size;
+    const char*      Name;
+    SEG             SegId;
+    xed_reg_enum_t  XedId;
+    REGSIZE         Size;
 };
 
 static SegEntry SegmentIds[] =
@@ -441,8 +441,8 @@ SEG getsegment(const char* text);
 xed_reg_enum_t regtoxed(REG reg);
 xed_reg_enum_t segtoxed(SEG seg);
 
-const char *regtostring(REG reg);
-const char *segtostring(SEG seg);
+const char* regtostring(REG reg);
+const char* segtostring(SEG seg);
 
 REGSIZE getregsize(REG reg);
 REGSIZE getsegsize(SEG seg);

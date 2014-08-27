@@ -7,34 +7,34 @@ enum OPERAND_TYPE
     OPERAND_IMM,
     // OPERAND_IMM1,
     OPERAND_MEM,
-	OPERAND_SEGSEL,
+    OPERAND_SEGSEL,
 };
 
 struct InstOperand
 {
-    OPERAND_TYPE	Type;
-    SEG				Segment;
-    MEMSIZE			Size;
-    int				BitSize;
-    int				XedEOSZ;
+    OPERAND_TYPE    Type;
+    SEG             Segment;
+    MEMSIZE         Size;
+    int             BitSize;
+    int             XedEOSZ;
 
     union
     {
         struct
         {
-            REG				Reg;
-            xed_reg_enum_t	XedReg;
+            REG             Reg;
+            xed_reg_enum_t  XedReg;
         } Reg;
 
         struct
         {
-			bool Signed;
+            bool Signed;
             bool RelBranch;
 
             union
             {
-                xed_uint64_t	imm;
-                xed_int64_t		simm;
+                xed_uint64_t    imm;
+                xed_int64_t     simm;
             };
         } Imm;
 
@@ -55,15 +55,15 @@ struct InstOperand
             REG IndexVal;
         } Mem;
 
-		struct
-		{
-			USHORT Selector;
-			xed_int_t Offset;
-		} Sel;
+        struct
+        {
+            USHORT Selector;
+            xed_int_t Offset;
+        } Sel;
     };
 };
 
-void SetMemoryDisplacementOrBase(XEDPARSE *Parse, const char *Value, InstOperand *Operand);
-void SetMemoryIndexOrScale(XEDPARSE *Parse, const char *Value, InstOperand *Operand);
-bool HandleMemoryOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand);
-bool AnalyzeOperand(XEDPARSE *Parse, const char *Value, InstOperand *Operand);
+void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand* Operand);
+void SetMemoryIndexOrScale(XEDPARSE* Parse, const char* Value, InstOperand* Operand);
+bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand);
+bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand);

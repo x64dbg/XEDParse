@@ -17,7 +17,7 @@ OPSIZE bitstoopsize(int bits)
 
 OPSIZE inttoopsize(int opsize)
 {
-    switch (opsize)
+    switch(opsize)
     {
     case 1:
         return SIZE_BYTE;
@@ -45,7 +45,7 @@ OPSIZE inttoopsize(int opsize)
 int opsizetoeosz(OPSIZE Value)
 {
     // OPSIZE to XED's effective operand size
-    switch (Value)
+    switch(Value)
     {
     case SIZE_BYTE:
         return 0;
@@ -60,26 +60,26 @@ int opsizetoeosz(OPSIZE Value)
     return 0;
 }
 
-OPSIZE StringToOpsize(const char *Value)
+OPSIZE StringToOpsize(const char* Value)
 {
-    for (int i = 0; i < ARRAYSIZE(OpsizeEntryTable); i++)
+    for(int i = 0; i < ARRAYSIZE(OpsizeEntryTable); i++)
     {
-        if (!_stricmp(OpsizeEntryTable[i].Name, Value))
+        if(!_stricmp(OpsizeEntryTable[i].Name, Value))
             return OpsizeEntryTable[i].Size;
     }
 
     return SIZE_UNSET;
 }
 
-const char *OpsizeToString(OPSIZE Size)
+const char* OpsizeToString(OPSIZE Size)
 {
     return OpsizeEntryTable[Size].Name;
 }
 
 OPSIZE ValueToOpsize(LONGLONG Value)
 {
-	int sign	= xed_shortest_width_signed(Value, 0xFF);
-	int unsign	= xed_shortest_width_unsigned(Value, 0xFF);
+    int sign    = xed_shortest_width_signed(Value, 0xFF);
+    int unsign  = xed_shortest_width_unsigned(Value, 0xFF);
 
-	return inttoopsize(min(sign, unsign));
+    return inttoopsize(min(sign, unsign));
 }

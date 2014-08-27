@@ -65,8 +65,8 @@ xed_operand_values_set_mode(xed_operand_values_t* p,
 /// Initializes dst operand structure but preserves the existing
 /// MODE/SMODE values from the src operand structure.
 XED_DLL_EXPORT void
-xed_operand_values_init_keep_mode( xed_operand_values_t* dst,
-                                   const xed_operand_values_t* src );
+xed_operand_values_init_keep_mode(xed_operand_values_t* dst,
+                                  const xed_operand_values_t* src);
 //@}
 
 ///////////////////////////////////////////////////////////

@@ -50,4 +50,4 @@ public:
 
 
 xed_encoder_request_t
-parse_encode_request(ascii_encode_request_t& areq);
+parse_encode_request(ascii_encode_request_t & areq);

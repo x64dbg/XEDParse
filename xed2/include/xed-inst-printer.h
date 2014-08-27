@@ -1,8 +1,8 @@
-/*BEGIN_LEGAL 
-Intel Open Source License 
+/*BEGIN_LEGAL
+Intel Open Source License
 
 Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
- 
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
 met:
@@ -15,7 +15,7 @@ other materials provided with the distribution.  Neither the name of
 the Intel Corporation nor the names of its contributors may be used to
 endorse or promote products derived from this software without
 specific prior written permission.
- 
+
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -28,8 +28,8 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 END_LEGAL */
-/// @file xed-inst-printer.h 
-/// 
+/// @file xed-inst-printer.h
+///
 
 
 #ifndef _XED_INST_PRINTER_H_
@@ -73,7 +73,7 @@ xed_format_intel(const xed_decoded_inst_t* xedd,
 /// Disassemble the decoded instruction using the XED syntax providing all
 /// operand resources (implicit, explicit, suppressed). The output buffer
 /// must be at least 25 bytes long. Returns true if disassembly proceeded
-/// without errors. 
+/// without errors.
 /// @param xedd a #xed_decoded_inst_t for a decoded instruction
 /// @param out_buffer a buffer to write the disassembly in to.
 /// @param buffer_len maximum length of the disassembly buffer

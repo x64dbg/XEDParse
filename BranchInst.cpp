@@ -12,7 +12,7 @@ bool IsIClassCall(xed_iclass_enum_t IClass)
 
 int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
 {
-    switch (IClass)
+    switch(IClass)
     {
     case XED_ICLASS_JB:
     case XED_ICLASS_JBE:
@@ -54,22 +54,22 @@ int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
     return 0;
 }
 
-bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
+bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
 {
     // Check if it needs to be fixed
-    if (!IsIClassJump(Instruction->Class) && !IsIClassCall(Instruction->Class))
+    if(!IsIClassJump(Instruction->Class) && !IsIClassCall(Instruction->Class))
         return true;
 
     // Any branch instruction can only have one operand max
-    if (Instruction->OperandCount > 1)
+    if(Instruction->OperandCount > 1)
     {
         if(Instruction->OperandCount == 2 && Instruction->Far) //jmp far 0xea231000, 0x1000
         {
             Instruction->OperandCount           = 2;
             Instruction->Operands[0].Type       = OPERAND_SEGSEL;
             Instruction->Operands[0].Sel.Offset = Instruction->Operands[0].Imm.imm;
-            Instruction->Operands[1].Type		= OPERAND_IMM;
-            Instruction->Operands[1].Size		= SIZE_WORD;
+            Instruction->Operands[1].Type       = OPERAND_IMM;
+            Instruction->Operands[1].Size       = SIZE_WORD;
             return true;
         }
 
@@ -78,9 +78,9 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
     }
 
     // This is only handled if the operand is an immediate
-    InstOperand *operand = &Instruction->Operands[0];
+    InstOperand* operand = &Instruction->Operands[0];
 
-    if (operand->Type == OPERAND_IMM)
+    if(operand->Type == OPERAND_IMM)
     {
         LONGLONG delta = TranslateRelativeCip(Parse, operand->Imm.imm, true);
 
@@ -95,36 +95,36 @@ bool TranslateBranchInst(XEDPARSE *Parse, Inst *Instruction)
 
         // Branches can't have a displacement larger than 32 bits
         ULONGLONG masked = delta & 0xFFFFFFFF00000000;
-        if (masked != 0 && masked != 0xFFFFFFFF00000000)
+        if(masked != 0 && masked != 0xFFFFFFFF00000000)
         {
             strcpy(Parse->error, "Branch displacement is too large");
             return false;
         }
 
-		// 64bit -> 32bit variable mask
-        if (!Parse->x64)
+        // 64bit -> 32bit variable mask
+        if(!Parse->x64)
             delta &= 0xFFFFFFFF;
 
-        operand->Size			= branchClass == 2 ? SIZE_BYTE : SIZE_DWORD;
-		operand->Imm.Signed		= true;
-        operand->Imm.RelBranch	= true;
-        operand->Imm.simm		= delta;
+        operand->Size           = branchClass == 2 ? SIZE_BYTE : SIZE_DWORD;
+        operand->Imm.Signed     = true;
+        operand->Imm.RelBranch  = true;
+        operand->Imm.simm       = delta;
     }
-    else if (operand->Type == OPERAND_MEM)
+    else if(operand->Type == OPERAND_MEM)
     {
         // JMP/CALL FARWORD PTR
         if(Instruction->Class == XED_ICLASS_CALL_FAR || Instruction->Class == XED_ICLASS_JMP_FAR)
             operand->Size = SIZE_FWORD;
     }
-	else if (operand->Type == OPERAND_SEGSEL)
-	{
-		// JMP FAR 0000:00000000
-		// This is considered 2 operands by XED
-		Instruction->OperandCount			= 2;
-		Instruction->Operands[1].Type		= OPERAND_IMM;
-		Instruction->Operands[1].Size		= SIZE_WORD;
-		Instruction->Operands[1].Imm.imm	= Instruction->Operands[0].Sel.Selector;
-	}
+    else if(operand->Type == OPERAND_SEGSEL)
+    {
+        // JMP FAR 0000:00000000
+        // This is considered 2 operands by XED
+        Instruction->OperandCount           = 2;
+        Instruction->Operands[1].Type       = OPERAND_IMM;
+        Instruction->Operands[1].Size       = SIZE_WORD;
+        Instruction->Operands[1].Imm.imm    = Instruction->Operands[0].Sel.Selector;
+    }
 
     return true;
 }

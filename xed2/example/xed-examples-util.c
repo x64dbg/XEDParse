@@ -90,26 +90,26 @@ typedef struct
 void xed_decode_stats_reset(xed_decode_stats_t* p, xed_uint64_t t1,
                             xed_uint64_t t2)
 {
-    if (t2 > t1)
-        p->total_time += (t2-t1);
+    if(t2 > t1)
+        p->total_time += (t2 - t1);
     else
         p->bad_times++;
     p->total_insts++;
     p->reset_counter++;
-    if (p->reset_counter == 50)
+    if(p->reset_counter == 50)
     {
-        if (CLIENT_VERBOSE1)
+        if(CLIENT_VERBOSE1)
             printf("\n\nRESETTING STATS\n\n");
         // to ignore startup transients paging everything in.
-        p->total_insts=0;
-        p->total_time=0;
+        p->total_insts = 0;
+        p->total_time = 0;
     }
     //these guys count average on tail instructions -
     //when all cpu caches and tables are full
-    if (p->total_insts >= p->perf_tail)
+    if(p->total_insts >= p->perf_tail)
     {
         p->total_insts_tail++;
-        p->total_time_tail += (t2-t1);
+        p->total_time_tail += (t2 - t1);
     }
 }
 
@@ -136,23 +136,23 @@ static xed_decode_stats_t xed_enc_stats;
 int xed_syntax = 0;
 int intel_syntax = 1;
 int att_syntax = 0;
-int client_verbose=0;
+int client_verbose = 0;
 
 ////////////////////////////////////////////////////////////////////////////
 
 static char xed_toupper(char c)
 {
-    if (c >= 'a' && c <= 'z')
-        return c-'a'+'A';
+    if(c >= 'a' && c <= 'z')
+        return c - 'a' + 'A';
     return c;
 }
 
 char* xed_upcase_buf(char* s)
 {
-    xed_uint_t len = XED_STATIC_CAST(xed_uint_t,strlen(s));
+    xed_uint_t len = XED_STATIC_CAST(xed_uint_t, strlen(s));
     xed_uint_t i;
-    for(i=0 ; i < len ; i++ )
-        s[i] = XED_STATIC_CAST(char,xed_toupper(s[i]));
+    for(i = 0 ; i < len ; i++)
+        s[i] = XED_STATIC_CAST(char, xed_toupper(s[i]));
     return s;
 }
 
@@ -160,11 +160,11 @@ static xed_uint8_t convert_nibble(xed_uint8_t x)
 {
     // convert ascii nibble to hex
     xed_uint8_t rv = 0;
-    if (x >= '0' && x <= '9')
+    if(x >= '0' && x <= '9')
         rv = x - '0';
-    else if (x >= 'A' && x <= 'F')
+    else if(x >= 'A' && x <= 'F')
         rv = x - 'A' + 10;
-    else if (x >= 'a' && x <= 'f')
+    else if(x >= 'a' && x <= 'f')
         rv = x - 'a' + 10;
     else
     {
@@ -177,11 +177,11 @@ static xed_uint8_t convert_nibble(xed_uint8_t x)
 
 xed_int64_t xed_atoi_hex(char* buf)
 {
-    xed_int64_t o=0;
+    xed_int64_t o = 0;
     xed_uint_t i;
-    xed_uint_t len = XED_STATIC_CAST(xed_uint_t,strlen(buf));
-    for(i=0; i<len ; i++)
-        o = o*16 + convert_nibble(buf[i]);
+    xed_uint_t len = XED_STATIC_CAST(xed_uint_t, strlen(buf));
+    for(i = 0; i < len ; i++)
+        o = o * 16 + convert_nibble(buf[i]);
     return o;
 }
 
@@ -198,17 +198,17 @@ xed_int64_t xed_atoi_general(char* buf, int mul)
     }
     // exclude hex; octal works just fine
     q = p;
-    if (*q == '-' || *q == '+')
+    if(*q == '-' || *q == '+')
     {
         q++;
     }
-    if (*q=='0' && (q[1]=='x' || q[1]=='X'))
+    if(*q == '0' && (q[1] == 'x' || q[1] == 'X'))
     {
-        return xed_strtoll(buf,0);
+        return xed_strtoll(buf, 0);
     }
 
-    b = xed_strtoll(buf,0);
-    if (p)
+    b = xed_strtoll(buf, 0);
+    if(p)
     {
         while(*p && (*p == '-' || *p == '+'))
         {
@@ -219,17 +219,17 @@ xed_int64_t xed_atoi_general(char* buf, int mul)
             p++;
         }
 
-        if (*p != 0)
+        if(*p != 0)
         {
-            if (*p == 'k' || *p == 'K')
+            if(*p == 'k' || *p == 'K')
             {
                 b = b * mul;
             }
-            else if (*p == 'm' || *p == 'M')
+            else if(*p == 'm' || *p == 'M')
             {
                 b = b * mul * mul;
             }
-            else if (*p == 'g' || *p == 'G' || *p == 'b' || *p == 'B')
+            else if(*p == 'g' || *p == 'G' || *p == 'b' || *p == 'B')
             {
                 b = b * mul * mul * mul;
             }
@@ -240,37 +240,37 @@ xed_int64_t xed_atoi_general(char* buf, int mul)
 
 static char nibble_to_ascii_hex(xed_uint8_t i)
 {
-    if (i<10) return i+'0';
-    if (i<16) return i-10+'A';
+    if(i < 10) return i + '0';
+    if(i < 16) return i - 10 + 'A';
     return '?';
 }
 void xed_print_hex_line(char* buf, const xed_uint8_t* array, const int length,
                         const int buflen)
 {
     int n = length;
-    int i=0;
-    if (length == 0)
+    int i = 0;
+    if(length == 0)
         n = XED_MAX_INSTRUCTION_BYTES;
-    assert(buflen >= (2*n+1)); /* including null */
-    for( i=0 ; i< n; i++)
+    assert(buflen >= (2 * n + 1)); /* including null */
+    for(i = 0 ; i < n; i++)
     {
-        buf[2*i+0] = nibble_to_ascii_hex(array[i]>>4);
-        buf[2*i+1] = nibble_to_ascii_hex(array[i]&0xF);
+        buf[2 * i + 0] = nibble_to_ascii_hex(array[i] >> 4);
+        buf[2 * i + 1] = nibble_to_ascii_hex(array[i] & 0xF);
     }
-    buf[2*i]=0;
+    buf[2 * i] = 0;
 }
 
 
 
 void xedex_derror(const char* s)
 {
-    printf("[XED CLIENT ERROR] %s\n",s);
+    printf("[XED CLIENT ERROR] %s\n", s);
     //exit(1);
 }
 
 void xedex_dwarn(const char* s)
 {
-    printf("[XED CLIENT WARNING] %s\n",s);
+    printf("[XED CLIENT WARNING] %s\n", s);
 }
 
 
@@ -281,7 +281,7 @@ decode_internal(xed_decoded_inst_t* xedd,
                 const xed_uint8_t* itext,
                 xed_uint_t max_bytes)
 {
-    xed_error_enum_t err =  xed_decode(xedd,itext,max_bytes);
+    xed_error_enum_t err =  xed_decode(xedd, itext, max_bytes);
     return err;
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -322,7 +322,7 @@ static void print_decode_stats_internal(xed_decode_stats_t* p,
 
 void xed_print_decode_stats()
 {
-//for ILD perf measurements
+    //for ILD perf measurements
     print_decode_stats_internal(&xed_stats, "XED3", "decode");
 }
 
@@ -340,53 +340,53 @@ xed_map_region(const char* path,
 {
 #if defined(_WIN32)
     FILE* f;
-    size_t t,ilen;
+    size_t t, ilen;
     xed_uint8_t* p;
 #if defined(XED_MSVC8_OR_LATER)
     errno_t err;
-    fprintf(stderr,"#Opening %s\n", path);
-    err = fopen_s(&f,path,"rb");
+    fprintf(stderr, "#Opening %s\n", path);
+    err = fopen_s(&f, path, "rb");
 #else
-    int err=0;
-    fprintf(stderr,"#Opening %s\n", path);
-    f = fopen(path,"rb");
-    err = (f==0);
+    int err = 0;
+    fprintf(stderr, "#Opening %s\n", path);
+    f = fopen(path, "rb");
+    err = (f == 0);
 #endif
-    if (err != 0)
+    if(err != 0)
     {
-        fprintf(stderr,"ERROR: Could not open %s\n", path);
+        fprintf(stderr, "ERROR: Could not open %s\n", path);
         exit(1);
     }
     err =  fseek(f, 0, SEEK_END);
-    if (err != 0)
+    if(err != 0)
     {
-        fprintf(stderr,"ERROR: Could not fseek %s\n", path);
+        fprintf(stderr, "ERROR: Could not fseek %s\n", path);
         exit(1);
     }
     ilen = ftell(f);
-    fprintf(stderr,"#Trying to read " XED_FMT_SIZET "\n", ilen);
+    fprintf(stderr, "#Trying to read " XED_FMT_SIZET "\n", ilen);
     p = (xed_uint8_t*)malloc(ilen);
-    t=0;
-    err = fseek(f,0, SEEK_SET);
-    if (err != 0)
+    t = 0;
+    err = fseek(f, 0, SEEK_SET);
+    if(err != 0)
     {
-        fprintf(stderr,"ERROR: Could not fseek to start of file %s\n", path);
+        fprintf(stderr, "ERROR: Could not fseek to start of file %s\n", path);
         exit(1);
     }
 
     while(t < ilen)
     {
         size_t n;
-        if (feof(f))
+        if(feof(f))
         {
             fprintf(stderr, "#Read EOF. Stopping.\n");
             break;
         }
-        n = fread(p+t, 1, ilen-t,f);
-        t = t+n;
-        fprintf(stderr,"#Read " XED_FMT_SIZET " of " XED_FMT_SIZET " bytes\n",
+        n = fread(p + t, 1, ilen - t, f);
+        t = t + n;
+        fprintf(stderr, "#Read " XED_FMT_SIZET " of " XED_FMT_SIZET " bytes\n",
                 t, ilen);
-        if (ferror(f))
+        if(ferror(f))
         {
             fprintf(stderr, "Error in file read. Stopping.\n");
             break;
@@ -397,15 +397,15 @@ xed_map_region(const char* path,
     *length = (unsigned int)ilen;
 
 #else
-    int ilen,fd;
+    int ilen, fd;
     fd = open(path, O_RDONLY);
-    if (fd == -1)
+    if(fd == -1)
     {
         printf("Could not open file: %s\n" , path);
         exit(1);
     }
     ilen = lseek(fd, 0, SEEK_END); // find the size.
-    if (ilen == -1)
+    if(ilen == -1)
         xedex_derror("lseek failed");
     else
         *length = (unsigned int) ilen;
@@ -413,14 +413,14 @@ xed_map_region(const char* path,
     lseek(fd, 0, SEEK_SET); // go to the beginning
     *start = mmap(0,
                   *length,
-                  PROT_READ|PROT_WRITE,
+                  PROT_READ | PROT_WRITE,
                   MAP_PRIVATE,
                   fd,
                   0);
-    if (*start == (void*) -1)
+    if(*start == (void*) - 1)
         xedex_derror("could not map region");
 #endif
-    if (CLIENT_VERBOSE1)
+    if(CLIENT_VERBOSE1)
         printf("Mapped " XED_FMT_U " bytes!\n", *length);
 }
 
@@ -430,8 +430,8 @@ xed_map_region(const char* path,
 static int all_zeros(xed_uint8_t* p, unsigned int len)
 {
     unsigned int i;
-    for( i=0; i<len; i++)
-        if (p[i])
+    for(i = 0; i < len; i++)
+        if(p[i])
             return 0;
     return 1;
 }
@@ -448,18 +448,18 @@ fn_disassemble_xed(xed_syntax_enum_t syntax,
     /* the caller_data is for symbolic disam */
 
     char buffer[XED_TMP_BUF_LEN];
-    int blen= buflen;
+    int blen = buflen;
     int ok = xed_format_context(syntax, xedd,
                                 buffer, XED_TMP_BUF_LEN,
                                 runtime_instruction_address, caller_data);
-    if (ok)
-        blen = xed_strncpy(buf,buffer,buflen);
+    if(ok)
+        blen = xed_strncpy(buf, buffer, buflen);
     else
     {
         blen = buflen;
-        blen = xed_strncpy(buf,"Error disassembling ",blen);
-        blen = xed_strncat(buf, xed_syntax_enum_t2str(syntax),blen);
-        blen = xed_strncat(buf," syntax.",blen);
+        blen = xed_strncpy(buf, "Error disassembling ", blen);
+        blen = xed_strncat(buf, xed_syntax_enum_t2str(syntax), blen);
+        blen = xed_strncat(buf, " syntax.", blen);
     }
     return blen;
 }
@@ -472,26 +472,26 @@ void disassemble(char* buf,
                  void* caller_data)
 {
     int blen = buflen;
-    if (xed_syntax)
+    if(xed_syntax)
     {
         blen = fn_disassemble_xed(XED_SYNTAX_XED, buf, blen,
                                   xedd, runtime_instruction_address,
                                   caller_data);
-        if (att_syntax || intel_syntax)
-            blen = xed_strncat(buf, " | ",blen);
+        if(att_syntax || intel_syntax)
+            blen = xed_strncat(buf, " | ", blen);
     }
-    if (att_syntax)
+    if(att_syntax)
     {
-        char* xbuf = buf+strlen(buf);
+        char* xbuf = buf + strlen(buf);
         blen = fn_disassemble_xed(XED_SYNTAX_ATT, xbuf, blen,
                                   xedd, runtime_instruction_address,
                                   caller_data);
-        if (intel_syntax)
-            blen = xed_strncat(buf, " | ",blen);
+        if(intel_syntax)
+            blen = xed_strncat(buf, " | ", blen);
     }
-    if (intel_syntax)
+    if(intel_syntax)
     {
-        char* ybuf = buf+strlen(buf);
+        char* ybuf = buf + strlen(buf);
         blen = fn_disassemble_xed(XED_SYNTAX_INTEL, ybuf, blen,
                                   xedd, runtime_instruction_address,
                                   caller_data);
@@ -511,8 +511,8 @@ void xed_decode_error(
            offset,
            runtime_instruction_address);
 
-    xed_print_hex_line(buf, ptr, 15,XED_HEX_BUFLEN);
-    printf("%s]\n",buf);
+    xed_print_hex_line(buf, ptr, 15, XED_HEX_BUFLEN);
+    printf("%s]\n", buf);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -521,10 +521,10 @@ void xed_decode_error(
 static void print_hex_line(const xed_uint8_t* p, unsigned int length)
 {
     char buf[XED_HEX_BUFLEN];
-    unsigned int lim = XED_HEX_BUFLEN/2;
-    if (length < lim)
+    unsigned int lim = XED_HEX_BUFLEN / 2;
+    if(length < lim)
         lim = length;
-    xed_print_hex_line(buf,p, lim, XED_HEX_BUFLEN);
+    xed_print_hex_line(buf, p, lim, XED_HEX_BUFLEN);
     printf("%s\n", buf);
 }
 
@@ -535,11 +535,11 @@ xed_uint_t disas_decode_binary(const xed_state_t* dstate,
                                xed_decoded_inst_t* xedd,
                                xed_uint64_t runtime_address)
 {
-    xed_uint64_t t1,t2;
+    xed_uint64_t t1, t2;
     xed_error_enum_t xed_error;
     xed_bool_t okay;
 
-    if (CLIENT_VERBOSE)
+    if(CLIENT_VERBOSE)
     {
         print_hex_line(hex_decode_text, bytes);
     }
@@ -550,39 +550,39 @@ xed_uint_t disas_decode_binary(const xed_state_t* dstate,
     t2 = xed_get_time();
     okay = (xed_error == XED_ERROR_NONE);
 #if defined(PTI_XED_TEST)
-    if (okay)
-        pti_xed_test(xedd,hex_decode_text, bytes, runtime_address);
+    if(okay)
+        pti_xed_test(xedd, hex_decode_text, bytes, runtime_address);
 #endif
 
-    if (CLIENT_VERBOSE3)
+    if(CLIENT_VERBOSE3)
     {
-        xed_uint64_t delta = t2-t1;
+        xed_uint64_t delta = t2 - t1;
         printf("Decode time = " XED_FMT_LU "\n", delta);
     }
-    if (okay)
+    if(okay)
     {
 
-        if (CLIENT_VERBOSE1)
+        if(CLIENT_VERBOSE1)
         {
             char tbuf[XED_TMP_BUF_LEN];
-            xed_decoded_inst_dump(xedd,tbuf,XED_TMP_BUF_LEN);
-            printf("%s\n",tbuf);
+            xed_decoded_inst_dump(xedd, tbuf, XED_TMP_BUF_LEN);
+            printf("%s\n", tbuf);
         }
-        if (CLIENT_VERBOSE)
+        if(CLIENT_VERBOSE)
         {
             char buf[XED_TMP_BUF_LEN];
-            if (xed_decoded_inst_valid(xedd))
+            if(xed_decoded_inst_valid(xedd))
             {
-                printf( "ICLASS: %s   CATEGORY: %s   EXTENSION: %s  IFORM: %s"
-                        "   ISA_SET: %s\n",
-                        xed_iclass_enum_t2str(xed_decoded_inst_get_iclass(xedd)),
-                        xed_category_enum_t2str(xed_decoded_inst_get_category(xedd)),
-                        xed_extension_enum_t2str(xed_decoded_inst_get_extension(xedd)),
-                        xed_iform_enum_t2str(xed_decoded_inst_get_iform_enum(xedd)),
-                        xed_isa_set_enum_t2str(xed_decoded_inst_get_isa_set(xedd)));
+                printf("ICLASS: %s   CATEGORY: %s   EXTENSION: %s  IFORM: %s"
+                       "   ISA_SET: %s\n",
+                       xed_iclass_enum_t2str(xed_decoded_inst_get_iclass(xedd)),
+                       xed_category_enum_t2str(xed_decoded_inst_get_category(xedd)),
+                       xed_extension_enum_t2str(xed_decoded_inst_get_extension(xedd)),
+                       xed_iform_enum_t2str(xed_decoded_inst_get_iform_enum(xedd)),
+                       xed_isa_set_enum_t2str(xed_decoded_inst_get_isa_set(xedd)));
             }
-            memset(buf,0,XED_TMP_BUF_LEN);
-            disassemble(buf,XED_TMP_BUF_LEN, xedd, runtime_address,0);
+            memset(buf, 0, XED_TMP_BUF_LEN);
+            disassemble(buf, XED_TMP_BUF_LEN, xedd, runtime_address, 0);
             printf("SHORT: %s\n", buf);
         }
         return 1;
@@ -608,10 +608,10 @@ xed_uint_t disas_decode_encode_binary(const xed_state_t* dstate,
     xed_bool_t decode_okay =  disas_decode_binary(dstate, decode_text_binary,
                               bytes, xedd,
                               runtime_address);
-    if (decode_okay)
+    if(decode_okay)
     {
         xed_error_enum_t encode_okay;
-        xed_uint64_t t1,t2;
+        xed_uint64_t t1, t2;
         unsigned int enc_olen, ilen = XED_MAX_INSTRUCTION_BYTES;
         xed_uint8_t array[XED_MAX_INSTRUCTION_BYTES];
         // they are basically the same now
@@ -623,20 +623,20 @@ xed_uint_t disas_decode_encode_binary(const xed_state_t* dstate,
         t1 = xed_get_time();
         encode_okay =  xed_encode(enc_req, array, ilen, &enc_olen);
         t2 = xed_get_time();
-        if (encode_okay != XED_ERROR_NONE)
+        if(encode_okay != XED_ERROR_NONE)
         {
-            if (CLIENT_VERBOSE)
+            if(CLIENT_VERBOSE)
             {
                 char buf[XED_TMP_BUF_LEN];
                 char buf2[XED_TMP_BUF_LEN];
-                int blen=XED_TMP_BUF_LEN;
+                int blen = XED_TMP_BUF_LEN;
                 xed_encode_request_print(enc_req, buf, XED_TMP_BUF_LEN);
-                blen = xed_strncpy(buf2,"Could not re-encode: ", blen);
+                blen = xed_strncpy(buf2, "Could not re-encode: ", blen);
                 blen = xed_strncat(buf2, buf, blen);
-                blen = xed_strncat(buf2,"\nError code was: ",blen);
+                blen = xed_strncat(buf2, "\nError code was: ", blen);
                 blen = xed_strncat(buf2,
-                                   xed_error_enum_t2str(encode_okay),blen);
-                blen = xed_strncat(buf2, "\n",blen);
+                                   xed_error_enum_t2str(encode_okay), blen);
+                blen = xed_strncat(buf2, "\n", blen);
                 xedex_dwarn(buf2);
             }
         }
@@ -644,29 +644,29 @@ xed_uint_t disas_decode_encode_binary(const xed_state_t* dstate,
         {
             retval_olen = enc_olen;
             // See if it matched the original...
-            if (CLIENT_VERBOSE)
+            if(CLIENT_VERBOSE)
             {
                 char buf[XED_HEX_BUFLEN];
                 xed_uint_t dec_length;
-                xed_print_hex_line(buf,array, enc_olen, XED_HEX_BUFLEN);
-                printf("Encodable! %s\n",buf);
+                xed_print_hex_line(buf, array, enc_olen, XED_HEX_BUFLEN);
+                printf("Encodable! %s\n", buf);
                 xed_decode_stats_reset(&xed_enc_stats, t1, t2);
                 dec_length = xed_decoded_inst_get_length(xedd);
-                if ((enc_olen != dec_length ||
-                        memcmp(decode_text_binary, array, enc_olen)  ))
+                if((enc_olen != dec_length ||
+                        memcmp(decode_text_binary, array, enc_olen)))
                 {
                     char buf2[XED_TMP_BUF_LEN];
                     char buf3[XED_TMP_BUF_LEN];
                     printf("Discrepenacy after re-encoding. dec_len= "
                            XED_FMT_U " ", dec_length);
                     xed_print_hex_line(buf, decode_text_binary,
-                                       dec_length,XED_HEX_BUFLEN);
+                                       dec_length, XED_HEX_BUFLEN);
                     printf("[%s] ", buf);
                     printf("enc_olen= " XED_FMT_U "", enc_olen);
                     xed_print_hex_line(buf, array, enc_olen, XED_HEX_BUFLEN);
                     printf(" [%s] ", buf);
                     printf("for instruction: ");
-                    xed_decoded_inst_dump(xedd, buf3,XED_TMP_BUF_LEN);
+                    xed_decoded_inst_dump(xedd, buf3, XED_TMP_BUF_LEN);
                     printf("%s\n", buf3);
                     printf("vs Encode  request: ");
                     xed_encode_request_print(enc_req, buf2, XED_TMP_BUF_LEN);
@@ -705,12 +705,12 @@ static char const* const xed_ast_input_enum_t_strings[] =
 static xed_uint8_t avx_extensions[XED_EXTENSION_LAST];
 static void init_interesting_avx(void)
 {
-    memset(avx_extensions,0,sizeof(xed_uint8_t)*XED_EXTENSION_LAST);
-    avx_extensions[XED_EXTENSION_AVX]=1;
-    avx_extensions[XED_EXTENSION_FMA]=1;
-    avx_extensions[XED_EXTENSION_F16C]=1;
-    avx_extensions[XED_EXTENSION_AVX2]=1;
-    avx_extensions[XED_EXTENSION_AVX2GATHER]=1;
+    memset(avx_extensions, 0, sizeof(xed_uint8_t)*XED_EXTENSION_LAST);
+    avx_extensions[XED_EXTENSION_AVX] = 1;
+    avx_extensions[XED_EXTENSION_FMA] = 1;
+    avx_extensions[XED_EXTENSION_F16C] = 1;
+    avx_extensions[XED_EXTENSION_AVX2] = 1;
+    avx_extensions[XED_EXTENSION_AVX2GATHER] = 1;
 }
 static XED_INLINE int is_interesting_avx(xed_extension_enum_t extension)
 {
@@ -721,12 +721,12 @@ static XED_INLINE int is_avx128(xed_decoded_inst_t* xedd)
     xed_uint32_t vl;
 
     // scalar ops are implicitly 128b
-    if (xed_decoded_inst_get_attribute(xedd, XED_ATTRIBUTE_SIMD_SCALAR))
+    if(xed_decoded_inst_get_attribute(xedd, XED_ATTRIBUTE_SIMD_SCALAR))
         return 1;
 
     // look at the VEX.VL field
     vl = xed3_operand_get_vl(xedd);
-    if (vl == 0)
+    if(vl == 0)
         return 1;
     return 0;
 
@@ -737,21 +737,21 @@ static int is_sse(xed_decoded_inst_t* xedd)
     const xed_extension_enum_t extension = xed_decoded_inst_get_extension(xedd);
     const xed_category_enum_t category = xed_decoded_inst_get_category(xedd);
 
-    if (extension == XED_EXTENSION_SSE)
+    if(extension == XED_EXTENSION_SSE)
     {
-        if (category != XED_CATEGORY_MMX  &&
+        if(category != XED_CATEGORY_MMX  &&
                 category != XED_CATEGORY_PREFETCH) /* exclude PREFETCH* insts */
             return 1;
     }
-    else if (extension == XED_EXTENSION_SSE2  ||
-             extension == XED_EXTENSION_SSSE3 ||
-             extension == XED_EXTENSION_SSE4)
+    else if(extension == XED_EXTENSION_SSE2  ||
+            extension == XED_EXTENSION_SSSE3 ||
+            extension == XED_EXTENSION_SSE4)
     {
-        if (category != XED_CATEGORY_MMX)
+        if(category != XED_CATEGORY_MMX)
             return 1;
     }
-    else if (extension == XED_EXTENSION_AES ||
-             extension == XED_EXTENSION_PCLMULQDQ)
+    else if(extension == XED_EXTENSION_AES ||
+            extension == XED_EXTENSION_PCLMULQDQ)
     {
         return 1;
     }
@@ -767,25 +767,25 @@ static xed_ast_input_enum_t classify_avx_sse(xed_decoded_inst_t* xedd)
 {
     xed_extension_enum_t ext = xed_decoded_inst_get_extension(xedd);
     xed_iclass_enum_t iclass  = xed_decoded_inst_get_iclass(xedd);
-    if (iclass == XED_ICLASS_VZEROALL)
+    if(iclass == XED_ICLASS_VZEROALL)
     {
         return XED_AST_INPUT_VZEROALL;
     }
-    else if (iclass == XED_ICLASS_VZEROUPPER)
+    else if(iclass == XED_ICLASS_VZEROUPPER)
     {
         return XED_AST_INPUT_VZEROUPPER;
     }
-    else if (is_interesting_avx(ext))
+    else if(is_interesting_avx(ext))
     {
-        if (is_avx128(xedd))
+        if(is_avx128(xedd))
             return XED_AST_INPUT_AVX128;
         return XED_AST_INPUT_AVX256;
     }
-    else if (is_sse(xedd))
+    else if(is_sse(xedd))
     {
         return XED_AST_INPUT_SSE;
     }
-    else if (iclass == XED_ICLASS_XRSTOR)
+    else if(iclass == XED_ICLASS_XRSTOR)
     {
         return XED_AST_INPUT_XRSTOR;
     }
@@ -820,10 +820,10 @@ void xed_disas_test(xed_disas_info_t* di)
     xed_dot_graph_supp_t* gs = 0;
     xed_bool_t graph_empty = 1;
 
-//#define     XED_USE_DECODE_CACHE
+    //#define     XED_USE_DECODE_CACHE
 #if defined(XED_USE_DECODE_CACHE)
     xed_decode_cache_t cache;
-    xed_uint32_t n_cache_entries = 16*1024;
+    xed_uint32_t n_cache_entries = 16 * 1024;
     xed_decode_cache_entry_t* cache_entries =
         (xed_decode_cache_entry_t*) malloc(n_cache_entries *
                                            sizeof(xed_decode_cache_entry_t));
@@ -831,13 +831,13 @@ void xed_disas_test(xed_disas_info_t* di)
 #endif
 
 
-    if (di->dot_graph_output)
+    if(di->dot_graph_output)
     {
         xed_syntax_enum_t syntax = XED_SYNTAX_INTEL;
         gs = xed_dot_graph_supp_create(syntax);
     }
 
-    if (first)
+    if(first)
     {
         xed_decode_stats_zero(&xed_stats, di);
         first = 0;
@@ -846,38 +846,38 @@ void xed_disas_test(xed_disas_info_t* di)
     m = di->ninst; // number of things to decode
     z = di->a;
 
-    if (di->runtime_vaddr_disas_start)
-        if (di->runtime_vaddr_disas_start > di->runtime_vaddr)
+    if(di->runtime_vaddr_disas_start)
+        if(di->runtime_vaddr_disas_start > di->runtime_vaddr)
             z = (di->runtime_vaddr_disas_start - di->runtime_vaddr) + di->a;
 
     zlimit = 0;
-    if (di->runtime_vaddr_disas_end)
+    if(di->runtime_vaddr_disas_end)
     {
-        if (di->runtime_vaddr_disas_end > di->runtime_vaddr)
+        if(di->runtime_vaddr_disas_end > di->runtime_vaddr)
             zlimit = (di->runtime_vaddr_disas_end - di->runtime_vaddr) + di->a;
         else  /* end address is before start of this region -- skip it */
             goto finish;
     }
 
 
-    if (z >= di->q)   /* start pointer  is after end of section */
+    if(z >= di->q)    /* start pointer  is after end of section */
         goto finish;
 
     // for skipping long strings of zeros
     skipping = 0;
     last_all_zeros = 0;
-    for( i=0; i<m; i++)
+    for(i = 0; i < m; i++)
     {
-        int ilim,elim;
-        if (zlimit && z >= zlimit)
+        int ilim, elim;
+        if(zlimit && z >= zlimit)
         {
-            if (di->xml_format == 0)
+            if(di->xml_format == 0)
                 printf("# end of range.\n");
             break;
         }
-        if (z >= di->q)
+        if(z >= di->q)
         {
-            if (di->xml_format == 0)
+            if(di->xml_format == 0)
 #if !defined(XED_ILD_ONLY)
                 printf("# end of text section.\n");
 #endif
@@ -887,10 +887,10 @@ void xed_disas_test(xed_disas_info_t* di)
         /* if we get near the end of the section, clip the itext length */
         ilim = 15;
         elim = di->q - z;
-        if (elim < ilim)
+        if(elim < ilim)
             ilim = elim;
 
-        if (CLIENT_VERBOSE3)
+        if(CLIENT_VERBOSE3)
         {
             printf("\n==============================================\n");
             printf("Decoding instruction " XED_FMT_U "\n", i);
@@ -898,14 +898,14 @@ void xed_disas_test(xed_disas_info_t* di)
         }
 
         // if we get two full things of 0's in a row, start skipping.
-        if (all_zeros((xed_uint8_t*) z, ilim))
+        if(all_zeros((xed_uint8_t*) z, ilim))
         {
-            if (skipping)
+            if(skipping)
             {
                 z = z + ilim;
                 continue;
             }
-            else if (last_all_zeros)
+            else if(last_all_zeros)
             {
 #if !defined(XED_ILD_ONLY) && !defined(XED2_PERF_MEASURE)
                 printf("...\n");
@@ -923,24 +923,24 @@ void xed_disas_test(xed_disas_info_t* di)
             last_all_zeros = 0;
         }
 
-        runtime_instruction_address =  ((xed_uint64_t)(z-di->a)) +
-                                       di->runtime_vaddr;
+        runtime_instruction_address = ((xed_uint64_t)(z - di->a)) +
+                                      di->runtime_vaddr;
 
-        if (CLIENT_VERBOSE3)
+        if(CLIENT_VERBOSE3)
         {
             char tbuf[XED_HEX_BUFLEN];
-            printf("Runtime Address " XED_FMT_LX ,runtime_instruction_address);
-            xed_print_hex_line(tbuf, (xed_uint8_t*) z, ilim,XED_HEX_BUFLEN);
+            printf("Runtime Address " XED_FMT_LX , runtime_instruction_address);
+            xed_print_hex_line(tbuf, (xed_uint8_t*) z, ilim, XED_HEX_BUFLEN);
             printf(" [%s]\n", tbuf);
         }
         okay = 0;
         length = 0;
 
         xed_decoded_inst_zero_set_mode(&xedd, di->dstate);
-        if (di->late_init)
+        if(di->late_init)
             (*di->late_init)(&xedd);
 
-        if ( di->decode_only )
+        if(di->decode_only)
         {
             xed_uint64_t t1;
             xed_uint64_t t2;
@@ -951,22 +951,22 @@ void xed_disas_test(xed_disas_info_t* di)
 
 #if defined(XED_USE_DECODE_CACHE)
             xed_error = xed_decode_cache(&xedd,
-                                         XED_REINTERPRET_CAST(const xed_uint8_t*,z),
+                                         XED_REINTERPRET_CAST(const xed_uint8_t*, z),
                                          ilim,
                                          &cache);
 #else
             xed_error = decode_internal(
                             &xedd,
-                            XED_REINTERPRET_CAST(const xed_uint8_t*,z),
+                            XED_REINTERPRET_CAST(const xed_uint8_t*, z),
                             ilim);
 #endif
             t2 = xed_get_time();
 
             okay = (xed_error == XED_ERROR_NONE);
 #if defined(PTI_XED_TEST)
-            if (okay)
+            if(okay)
                 pti_xed_test(&xedd,
-                             XED_REINTERPRET_CAST(const xed_uint8_t*,z),
+                             XED_REINTERPRET_CAST(const xed_uint8_t*, z),
                              ilim,
                              runtime_instruction_address);
 #endif
@@ -974,24 +974,24 @@ void xed_disas_test(xed_disas_info_t* di)
             xed_decode_stats_reset(&xed_stats, t1, t2);
             length = xed_decoded_inst_get_length(&xedd);
 
-            if (okay && length == 0)
+            if(okay && length == 0)
             {
                 printf("Zero length on decoded instruction!\n");
-                xed_decode_error( runtime_instruction_address,
-                                  z-di->a, z, xed_error);
+                xed_decode_error(runtime_instruction_address,
+                                 z - di->a, z, xed_error);
                 xedex_derror("Dieing");
             }
 
-            if (di->resync && di->symfn)
+            if(di->resync && di->symfn)
             {
                 xed_bool_t resync = 0;
                 unsigned int x;
-                for(x=1; x<length; x++)
+                for(x = 1; x < length; x++)
                 {
 
-                    char* name = (*di->symfn)(runtime_instruction_address+x,
+                    char* name = (*di->symfn)(runtime_instruction_address + x,
                                               di->caller_symbol_data);
-                    if (name)
+                    if(name)
                     {
                         char buf[XED_HEX_BUFLEN];
                         /* bad news. We found a symbol in the middle of an
@@ -1004,48 +1004,48 @@ void xed_disas_test(xed_disas_info_t* di)
                                " an instruction. Resynchronizing...\n");
                         printf("ERROR: Rejecting: [");
                         xed_print_hex_line(buf, z, x, XED_HEX_BUFLEN);
-                        printf("%s]\n",buf);
+                        printf("%s]\n", buf);
 
                         z += x;
                         resync = 1;
                         break;
                     }
                 }
-                if (resync)
+                if(resync)
                     continue;
             }
 
             xed_stats.total_ilen += length;
 
-//we don't want to print out disassembly with ILD perf
+            //we don't want to print out disassembly with ILD perf
 #if !defined(XED_ILD_ONLY) && !defined(XED2_PERF_MEASURE)
 
-            if (okay)
+            if(okay)
             {
-                if (CLIENT_VERBOSE1)
+                if(CLIENT_VERBOSE1)
                 {
                     char tbuf[XED_TMP_BUF_LEN];
-                    xed_decoded_inst_dump(&xedd,tbuf, XED_TMP_BUF_LEN);
-                    printf("%s\n",tbuf);
+                    xed_decoded_inst_dump(&xedd, tbuf, XED_TMP_BUF_LEN);
+                    printf("%s\n", tbuf);
                 }
-                if (CLIENT_VERBOSE)
+                if(CLIENT_VERBOSE)
                 {
                     char buffer[XED_TMP_BUF_LEN];
                     unsigned int dec_len;
                     unsigned int sp;
-                    if (di->symfn)
+                    if(di->symfn)
                     {
                         char* name = (*di->symfn)(runtime_instruction_address,
                                                   di->caller_symbol_data);
-                        if (name)
+                        if(name)
                         {
-                            if (di->xml_format)
+                            if(di->xml_format)
                                 printf("\n<SYM>%s</SYM>\n", name);
                             else
                                 printf("\nSYM %s:\n", name);
                         }
                     }
-                    if (di->xml_format)
+                    if(di->xml_format)
                     {
                         printf("<ASMLINE>\n");
                         printf("  <ADDR>" XED_FMT_LX "</ADDR>\n",
@@ -1060,12 +1060,12 @@ void xed_disas_test(xed_disas_info_t* di)
                         dec_len = xed_decoded_inst_get_length(&xedd);
                         xed_print_hex_line(buffer, (xed_uint8_t*) z,
                                            dec_len, XED_TMP_BUF_LEN);
-                        printf("%s</ITEXT>\n",buffer);
-                        buffer[0]=0;
-                        disassemble(buffer,XED_TMP_BUF_LEN,
+                        printf("%s</ITEXT>\n", buffer);
+                        buffer[0] = 0;
+                        disassemble(buffer, XED_TMP_BUF_LEN,
                                     &xedd, runtime_instruction_address,
                                     di->caller_symbol_data);
-                        printf( "  %s\n",buffer);
+                        printf("  %s\n", buffer);
                         printf("</ASMLINE>\n");
                     }
                     else
@@ -1073,13 +1073,13 @@ void xed_disas_test(xed_disas_info_t* di)
                         printf("XDIS " XED_FMT_LX ": ",
                                runtime_instruction_address);
 #if 0  /* test code for the new API */
-                        if (xed_decoded_inst_masked_vector_operation(&xedd))
+                        if(xed_decoded_inst_masked_vector_operation(&xedd))
                             printf("MSK ");
                         else
                             printf("    ");
 #endif
 
-                        if (di->ast)
+                        if(di->ast)
                         {
                             printf("%-6s ",
                                    xed_ast_input_enum_t2str(
@@ -1099,18 +1099,18 @@ void xed_disas_test(xed_disas_info_t* di)
                         dec_len = xed_decoded_inst_get_length(&xedd);
                         xed_print_hex_line(buffer, (xed_uint8_t*) z,
                                            dec_len, XED_HEX_BUFLEN);
-                        printf("%s",buffer);
+                        printf("%s", buffer);
                         // pad out the instruction bytes
-                        for ( sp=dec_len; sp < 12; sp++)
+                        for(sp = dec_len; sp < 12; sp++)
                             printf("  ");
                         printf(" ");
-                        buffer[0]=0;
-                        disassemble(buffer,XED_TMP_BUF_LEN,
+                        buffer[0] = 0;
+                        disassemble(buffer, XED_TMP_BUF_LEN,
                                     &xedd,
                                     runtime_instruction_address,
                                     di->caller_symbol_data);
-                        printf( "%s",buffer);
-                        if (gs)
+                        printf("%s", buffer);
+                        if(gs)
                         {
                             graph_empty = 0;
                             xed_dot_graph_add_instruction(
@@ -1120,18 +1120,18 @@ void xed_disas_test(xed_disas_info_t* di)
                                 di->caller_symbol_data);
                         }
 
-                        if (di->line_number_info_fn)
+                        if(di->line_number_info_fn)
                             (*di->line_number_info_fn)(runtime_instruction_address);
 
-                        printf( "\n");
+                        printf("\n");
                     }
                 }
             }
             else
             {
                 errors++;
-                xed_decode_error( runtime_instruction_address, z-di->a, z,
-                                  xed_error);
+                xed_decode_error(runtime_instruction_address, z - di->a, z,
+                                 xed_error);
                 // just give a length of 1B to see if we can restart decode...
                 length = 1;
             }
@@ -1143,18 +1143,18 @@ void xed_disas_test(xed_disas_info_t* di)
             xed_uint64_t t2;
             unsigned int olen  = 0;
             olen  = disas_decode_encode_binary(di->dstate,
-                                               XED_REINTERPRET_CAST(const xed_uint8_t*,z),
+                                               XED_REINTERPRET_CAST(const xed_uint8_t*, z),
                                                ilim,
                                                &xedd,
                                                runtime_instruction_address);
-            t2=xed_get_time();
+            t2 = xed_get_time();
             okay = (olen != 0);
             xed_decode_stats_reset(&xed_stats, t1, t2);
-            if (!okay)
+            if(!okay)
             {
                 errors++;
                 printf("-- Could not decode/encode at offset: %d\n" ,
-                       (int)(z-di->a));
+                       (int)(z - di->a));
                 // just give a length of 1B to see if we can restart decode...
                 length = 1;
                 //exit(1);
@@ -1164,7 +1164,7 @@ void xed_disas_test(xed_disas_info_t* di)
                 length = xed_decoded_inst_get_length(&xedd);
                 xed_stats.total_ilen += length;
                 xed_stats.total_olen += olen;
-                if (length > olen)
+                if(length > olen)
                     xed_stats.total_shorter += (length - olen);
                 else
                     xed_stats.total_longer += (olen - length);
@@ -1177,32 +1177,32 @@ void xed_disas_test(xed_disas_info_t* di)
         z = z + length;
     }
 
-    if (di->xml_format == 0)
+    if(di->xml_format == 0)
     {
-        printf( "# Errors: " XED_FMT_LU "\n", errors);
+        printf("# Errors: " XED_FMT_LU "\n", errors);
     }
 finish:
 
-    if (gs)
+    if(gs)
     {
-        if (graph_empty ==0 )
+        if(graph_empty == 0)
             xed_dot_graph_dump(di->dot_graph_output, gs);
         xed_dot_graph_supp_deallocate(gs);
     }
 
 #if defined(XED_USE_DECODE_CACHE)
-    if (di->xml_format == 0)
+    if(di->xml_format == 0)
     {
-        printf( "# Cache refs:            " XED_FMT_LU12 "\n",
-                cache.misses + cache.hits);
-        printf( "# Cache hits:            " XED_FMT_LU12 "\n",
-                cache.hits);
-        printf( "# Cache found_something: " XED_FMT_LU12 "\n",
-                cache.found_something);
-        printf( "# Cache miscompares:     " XED_FMT_LU12 "\n",
-                cache.miscompares);
-        printf( "# Cache hit_rate: %.2f\n",
-                100.0*cache.hits/(cache.misses+cache.hits));
+        printf("# Cache refs:            " XED_FMT_LU12 "\n",
+               cache.misses + cache.hits);
+        printf("# Cache hits:            " XED_FMT_LU12 "\n",
+               cache.hits);
+        printf("# Cache found_something: " XED_FMT_LU12 "\n",
+               cache.found_something);
+        printf("# Cache miscompares:     " XED_FMT_LU12 "\n",
+               cache.miscompares);
+        printf("# Cache hit_rate: %.2f\n",
+               100.0 * cache.hits / (cache.misses + cache.hits));
     }
     free(cache_entries);
 #endif
@@ -1213,24 +1213,24 @@ finish:
 xed_uint8_t
 convert_ascii_nibble(char c)
 {
-    if (c >= '0' && c <= '9')
+    if(c >= '0' && c <= '9')
     {
-        return c-'0';
+        return c - '0';
     }
-    else if (c >= 'a' && c <= 'f')
+    else if(c >= 'a' && c <= 'f')
     {
-        return c-'a' + 10;
+        return c - 'a' + 10;
     }
-    else if (c >= 'A' && c <= 'F')
+    else if(c >= 'A' && c <= 'F')
     {
-        return c-'A' + 10;
+        return c - 'A' + 10;
     }
     else
     {
         char buffer[XED_HEX_BUFLEN];
         char* x;
-        xed_strncpy(buffer,"Invalid character in hex string: ", XED_HEX_BUFLEN);
-        x= buffer+strlen(buffer);
+        xed_strncpy(buffer, "Invalid character in hex string: ", XED_HEX_BUFLEN);
+        x = buffer + strlen(buffer);
         *x++ = c;
         *x++ = 0;
         xedex_derror(buffer);
@@ -1244,9 +1244,9 @@ xed_uint64_t convert_ascii_hex_to_int(const char* s)
 {
     xed_uint64_t retval = 0;
     const char* p = s;
-    while (*p)
+    while(*p)
     {
-        retval  =  (retval << 4) + convert_ascii_nibble(*p);
+        retval  = (retval << 4) + convert_ascii_nibble(*p);
         p++;
     }
     return retval;
@@ -1267,22 +1267,22 @@ xed_convert_ascii_to_hex(const char* src, xed_uint8_t* dst,
     unsigned int p = 0;
     unsigned int i = 0;
 
-    const unsigned int len = XED_STATIC_CAST(unsigned int,strlen(src));
-    if ((len & 1) != 0)
+    const unsigned int len = XED_STATIC_CAST(unsigned int, strlen(src));
+    if((len & 1) != 0)
         xedex_derror("test string was not an even number of nibbles");
 
-    if (len > (max_bytes * 2) )
+    if(len > (max_bytes * 2))
         xedex_derror("test string was too long");
 
-    for( j=0; j<max_bytes; j++)
+    for(j = 0; j < max_bytes; j++)
         dst[j] = 0;
 
-    for(; i<len/2; i++)
+    for(; i < len / 2; i++)
     {
-        if (CLIENT_VERBOSE3)
-            printf("Converting %c & %c\n", src[p], src[p+1]);
-        dst[i] = convert_ascii_nibbles(src[p], src[p+1]);
-        p=p+2;
+        if(CLIENT_VERBOSE3)
+            printf("Converting %c & %c\n", src[p], src[p + 1]);
+        dst[i] = convert_ascii_nibbles(src[p], src[p + 1]);
+        p = p + 2;
     }
     return i;
 }
@@ -1293,60 +1293,60 @@ convert_base10(const char* buf)
 {
     xed_int64_t v = 0;
     xed_int64_t sign = 1;
-    int len = XED_STATIC_CAST(int,strlen(buf));
+    int len = XED_STATIC_CAST(int, strlen(buf));
     int i;
-    for(i=0; i<len; i++)
+    for(i = 0; i < len; i++)
     {
         char c = buf[i];
-        if (i == 0 && c == '-')
+        if(i == 0 && c == '-')
         {
             sign = -1;
         }
-        else if (c >= '0' && c <= '9')
+        else if(c >= '0' && c <= '9')
         {
             unsigned int digit = c - '0';
-            v = v*10 + digit;
+            v = v * 10 + digit;
         }
-        else if (c == '_') /* skip underscores */
+        else if(c == '_')  /* skip underscores */
             continue;
         else
         {
             break;
         }
     }
-    return v*sign;
+    return v * sign;
 }
 
 static xed_int64_t
 convert_base16(const char* buf)
 {
     xed_int64_t v = 0;
-    int len = XED_STATIC_CAST(int,strlen(buf));
-    int start =0 ;
+    int len = XED_STATIC_CAST(int, strlen(buf));
+    int start = 0 ;
     int i;
-    if (len > 2 && buf[0] == '0' && (buf[1] == 'x' || buf[1] == 'X'))
+    if(len > 2 && buf[0] == '0' && (buf[1] == 'x' || buf[1] == 'X'))
     {
         start = 2;
     }
-    for(i=start; i<len; i++)
+    for(i = start; i < len; i++)
     {
         char c = buf[i];
-        if (c >= '0' && c <= '9')
+        if(c >= '0' && c <= '9')
         {
             unsigned int digit = c - '0';
-            v = v*16 + digit;
+            v = v * 16 + digit;
         }
-        else if (c >= 'A' && c <= 'F')
+        else if(c >= 'A' && c <= 'F')
         {
             unsigned int digit = c - 'A' + 10;
-            v = v*16 + digit;
+            v = v * 16 + digit;
         }
-        else if (c >= 'a' && c <= 'f')
+        else if(c >= 'a' && c <= 'f')
         {
             unsigned int digit = c - 'a' + 10;
-            v = v*16 + digit;
+            v = v * 16 + digit;
         }
-        else if (c == '_') /* skip underscores */
+        else if(c == '_')  /* skip underscores */
             continue;
         else
         {
@@ -1362,7 +1362,7 @@ xed_internal_strtoll(const char* buf, int base)
     switch(base)
     {
     case 0:
-        if (strlen(buf) > 2 && buf[0] == '0' &&
+        if(strlen(buf) > 2 && buf[0] == '0' &&
                 (buf[1] == 'x' || buf[1] == 'X'))
         {
             return convert_base16(buf);
@@ -1383,16 +1383,16 @@ xed_int64_t xed_strtoll(const char* buf, int base)
 {
     xed_int64_t t;
     // strtoll is missing on some compilers and buggy on some platforms
-    t =  xed_internal_strtoll(buf,base);
+    t =  xed_internal_strtoll(buf, base);
     return t;
 }
 
 char* xed_strdup(char const* const src)
 {
-    unsigned int n = (unsigned int)strlen(src)+1; /* plus one for null */
-    char* dst = (char*)malloc(n*sizeof(char));
+    unsigned int n = (unsigned int)strlen(src) + 1; /* plus one for null */
+    char* dst = (char*)malloc(n * sizeof(char));
     assert(dst != 0);
-    dst[0]=0; /* start w/ a null */
+    dst[0] = 0; /* start w/ a null */
     xed_strncat(dst, src, n);
     return dst;
 }

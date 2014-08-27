@@ -76,8 +76,8 @@ static XED_INLINE void xed_state_init(xed_state_t* p,
                                       xed_address_width_enum_t arg_ignored,
                                       xed_address_width_enum_t arg_stack_addr_width)
 {
-    p->mmode=arg_mmode;
-    p->stack_addr_width=arg_stack_addr_width;
+    p->mmode = arg_mmode;
+    p->stack_addr_width = arg_stack_addr_width;
     (void) arg_ignored; //pacify compiler unused arg warning
 }
 
@@ -95,16 +95,16 @@ static XED_INLINE void xed_state_init2(xed_state_t* p,
                                        xed_machine_mode_enum_t arg_mmode,
                                        xed_address_width_enum_t arg_stack_addr_width)
 {
-    p->mmode=arg_mmode;
-    p->stack_addr_width=arg_stack_addr_width;
+    p->mmode = arg_mmode;
+    p->stack_addr_width = arg_stack_addr_width;
 }
 
 /// clear the xed_state_t
 /// @ingroup INIT
 static XED_INLINE void xed_state_zero(xed_state_t* p)
 {
-    p->mmode= XED_MACHINE_MODE_INVALID;
-    p->stack_addr_width=XED_ADDRESS_WIDTH_INVALID;
+    p->mmode = XED_MACHINE_MODE_INVALID;
+    p->stack_addr_width = XED_ADDRESS_WIDTH_INVALID;
 }
 
 //@}
@@ -149,7 +149,7 @@ static XED_INLINE xed_bool_t xed_state_mode_width_32(const xed_state_t* p)
 
 /// Set the machine mode which corresponds to the default data operand size
 /// @ingroup INIT
-static XED_INLINE void  xed_state_set_machine_mode( xed_state_t* p,
+static XED_INLINE void  xed_state_set_machine_mode(xed_state_t* p,
         xed_machine_mode_enum_t arg_mode)
 {
     p->mmode = arg_mode;

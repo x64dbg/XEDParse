@@ -250,15 +250,15 @@ xed_get_byte(xed_uint64_t x, unsigned int i, unsigned int len);
 static XED_INLINE xed_uint64_t xed_make_uint64(xed_uint32_t hi, xed_uint32_t lo)
 {
     xed_union64_t y;
-    y.s.lo32= lo;
-    y.s.hi32= hi;
+    y.s.lo32 = lo;
+    y.s.hi32 = hi;
     return y.u64;
 }
 static XED_INLINE xed_int64_t xed_make_int64(xed_uint32_t hi, xed_uint32_t lo)
 {
     xed_union64_t y;
-    y.s.lo32= lo;
-    y.s.hi32= hi;
+    y.s.lo32 = lo;
+    y.s.hi32 = hi;
     return y.i64;
 }
 

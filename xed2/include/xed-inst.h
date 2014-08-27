@@ -92,7 +92,7 @@ static XED_INLINE xed_operand_enum_t xed_operand_name(const xed_operand_t* p)
 
 /// @ingroup DEC
 static XED_INLINE xed_operand_visibility_enum_t
-xed_operand_operand_visibility( const xed_operand_t* p)
+xed_operand_operand_visibility(const xed_operand_t* p)
 {
     return p->_operand_visibility;
 }
@@ -202,11 +202,11 @@ static XED_INLINE xed_uint_t xed_operand_is_register(xed_operand_enum_t name)
 /// otherwise. See also #xed_operand_is_register .
 static XED_INLINE xed_uint_t xed_operand_is_memory_addressing_register(xed_operand_enum_t name)
 {
-    return  ( name == XED_OPERAND_BASE0 ||
-              name == XED_OPERAND_INDEX ||
-              name == XED_OPERAND_SEG0  ||
-              name == XED_OPERAND_BASE1 ||
-              name == XED_OPERAND_SEG1 );
+    return (name == XED_OPERAND_BASE0 ||
+            name == XED_OPERAND_INDEX ||
+            name == XED_OPERAND_SEG0  ||
+            name == XED_OPERAND_BASE1 ||
+            name == XED_OPERAND_SEG1);
 }
 
 //@}
