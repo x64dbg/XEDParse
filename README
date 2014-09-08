@@ -3,17 +3,15 @@ instruction format. The library is meant to have quick access to assembly
 in certain low-level programs (such as debuggers).
 
 Currently finished:
-- parsing most instructions to an internal data structure (XMM, float etc.
-  unsupported currently);
-- translate the instruction base to XED2;
-- translate registers to XED2;
-- encode the translated structure;
-- translate values;
-- translate memory arguments;
+- parsing instructions to an internal data structure
+- translate the instruction base to XED2
+- translate registers to XED2
+- encode the translated structure
+- translate values
+- translate memory arguments
 
 Todo:
-- translate relative stuff (jumps + calls + rip-relative);
-- more operand types (for XMM, float etc.);
+- handle instructions with more than two operands correctly
 
 Currently the parser can be considered reasonably fast, it parses about 
 200 000 instructions in 1,5 seconds.
