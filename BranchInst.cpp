@@ -90,7 +90,7 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
         //
         // CALL doesn't apply here
         // IF DELTA <= 127+ShortJumpLen (for Forward Jumps) && DELTA > -127 (for Backward Jumps) THEN [SHORT JUMP]
-        int branchClass = BranchClassBytes(Instruction->Class, delta <= 127+2 && delta > -127);
+        int branchClass = BranchClassBytes(Instruction->Class, (delta <= 127 + 2) && (delta > -127));
         delta -= branchClass;
 
         // Branches can't have a displacement larger than 32 bits

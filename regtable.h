@@ -187,7 +187,40 @@ enum REG
     REG_YMM15,
 
     /* Advanced vector extensions V2 ZMM# */
-    /* TODO */
+#if 0
+    REG_ZMM0,
+    REG_ZMM1,
+    REG_ZMM2,
+    REG_ZMM3,
+    REG_ZMM4,
+    REG_ZMM5,
+    REG_ZMM6,
+    REG_ZMM7,
+    REG_ZMM8,
+    REG_ZMM9,
+    REG_ZMM10,
+    REG_ZMM11,
+    REG_ZMM12,
+    REG_ZMM13,
+    REG_ZMM14,
+    REG_ZMM15,
+    REG_ZMM16,
+    REG_ZMM17,
+    REG_ZMM18,
+    REG_ZMM19,
+    REG_ZMM20,
+    REG_ZMM21,
+    REG_ZMM22,
+    REG_ZMM23,
+    REG_ZMM24,
+    REG_ZMM25,
+    REG_ZMM26,
+    REG_ZMM27,
+    REG_ZMM28,
+    REG_ZMM29,
+    REG_ZMM30,
+    REG_ZMM31,
+#endif
 
     /* Segment registers */
     REG_SINVALID,
@@ -397,7 +430,40 @@ static RegEntry RegisterIds[] =
     { "ymm15", REG_YMM15, XED_REG_YMM15, SIZE_YMMWORD },
 
     /* Advanced vector extensions V2 ZMM# */
-    /* TODO */
+#if 0
+    { "zmm0", REG_ZMM0, XED_REG_ZMM0, SIZE_ZMMWORD },
+    { "zmm1", REG_ZMM1, XED_REG_ZMM1, SIZE_ZMMWORD },
+    { "zmm2", REG_ZMM2, XED_REG_ZMM2, SIZE_ZMMWORD },
+    { "zmm3", REG_ZMM3, XED_REG_ZMM3, SIZE_ZMMWORD },
+    { "zmm4", REG_ZMM4, XED_REG_ZMM4, SIZE_ZMMWORD },
+    { "zmm5", REG_ZMM5, XED_REG_ZMM5, SIZE_ZMMWORD },
+    { "zmm6", REG_ZMM6, XED_REG_ZMM6, SIZE_ZMMWORD },
+    { "zmm7", REG_ZMM7, XED_REG_ZMM7, SIZE_ZMMWORD },
+    { "zmm8", REG_ZMM8, XED_REG_ZMM8, SIZE_ZMMWORD },
+    { "zmm9", REG_ZMM9, XED_REG_ZMM9, SIZE_ZMMWORD },
+    { "zmm10", REG_ZMM10, XED_REG_ZMM10, SIZE_ZMMWORD },
+    { "zmm11", REG_ZMM11, XED_REG_ZMM11, SIZE_ZMMWORD },
+    { "zmm12", REG_ZMM12, XED_REG_ZMM12, SIZE_ZMMWORD },
+    { "zmm13", REG_ZMM13, XED_REG_ZMM13, SIZE_ZMMWORD },
+    { "zmm14", REG_ZMM14, XED_REG_ZMM14, SIZE_ZMMWORD },
+    { "zmm15", REG_ZMM15, XED_REG_ZMM15, SIZE_ZMMWORD },
+    { "zmm16", REG_ZMM16, XED_REG_ZMM16, SIZE_ZMMWORD },
+    { "zmm17", REG_ZMM17, XED_REG_ZMM17, SIZE_ZMMWORD },
+    { "zmm18", REG_ZMM18, XED_REG_ZMM18, SIZE_ZMMWORD },
+    { "zmm19", REG_ZMM19, XED_REG_ZMM19, SIZE_ZMMWORD },
+    { "zmm20", REG_ZMM20, XED_REG_ZMM20, SIZE_ZMMWORD },
+    { "zmm21", REG_ZMM21, XED_REG_ZMM21, SIZE_ZMMWORD },
+    { "zmm22", REG_ZMM22, XED_REG_ZMM22, SIZE_ZMMWORD },
+    { "zmm23", REG_ZMM23, XED_REG_ZMM23, SIZE_ZMMWORD },
+    { "zmm24", REG_ZMM24, XED_REG_ZMM24, SIZE_ZMMWORD },
+    { "zmm25", REG_ZMM25, XED_REG_ZMM25, SIZE_ZMMWORD },
+    { "zmm26", REG_ZMM26, XED_REG_ZMM26, SIZE_ZMMWORD },
+    { "zmm27", REG_ZMM27, XED_REG_ZMM27, SIZE_ZMMWORD },
+    { "zmm28", REG_ZMM28, XED_REG_ZMM28, SIZE_ZMMWORD },
+    { "zmm29", REG_ZMM29, XED_REG_ZMM29, SIZE_ZMMWORD },
+    { "zmm30", REG_ZMM30, XED_REG_ZMM30, SIZE_ZMMWORD },
+    { "zmm31", REG_ZMM31, XED_REG_ZMM31, SIZE_ZMMWORD },
+#endif
 
     /* Segment registers */
     { "sinval", REG_SINVALID, XED_REG_INVALID, SIZE_WORD },
