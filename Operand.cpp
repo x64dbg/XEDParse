@@ -197,7 +197,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     // Fix up the operand segment
     if(Operand->Segment == SEG_INVALID)
     {
-        if(Operand->Mem.BaseVal == REG_ESP)
+        if(Operand->Mem.BaseVal == REG_ESP && !Parse->x64)
         {
             // If the segment isn't set and the base is ESP,
             // set the segment to SS
@@ -206,6 +206,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
         else
         {
             // Default to DS
+            // 64-bit doesn't have true segments except for FS/GS/DS
             Operand->Segment = SEG_DS;
         }
     }
@@ -214,7 +215,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     {
         // If the base isn't set, the displacement must be at least 32 bits
         if(!Operand->Mem.Base)
-            Operand->Mem.DispWidth = SIZE_DWORD;
+            Operand->Mem.DispWidth = max(Operand->Mem.DispWidth, SIZE_DWORD);
 
         // Use RIP-relative addressing per default when on x64 and when the displacement is set
         // and when the segment is SEG_DS
@@ -222,19 +223,23 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
         {
             if(!Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
             {
-                LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
-                ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
-
-                if(masked == 0 || masked == 0xFFFFFFFF00000000)
+                // If a 32-bit address was given, don't apply RIP-relative addressing
+                if(Operand->Mem.DispWidth != SIZE_DWORD)
                 {
-                    Operand->Mem.DispRipRelative    = true;
-                    Operand->Mem.DispVal            = newDisp;
-                    Operand->Mem.DispWidth          = SIZE_DWORD;
-                    Operand->Mem.Base               = true;
-                    Operand->Mem.BaseVal            = REG_RIP;
+                    LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
+                    ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
+
+                    if(masked == 0 || masked == 0xFFFFFFFF00000000)
+                    {
+                        Operand->Mem.DispRipRelative = true;
+                        Operand->Mem.DispVal = newDisp;
+                        Operand->Mem.DispWidth = SIZE_DWORD;
+                        Operand->Mem.Base = true;
+                        Operand->Mem.BaseVal = REG_RIP;
+                    }
+                    else
+                        Operand->Mem.DispWidth = SIZE_QWORD;
                 }
-                else
-                    Operand->Mem.DispWidth = SIZE_QWORD;
             }
         }
     }
