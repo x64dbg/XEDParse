@@ -22,9 +22,13 @@ static bool isbase(const char* text, const char* base)
 
 bool valfromstring(const char* text, ULONGLONG* value)
 {
+    // Check if the string has any actual characters
+    if(text[0] == '\0')
+        return false;
+
     bool negative = false;
 
-    if(*text == '-')
+    if(text[0] == '-')
     {
         negative = true;
         text++;
