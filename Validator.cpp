@@ -68,8 +68,17 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             if(!xed_operand_is_memory_addressing(name))
                 continue;
 
+            // Some instructions (FSAVE, FXSAVE, FNSAVE) have different bit
+            // sizes such as 752 or 864. Anything > 512 bits is skipped after
+            // the first entry
+            unsigned int size = xed_operand_width_bits(op, Operand->XedEOSZ);
+
+            // Is it a non-standard operand size?
+            if(size > opsizetobits(SIZE_ZMMWORD) || memoryOperandSize > opsizetobits(SIZE_ZMMWORD))
+                memoryOperandCount = 0;
+
             memoryOperandCount++;
-            memoryOperandSize = max(memoryOperandSize, xed_operand_width_bits(op, Operand->XedEOSZ));
+            memoryOperandSize = max(memoryOperandSize, size);
         }
 
         // Check if ambiguous
@@ -455,12 +464,14 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
 void LookupTableInit()
 {
     static bool bInitialized = false;
+
     if(bInitialized)
         return;
 
+    // Initialize XED's internal state
     xed_tables_init();
 
-    // Initialize everything
+    // Invalidate initial data
     for(int i = 0; i < XED_ICLASS_LAST; i++)
     {
         IClassType* type        = &XedInstLookupTable[i];
