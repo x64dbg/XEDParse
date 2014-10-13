@@ -1,6 +1,31 @@
 #include "Translator.h"
 #include <stdio.h>
 
+OPSIZE AdjustValueWidth(bool Signed, ULONGLONG Value, OPSIZE Width)
+{
+    // Adjustment fix-up when the sign bit is set
+    //
+    // half     = pow(2, n_bits - 1);
+    // minhalf  = -half;
+    xed_uint64_t maxhalf = 1 << (opsizetobits(Width) - 1);
+    xed_uint64_t minhalf = 1 + (~maxhalf);
+
+    // Values that are <  than -(MAX_VALUE/2) need to use the next biggest size
+    // Values that are >= than +(MAX_VALUE/2) need to use the next biggest size
+    if((Signed && Value < minhalf) || (!Signed && Value >= maxhalf))
+    {
+        switch(Width)
+        {
+        case SIZE_BYTE:
+            return SIZE_DWORD;
+        case SIZE_DWORD:
+            return SIZE_QWORD;
+        }
+    }
+
+    return Width;
+}
+
 void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
 {
     // Displacement = name or number
@@ -38,25 +63,7 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
         else
             Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_unsigned(disp, 0x5));
 
-        // half     = pow(2, n_bits - 1);
-        // minhalf  = -half;
-        xed_uint64_t maxhalf = 1 << (opsizetobits(Operand->Mem.DispWidth) - 1);
-        xed_uint64_t minhalf = 1 + (~maxhalf);
-
-        // Values that are <  than -(MAX_VALUE/2) need to use the next biggest size
-        // Values that are >= than +(MAX_VALUE/2) need to use the next biggest size
-        if((sign && disp < minhalf) || (!sign && disp >= maxhalf))
-        {
-            switch(Operand->Mem.DispWidth)
-            {
-            case SIZE_BYTE:
-                Operand->Mem.DispWidth = SIZE_DWORD;
-                break;
-            case SIZE_DWORD:
-                Operand->Mem.DispWidth = SIZE_QWORD;
-                break;
-            }
-        }
+        Operand->Mem.DispWidth = AdjustValueWidth(sign, disp, Operand->Mem.DispWidth);
     }
     else
     {
@@ -348,6 +355,8 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
         Operand->XedEOSZ    = EOSZ_64_32(Parse->x64);
         Operand->Imm.Signed = (Value[0] == '-');
         Operand->Imm.imm    = immVal;
+
+        Operand->Size = AdjustValueWidth(Operand->Imm.Signed, immVal, Operand->Size);
     }
     else
     {
