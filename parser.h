@@ -5,6 +5,7 @@
 #include "OpSize.h"
 #include "RegTable.h"
 #include "Operand.h"
+#include "MemOperand.h"
 #include "Prefix.h"
 
 struct Inst

@@ -3,6 +3,23 @@
 // This maps an ICLASS to all of its IFORMs
 IClassType XedInstLookupTable[XED_ICLASS_LAST];
 
+int ResizeOperandImmediate(InstOperand* Operand, int FixedSize, int LargestSize)
+{
+    // The value size might need adjustment if the sign bit is set,
+    // but check if it can be supported
+    if(FixedSize < LargestSize)
+    {
+        OPSIZE bitSize = bitstoopsize(FixedSize);
+        OPSIZE newSize = PromoteImmediateWidth(Operand->Imm.Signed, Operand->Imm.imm, bitSize);
+        int newBits    = opsizetobits(newSize);
+
+        // The newer size might exceed LargestSize, so limit it
+        return min(newBits, LargestSize);
+    }
+
+    return FixedSize;
+}
+
 bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand* Operand)
 {
     IClassType* type = &XedInstLookupTable[IClass];
@@ -18,12 +35,13 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
         // Find the smallest instruction imm size that fits the input
         // Set an arbitrarily high value for fixedSize
         int targetSize  = opsizetobits(Operand->Size);
+        int largestSize = 0;
         int fixedSize   = INT_MAX;
 
         for(int i = 0; i < type->InstructionCount; i++)
         {
-            const xed_inst_t* inst          = type->Instructions[i];
-            const xed_operand_t* op         = xed_inst_operand(inst, 0);
+            const xed_inst_t* inst  = type->Instructions[i];
+            const xed_operand_t* op = xed_inst_operand(inst, 0);
 
             if(!xed_operand_type_is_immediate(xed_operand_type(op)))
                 continue;
@@ -32,6 +50,8 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
 
             if(size >= targetSize && size <= fixedSize)
                 fixedSize = size;
+
+            largestSize = max(largestSize, size);
         }
 
         if(fixedSize == INT_MAX)
@@ -40,6 +60,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             return false;
         }
 
+        fixedSize     = ResizeOperandImmediate(Operand, fixedSize, largestSize);
         Operand->Size = bitstoopsize(fixedSize);
         return true;
     }
@@ -61,9 +82,9 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
 
         for(int i = 0; i < type->InstructionCount; i++)
         {
-            const xed_inst_t* inst      = type->Instructions[i];
-            const xed_operand_t* op     = xed_inst_operand(inst, 0);
-            xed_operand_enum_t name     = xed_operand_name(op);
+            const xed_inst_t* inst  = type->Instructions[i];
+            const xed_operand_t* op = xed_inst_operand(inst, 0);
+            xed_operand_enum_t name = xed_operand_name(op);
 
             if(!xed_operand_is_memory_addressing(name))
                 continue;
@@ -88,8 +109,8 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             return false;
         }
 
-        Operand->Size       = bitstoopsize(memoryOperandSize);
-        Operand->BitSize    = memoryOperandSize;
+        Operand->Size    = bitstoopsize(memoryOperandSize);
+        Operand->BitSize = memoryOperandSize;
         return true;
     }
     break;
@@ -114,13 +135,14 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
         case OPERAND_IMM:
         {
             int targetSize  = opsizetobits(Operands[1].Size);
+            int largestSize = 0;
             int fixedSize   = INT_MAX;
 
             for(int i = 0; i < type->InstructionCount; i++)
             {
-                inst        = type->Instructions[i];
-                xedOp[0]    = xed_inst_operand(inst, 0);
-                xedOp[1]    = xed_inst_operand(inst, 1);
+                inst     = type->Instructions[i];
+                xedOp[0] = xed_inst_operand(inst, 0);
+                xedOp[1] = xed_inst_operand(inst, 1);
 
                 // Match the register first
                 if(!xed_operand_template_is_register(xedOp[0]))
@@ -137,6 +159,8 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
 
                 if(size >= targetSize && size <= fixedSize)
                     fixedSize = size;
+
+                largestSize = max(largestSize, size);
             }
 
             if(fixedSize == INT_MAX)
@@ -145,6 +169,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
+            fixedSize        = ResizeOperandImmediate(&Operands[1], fixedSize, largestSize);
             Operands[1].Size = bitstoopsize(fixedSize);
             return true;
         }
@@ -161,9 +186,9 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
 
             for(int i = 0; i < type->InstructionCount; i++)
             {
-                inst        = type->Instructions[i];
-                xedOp[0]    = xed_inst_operand(inst, 0);
-                xedOp[1]    = xed_inst_operand(inst, 1);
+                inst     = type->Instructions[i];
+                xedOp[0] = xed_inst_operand(inst, 0);
+                xedOp[1] = xed_inst_operand(inst, 1);
 
                 // Match the register first
                 if(!xed_operand_template_is_register(xedOp[0]))
@@ -209,11 +234,11 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
             // See above: ResizeSingleOperand(), case OPERAND_MEM
             //
             unsigned int memoryOperandCount = 0;
-            unsigned int memoryOperandSize = 0;
+            unsigned int memoryOperandSize  = 0;
 
             for(int i = 0; i < type->InstructionCount; i++)
             {
-                inst = type->Instructions[i];
+                inst     = type->Instructions[i];
                 xedOp[0] = xed_inst_operand(inst, 0);
                 xedOp[1] = xed_inst_operand(inst, 1);
 
@@ -258,17 +283,17 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
             // Both the memory and immediate operands need to be resized if needed
             // First get the smallest IMM possible, then also store MEM types
             //
-            unsigned int memoryOperandCount = 0;
-            unsigned int memoryOperandSize  = 0;
+            int memoryOperandCount = 0;
+            int memoryOperandSize  = 0;
 
-            unsigned int targetSize = opsizetobits(Operands[1].Size);
-            unsigned int fixedSize  = INT_MAX;
+            int targetSize  = opsizetobits(Operands[1].Size);
+            int fixedSize   = INT_MAX;
 
             for(int i = 0; i < type->InstructionCount; i++)
             {
-                inst        = type->Instructions[i];
-                xedOp[0]    = xed_inst_operand(inst, 0);
-                xedOp[1]    = xed_inst_operand(inst, 1);
+                inst     = type->Instructions[i];
+                xedOp[0] = xed_inst_operand(inst, 0);
+                xedOp[1] = xed_inst_operand(inst, 1);
 
                 // Match memory types
                 if(!xed_operand_is_memory_addressing(xed_operand_name(xedOp[0])))
@@ -278,8 +303,8 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 if(!xed_operand_type_is_immediate(xed_operand_type(xedOp[1])))
                     continue;
 
-                unsigned int memSize = xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ);
-                unsigned int immSize = xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ);
+                int memSize = xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ);
+                int immSize = xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ);
 
                 // Skip sizes smaller than the immediate
                 if(immSize < targetSize)
@@ -296,7 +321,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 else
                 {
                     // Size was set, skip anything smaller
-                    if(memSize < opsizetobits(Operands[0].Size))
+                    if(memSize < (int)opsizetobits(Operands[0].Size))
                         continue;
                 }
 
@@ -324,6 +349,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
+            fixedSize           = ResizeOperandImmediate(&Operands[1], fixedSize, opsizetobits(Operands[0].Size));
             Operands[1].Size    = bitstoopsize(fixedSize);
             Operands[1].BitSize = fixedSize;
             return true;

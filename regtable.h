@@ -186,7 +186,7 @@ enum REG
     REG_YMM14,
     REG_YMM15,
 
-    /* Advanced vector extensions V2 ZMM# */
+    /* Advanced vector extensions 512 ZMM# */
 #if 0
     REG_ZMM0,
     REG_ZMM1,
@@ -429,7 +429,7 @@ static RegEntry RegisterIds[] =
     { "ymm14", REG_YMM14, XED_REG_YMM14, SIZE_YMMWORD },
     { "ymm15", REG_YMM15, XED_REG_YMM15, SIZE_YMMWORD },
 
-    /* Advanced vector extensions V2 ZMM# */
+    /* Advanced vector extensions 512 ZMM# */
 #if 0
     { "zmm0", REG_ZMM0, XED_REG_ZMM0, SIZE_ZMMWORD },
     { "zmm1", REG_ZMM1, XED_REG_ZMM1, SIZE_ZMMWORD },

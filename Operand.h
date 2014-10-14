@@ -63,7 +63,5 @@ struct InstOperand
     };
 };
 
-void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand* Operand);
-void SetMemoryIndexOrScale(XEDPARSE* Parse, const char* Value, InstOperand* Operand);
-bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand);
+OPSIZE PromoteImmediateWidth(bool Signed, ULONGLONG Value, OPSIZE Width);
 bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand);

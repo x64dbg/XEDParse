@@ -51,6 +51,9 @@
     <ClCompile Include="BranchInst.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MemOperand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="XEDParse.h">
@@ -285,6 +288,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BranchInst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MemOperand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

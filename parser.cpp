@@ -199,8 +199,14 @@ bool ParseInstString(XEDPARSE* Parse, Inst* Instruction)
     strcpy(buf, Parse->instr);
 
     // Find near/far modifiers
-    Instruction->Near   = StrDel(buf, "near", ' ');
-    Instruction->Far    = StrDel(buf, "far", ' ');
+    Instruction->Near = StrDel(buf, "near", ' ');
+    Instruction->Far  = StrDel(buf, "far", ' ');
+
+    if(Instruction->Near && Instruction->Far)
+    {
+        strcpy(Parse->error, "Instruction cannot be near and far");
+        return false;
+    }
 
     // Parse into tokens
     char tokens[8][64];
