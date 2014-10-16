@@ -3,8 +3,12 @@
 // This maps an ICLASS to all of its IFORMs
 IClassType XedInstLookupTable[XED_ICLASS_LAST];
 
-int ResizeOperandImmediate(InstOperand* Operand, int FixedSize, int LargestSize)
+int ResizeOperandImmediate(InstOperand* Operand, xed_iclass_enum_t IClass, int FixedSize, int LargestSize)
 {
+    // Branches are skipped here
+    if(IsIClassJump(IClass) || IsIClassCall(IClass))
+        return FixedSize;
+
     // The value size might need adjustment if the sign bit is set,
     // but check if it can be supported
     if(FixedSize < LargestSize)
@@ -60,7 +64,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             return false;
         }
 
-        fixedSize     = ResizeOperandImmediate(Operand, fixedSize, largestSize);
+        fixedSize     = ResizeOperandImmediate(Operand, IClass, fixedSize, largestSize);
         Operand->Size = bitstoopsize(fixedSize);
         return true;
     }
@@ -169,7 +173,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
-            fixedSize        = ResizeOperandImmediate(&Operands[1], fixedSize, largestSize);
+            fixedSize        = ResizeOperandImmediate(&Operands[1], IClass, fixedSize, largestSize);
             Operands[1].Size = bitstoopsize(fixedSize);
             return true;
         }
@@ -349,7 +353,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
-            fixedSize           = ResizeOperandImmediate(&Operands[1], fixedSize, opsizetobits(Operands[0].Size));
+            fixedSize           = ResizeOperandImmediate(&Operands[1], IClass, fixedSize, opsizetobits(Operands[0].Size));
             Operands[1].Size    = bitstoopsize(fixedSize);
             Operands[1].BitSize = fixedSize;
             return true;

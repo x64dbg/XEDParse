@@ -60,10 +60,11 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
     if(!IsIClassJump(Instruction->Class) && !IsIClassCall(Instruction->Class))
         return true;
 
-    // Any branch instruction can only have one operand max
+    // Any regular branch instruction can only have one operand max
     if(Instruction->OperandCount > 1)
     {
-        if(Instruction->OperandCount == 2 && Instruction->Far) //jmp far 0xea231000, 0x1000
+        // Far jumps are the exception: jmp far 0xea231000, 0x1000
+        if(Instruction->OperandCount == 2 && Instruction->Far)
         {
             Instruction->OperandCount           = 2;
             Instruction->Operands[0].Type       = OPERAND_SEGSEL;
@@ -77,18 +78,18 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
         return false;
     }
 
-    // This is only handled if the operand is an immediate
+    // This is only handled if the operand is memory/selector/an immediate
     InstOperand* operand = &Instruction->Operands[0];
 
     if(operand->Type == OPERAND_IMM)
     {
         LONGLONG delta = TranslateRelativeCip(Parse, operand->Imm.imm, true);
 
-        // XED doesn't automatically do this for some reason
+        // XED doesn't automatically do this:
         //
         // Modify the delta so that it accommodates for the instruction size
         //
-        // CALL doesn't apply here
+        // CALL doesn't apply to this
         // IF DELTA <= 127+ShortJumpLen (for Forward Jumps) && DELTA > -127 (for Backward Jumps) THEN [SHORT JUMP]
         int branchClass = BranchClassBytes(Instruction->Class, (delta <= 127 + 2) && (delta > -127));
         delta -= branchClass;
@@ -114,7 +115,15 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
     {
         // JMP/CALL FARWORD PTR
         if(Instruction->Class == XED_ICLASS_CALL_FAR || Instruction->Class == XED_ICLASS_JMP_FAR)
+        {
+            if(operand->Size != SIZE_UNSET && operand->Size != SIZE_FWORD)
+            {
+                strcpy(Parse->error, "Invalid memory type for far branch");
+                return false;
+            }
+
             operand->Size = SIZE_FWORD;
+        }
     }
     else if(operand->Type == OPERAND_SEGSEL)
     {

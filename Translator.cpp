@@ -86,7 +86,7 @@ void ConvertInstToXed(Inst* Instruction, xed_state_t Mode, xed_encoder_instructi
     }
 }
 
-bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, int EffectiveWidth)
+bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, unsigned int EffectiveWidth)
 {
     // Convert this struct to XED's format
     xed_encoder_instruction_t xedInst;
