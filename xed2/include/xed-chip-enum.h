@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -53,6 +53,7 @@ typedef enum
     XED_CHIP_I486,
     XED_CHIP_PENTIUMREAL,
     XED_CHIP_PENTIUM,
+    XED_CHIP_QUARK,
     XED_CHIP_PENTIUMMMXREAL,
     XED_CHIP_PENTIUMMMX,
     XED_CHIP_ALLREAL,
@@ -61,8 +62,8 @@ typedef enum
     XED_CHIP_PENTIUM3,
     XED_CHIP_PENTIUM4,
     XED_CHIP_P4PRESCOTT,
-    XED_CHIP_P4PRESCOTT642,
-    XED_CHIP_P4PRESCOTT2M,
+    XED_CHIP_P4PRESCOTT_NOLAHF,
+    XED_CHIP_P4PRESCOTT_VTX,
     XED_CHIP_CORE2,
     XED_CHIP_PENRYN,
     XED_CHIP_PENRYN_E,
@@ -72,10 +73,12 @@ typedef enum
     XED_CHIP_SALTWELL,
     XED_CHIP_SILVERMONT,
     XED_CHIP_AMD,
+    XED_CHIP_BROADWELL,
+    XED_CHIP_GOLDMONT,
+    XED_CHIP_SKYLAKE,
     XED_CHIP_SANDYBRIDGE,
     XED_CHIP_IVYBRIDGE,
     XED_CHIP_HASWELL,
-    XED_CHIP_BROADWELL,
     XED_CHIP_ALL,
     XED_CHIP_LAST
 } xed_chip_enum_t;

@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -48,6 +48,7 @@ typedef enum
     XED_ISA_SET_BDW,
     XED_ISA_SET_BMI1,
     XED_ISA_SET_BMI2,
+    XED_ISA_SET_CLFLUSHOPT,
     XED_ISA_SET_CMPXCHG16B,
     XED_ISA_SET_F16C,
     XED_ISA_SET_FMA,
@@ -68,6 +69,7 @@ typedef enum
     XED_ISA_SET_LZCNT,
     XED_ISA_SET_MMX,
     XED_ISA_SET_MOVBE,
+    XED_ISA_SET_MPX,
     XED_ISA_SET_MXCSR,
     XED_ISA_SET_PCLMULQDQ,
     XED_ISA_SET_PENTIUM,
@@ -85,6 +87,8 @@ typedef enum
     XED_ISA_SET_RDTSCP,
     XED_ISA_SET_RDWRFSGS,
     XED_ISA_SET_RTM,
+    XED_ISA_SET_SGX,
+    XED_ISA_SET_SHA,
     XED_ISA_SET_SMAP,
     XED_ISA_SET_SMX,
     XED_ISA_SET_SSE,
@@ -102,7 +106,9 @@ typedef enum
     XED_ISA_SET_X87,
     XED_ISA_SET_XOP,
     XED_ISA_SET_XSAVE,
+    XED_ISA_SET_XSAVEC,
     XED_ISA_SET_XSAVEOPT,
+    XED_ISA_SET_XSAVES,
     XED_ISA_SET_LAST
 } xed_isa_set_enum_t;
 

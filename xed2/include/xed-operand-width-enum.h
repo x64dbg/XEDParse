@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -105,6 +105,8 @@ typedef enum
     XED_OPERAND_WIDTH_I7,
     XED_OPERAND_WIDTH_I8,
     XED_OPERAND_WIDTH_VAR,
+    XED_OPERAND_WIDTH_BND32,
+    XED_OPERAND_WIDTH_BND64,
     XED_OPERAND_WIDTH_QQ,
     XED_OPERAND_WIDTH_YUB,
     XED_OPERAND_WIDTH_YUW,

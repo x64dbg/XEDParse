@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -39,6 +39,12 @@ END_LEGAL */
 typedef enum
 {
     XED_REG_INVALID,
+    XED_REG_BNDCFGU,
+    XED_REG_BNDSTATUS,
+    XED_REG_BND0,
+    XED_REG_BND1,
+    XED_REG_BND2,
+    XED_REG_BND3,
     XED_REG_CR0,
     XED_REG_CR1,
     XED_REG_CR2,
@@ -249,6 +255,12 @@ typedef enum
     XED_REG_YMM14,
     XED_REG_YMM15,
     XED_REG_LAST,
+    XED_REG_BNDCFG_FIRST = XED_REG_BNDCFGU, //< PSEUDO
+    XED_REG_BNDCFG_LAST = XED_REG_BNDCFGU, //<PSEUDO
+    XED_REG_BNDSTAT_FIRST = XED_REG_BNDSTATUS, //< PSEUDO
+    XED_REG_BNDSTAT_LAST = XED_REG_BNDSTATUS, //<PSEUDO
+    XED_REG_BOUND_FIRST = XED_REG_BND0, //< PSEUDO
+    XED_REG_BOUND_LAST = XED_REG_BND3, //<PSEUDO
     XED_REG_CR_FIRST = XED_REG_CR0, //< PSEUDO
     XED_REG_CR_LAST = XED_REG_CR15, //<PSEUDO
     XED_REG_DR_FIRST = XED_REG_DR0, //< PSEUDO

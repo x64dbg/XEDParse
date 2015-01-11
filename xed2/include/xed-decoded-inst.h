@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -92,16 +92,6 @@ typedef struct xed_decoded_inst_s
         struct xed_encoder_vars_s* ev;
 #endif
     } u;
-
-
-    union
-    {
-        xed_int8_t  byte;
-        xed_int16_t word;
-        xed_int32_t dword;
-        xed_int64_t qword;
-    } disp_val;
-
 
 } xed_decoded_inst_t;
 

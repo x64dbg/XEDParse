@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -53,7 +53,6 @@ typedef enum
     XED_OPERAND_DF64,
     XED_OPERAND_DISP_WIDTH,
     XED_OPERAND_DISP,
-    XED_OPERAND_DISP_BYTES,
     XED_OPERAND_DUMMY,
     XED_OPERAND_EASZ,
     XED_OPERAND_ELEMENT_SIZE,
@@ -66,12 +65,12 @@ typedef enum
     XED_OPERAND_HAS_SIB,
     XED_OPERAND_HAS_MODRM,
     XED_OPERAND_HINT,
+    XED_OPERAND_HSW,
     XED_OPERAND_ICLASS,
     XED_OPERAND_ILD_F2,
     XED_OPERAND_ILD_F3,
     XED_OPERAND_ILD_SEG,
     XED_OPERAND_IMM_WIDTH,
-    XED_OPERAND_IMM_BYTES,
     XED_OPERAND_IMM0SIGNED,
     XED_OPERAND_IMM0,
     XED_OPERAND_IMM1_BYTES,
@@ -94,6 +93,7 @@ typedef enum
     XED_OPERAND_MODEP55C,
     XED_OPERAND_MODRM,
     XED_OPERAND_MODRM_BYTE,
+    XED_OPERAND_MPXMODE,
     XED_OPERAND_NEED_MEMDISP,
     XED_OPERAND_NEEDREX,
     XED_OPERAND_NELEM,

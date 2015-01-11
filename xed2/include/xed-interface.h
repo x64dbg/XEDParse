@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -41,6 +41,8 @@ END_LEGAL */
 #if defined(_WIN32) && defined(_MANAGED)
 #pragma unmanaged
 #endif
+
+#include "xed-build-defines.h" /* generated */
 
 #include "xed-common-hdrs.h"
 #include "xed-types.h"

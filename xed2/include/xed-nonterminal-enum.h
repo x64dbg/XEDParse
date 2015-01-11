@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -59,6 +59,10 @@ typedef enum
     XED_NONTERMINAL_ASZ_NONTERM,
     XED_NONTERMINAL_AVX_INSTRUCTIONS,
     XED_NONTERMINAL_AVX_SPLITTER,
+    XED_NONTERMINAL_BND_B,
+    XED_NONTERMINAL_BND_B_CHECK,
+    XED_NONTERMINAL_BND_R,
+    XED_NONTERMINAL_BND_R_CHECK,
     XED_NONTERMINAL_BRANCH_HINT,
     XED_NONTERMINAL_BRDISP32,
     XED_NONTERMINAL_BRDISP8,

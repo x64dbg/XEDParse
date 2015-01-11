@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -48,6 +48,7 @@ typedef enum
     XED_EXTENSION_BDW,
     XED_EXTENSION_BMI1,
     XED_EXTENSION_BMI2,
+    XED_EXTENSION_CLFLUSHOPT,
     XED_EXTENSION_F16C,
     XED_EXTENSION_FMA,
     XED_EXTENSION_FMA4,
@@ -56,12 +57,15 @@ typedef enum
     XED_EXTENSION_LZCNT,
     XED_EXTENSION_MMX,
     XED_EXTENSION_MOVBE,
+    XED_EXTENSION_MPX,
     XED_EXTENSION_PCLMULQDQ,
     XED_EXTENSION_RDRAND,
     XED_EXTENSION_RDSEED,
     XED_EXTENSION_RDTSCP,
     XED_EXTENSION_RDWRFSGS,
     XED_EXTENSION_RTM,
+    XED_EXTENSION_SGX,
+    XED_EXTENSION_SHA,
     XED_EXTENSION_SMAP,
     XED_EXTENSION_SMX,
     XED_EXTENSION_SSE,
@@ -77,7 +81,9 @@ typedef enum
     XED_EXTENSION_X87,
     XED_EXTENSION_XOP,
     XED_EXTENSION_XSAVE,
+    XED_EXTENSION_XSAVEC,
     XED_EXTENSION_XSAVEOPT,
+    XED_EXTENSION_XSAVES,
     XED_EXTENSION_LAST
 } xed_extension_enum_t;
 

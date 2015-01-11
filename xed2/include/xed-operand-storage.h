@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -51,11 +51,9 @@ typedef struct xed_operand_storage_s
     xed_uint8_t base0;
     xed_uint8_t base1;
     xed_uint8_t brdisp_width;
-    xed_uint8_t disp_bytes;
     xed_uint8_t disp_width;
     xed_uint8_t ild_seg;
     xed_uint8_t imm1_bytes;
-    xed_uint8_t imm_bytes;
     xed_uint8_t imm_width;
     xed_uint8_t index;
     xed_uint8_t max_bytes;
@@ -136,6 +134,7 @@ typedef struct xed_operand_storage_s
     xed_uint8_t dummy;
     xed_uint8_t encoder_preferred;
     xed_uint8_t has_sib;
+    xed_uint8_t hsw;
     xed_uint8_t ild_f2;
     xed_uint8_t ild_f3;
     xed_uint8_t imm0;
@@ -150,6 +149,7 @@ typedef struct xed_operand_storage_s
     xed_uint8_t modep55c;
     xed_uint8_t mode_first_prefix;
     xed_uint8_t modrm;
+    xed_uint8_t mpxmode;
     xed_uint8_t needrex;
     xed_uint8_t norex;
     xed_uint8_t osz;

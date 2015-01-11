@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -75,7 +75,7 @@ static XED_INLINE xed_extension_enum_t xed_decoded_inst_get_extension(const xed_
 }
 /// @ingroup DEC
 /// Return the instruction #xed_isa_set_enum_t enumeration
-static XED_INLINE xed_isa_set_enum_t xed_decoded_inst_get_isa_set(const xed_decoded_inst_t* p)
+static XED_INLINE xed_isa_set_enum_t xed_decoded_inst_get_isa_set(xed_decoded_inst_t const* const p)
 {
     xed_assert(p->_inst != 0);
     return xed_inst_isa_set(p->_inst);
@@ -127,6 +127,15 @@ xed_decoded_inst_get_modrm(const xed_decoded_inst_t* p);
 /// blend operations that use their mask field as a control.
 XED_DLL_EXPORT xed_bool_t
 xed_decoded_inst_masked_vector_operation(xed_decoded_inst_t* p);
+
+/// @ingroup DEC
+/// Returns 128, 256 or 512 for operations in the VEX, EVEX (or XOP)
+/// encoding space and returns 0 for (most) nonvector operations.
+/// This usually the content of the VEX.L or EVEX.LL field, reinterpreted.
+/// Some GPR instructions (like the BMI1/BMI2) are encoded in the VEX space
+/// and return non-zero values from this API.
+XED_DLL_EXPORT xed_uint_t
+xed_decoded_inst_vector_length_bits(xed_decoded_inst_t const* const p);
 
 /// @ingroup DEC
 /// Returns the number of legacy prefixes.
@@ -329,7 +338,7 @@ static XED_INLINE void xed_decoded_inst_set_input_chip(xed_decoded_inst_t* p,  x
 
 /// Indicate if this decoded instruction is valid for the specified #xed_chip_enum_t chip
 /// @ingroup DEC
-XED_DLL_EXPORT xed_bool_t xed_decoded_inst_valid_for_chip(xed_decoded_inst_t* p,
+XED_DLL_EXPORT xed_bool_t xed_decoded_inst_valid_for_chip(xed_decoded_inst_t const* const p,
         xed_chip_enum_t chip);
 
 //@}

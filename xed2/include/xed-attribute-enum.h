@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2013 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -57,6 +57,7 @@ typedef enum
     XED_ATTRIBUTE_HLE_REL_ABLE,
     XED_ATTRIBUTE_IGNORES_OSFXSR,
     XED_ATTRIBUTE_IMPLICIT_ONE,
+    XED_ATTRIBUTE_INDEX_REG_IS_POINTER,
     XED_ATTRIBUTE_LOCKABLE,
     XED_ATTRIBUTE_MASKOP,
     XED_ATTRIBUTE_MASKOP_EVEX,
@@ -68,6 +69,7 @@ typedef enum
     XED_ATTRIBUTE_NOP,
     XED_ATTRIBUTE_NOTSX,
     XED_ATTRIBUTE_NOTSX_COND,
+    XED_ATTRIBUTE_NO_RIP_REL,
     XED_ATTRIBUTE_PREFETCH,
     XED_ATTRIBUTE_PROTECTED_MODE,
     XED_ATTRIBUTE_QWORD_INDICES,
