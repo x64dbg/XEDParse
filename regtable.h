@@ -185,9 +185,24 @@ enum REG
     REG_YMM13,
     REG_YMM14,
     REG_YMM15,
+    REG_YMM16,
+    REG_YMM17,
+    REG_YMM18,
+    REG_YMM19,
+    REG_YMM20,
+    REG_YMM21,
+    REG_YMM22,
+    REG_YMM23,
+    REG_YMM24,
+    REG_YMM25,
+    REG_YMM26,
+    REG_YMM27,
+    REG_YMM28,
+    REG_YMM29,
+    REG_YMM30,
+    REG_YMM31,
 
     /* Advanced vector extensions 512 ZMM# */
-#if 0
     REG_ZMM0,
     REG_ZMM1,
     REG_ZMM2,
@@ -220,7 +235,6 @@ enum REG
     REG_ZMM29,
     REG_ZMM30,
     REG_ZMM31,
-#endif
 
     /* Segment registers */
     REG_SINVALID,
@@ -428,9 +442,24 @@ static RegEntry RegisterIds[] =
     { "ymm13", REG_YMM13, XED_REG_YMM13, SIZE_YMMWORD },
     { "ymm14", REG_YMM14, XED_REG_YMM14, SIZE_YMMWORD },
     { "ymm15", REG_YMM15, XED_REG_YMM15, SIZE_YMMWORD },
+    { "ymm16", REG_YMM16, XED_REG_YMM16, SIZE_YMMWORD },
+    { "ymm17", REG_YMM17, XED_REG_YMM17, SIZE_YMMWORD },
+    { "ymm18", REG_YMM18, XED_REG_YMM18, SIZE_YMMWORD },
+    { "ymm19", REG_YMM19, XED_REG_YMM19, SIZE_YMMWORD },
+    { "ymm20", REG_YMM20, XED_REG_YMM20, SIZE_YMMWORD },
+    { "ymm21", REG_YMM21, XED_REG_YMM21, SIZE_YMMWORD },
+    { "ymm22", REG_YMM22, XED_REG_YMM22, SIZE_YMMWORD },
+    { "ymm23", REG_YMM23, XED_REG_YMM23, SIZE_YMMWORD },
+    { "ymm24", REG_YMM24, XED_REG_YMM24, SIZE_YMMWORD },
+    { "ymm25", REG_YMM25, XED_REG_YMM25, SIZE_YMMWORD },
+    { "ymm26", REG_YMM26, XED_REG_YMM26, SIZE_YMMWORD },
+    { "ymm27", REG_YMM27, XED_REG_YMM27, SIZE_YMMWORD },
+    { "ymm28", REG_YMM28, XED_REG_YMM28, SIZE_YMMWORD },
+    { "ymm29", REG_YMM29, XED_REG_YMM29, SIZE_YMMWORD },
+    { "ymm30", REG_YMM30, XED_REG_YMM30, SIZE_YMMWORD },
+    { "ymm31", REG_YMM31, XED_REG_YMM31, SIZE_YMMWORD },
 
     /* Advanced vector extensions 512 ZMM# */
-#if 0
     { "zmm0", REG_ZMM0, XED_REG_ZMM0, SIZE_ZMMWORD },
     { "zmm1", REG_ZMM1, XED_REG_ZMM1, SIZE_ZMMWORD },
     { "zmm2", REG_ZMM2, XED_REG_ZMM2, SIZE_ZMMWORD },
@@ -463,7 +492,6 @@ static RegEntry RegisterIds[] =
     { "zmm29", REG_ZMM29, XED_REG_ZMM29, SIZE_ZMMWORD },
     { "zmm30", REG_ZMM30, XED_REG_ZMM30, SIZE_ZMMWORD },
     { "zmm31", REG_ZMM31, XED_REG_ZMM31, SIZE_ZMMWORD },
-#endif
 
     /* Segment registers */
     { "sinval", REG_SINVALID, XED_REG_INVALID, SIZE_WORD },
