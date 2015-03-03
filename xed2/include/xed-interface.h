@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -50,20 +50,18 @@ END_LEGAL */
 
 #include "xed-init.h"
 #include "xed-decode.h"
-#include "xed-decode-cache.h"
+#include "xed-ild.h"
 
 #include "xed-state.h" /* dstate, legacy */
 #include "xed-syntax-enum.h"
 #include "xed-reg-class-enum.h" /* generated */
 #include "xed-reg-class.h"
-#include "xed-inst-printer.h"
 
 #if defined(XED_ENCODER)
 # include "xed-encode.h"
 # include "xed-encoder-hl.h"
 #endif
 #include "xed-util.h"
-#include "xed-inst-printer.h"
 #include "xed-operand-action.h"
 
 #include "xed-version.h"

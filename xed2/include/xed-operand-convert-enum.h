@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -39,6 +39,10 @@ END_LEGAL */
 typedef enum
 {
     XED_OPERAND_CONVERT_INVALID,
+    XED_OPERAND_CONVERT_ZEROSTR,
+    XED_OPERAND_CONVERT_SAESTR,
+    XED_OPERAND_CONVERT_ROUNDC,
+    XED_OPERAND_CONVERT_BCASTSTR,
     XED_OPERAND_CONVERT_LAST
 } xed_operand_convert_enum_t;
 

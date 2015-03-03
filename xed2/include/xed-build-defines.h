@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -38,9 +38,12 @@ END_LEGAL */
 #    define XED_AVX
 #  endif
 #  if !defined(XED_GIT_VERSION)
-#    define XED_GIT_VERSION "6.23.0-15-g43cff9b 2014-04-11"
+#    define XED_GIT_VERSION "7.15.0-2-g8224fa5 2015-01-21"
 #  endif
 #  if !defined(XED_MPX)
 #    define XED_MPX
+#  endif
+#  if !defined(XED_SUPPORTS_AVX512)
+#    define XED_SUPPORTS_AVX512
 #  endif
 #endif

@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -44,11 +44,15 @@ typedef enum
     XED_EXTENSION_AVX,
     XED_EXTENSION_AVX2,
     XED_EXTENSION_AVX2GATHER,
+    XED_EXTENSION_AVX512EVEX,
+    XED_EXTENSION_AVX512VEX,
     XED_EXTENSION_BASE,
     XED_EXTENSION_BDW,
     XED_EXTENSION_BMI1,
     XED_EXTENSION_BMI2,
     XED_EXTENSION_CLFLUSHOPT,
+    XED_EXTENSION_CLFSH,
+    XED_EXTENSION_CLWB,
     XED_EXTENSION_F16C,
     XED_EXTENSION_FMA,
     XED_EXTENSION_FMA4,
@@ -58,7 +62,10 @@ typedef enum
     XED_EXTENSION_MMX,
     XED_EXTENSION_MOVBE,
     XED_EXTENSION_MPX,
+    XED_EXTENSION_PAUSE,
     XED_EXTENSION_PCLMULQDQ,
+    XED_EXTENSION_PCOMMIT,
+    XED_EXTENSION_PREFETCHWT1,
     XED_EXTENSION_RDRAND,
     XED_EXTENSION_RDSEED,
     XED_EXTENSION_RDTSCP,

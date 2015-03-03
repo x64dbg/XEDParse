@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -62,6 +62,7 @@ typedef enum
     XED_REG_CLASS_XCR,
     XED_REG_CLASS_XMM,
     XED_REG_CLASS_YMM,
+    XED_REG_CLASS_ZMM,
     XED_REG_CLASS_LAST
 } xed_reg_class_enum_t;
 

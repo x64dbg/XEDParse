@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -158,18 +158,11 @@ static XED_INLINE void  xed_state_set_machine_mode(xed_state_t* p,
 
 /// @name Address width
 //@{
-/// Set the address width
-/// @ingroup INIT
-static XED_INLINE void xed_state_set_address_width(xed_state_t* p,
-        xed_address_width_enum_t arg_addr_width)
-{
-    (void)p;
-    (void)arg_addr_width;
-}
 
 /// return the address width
 /// @ingroup INIT
-static XED_INLINE xed_address_width_enum_t  xed_state_get_address_width(const xed_state_t* p)
+static XED_INLINE xed_address_width_enum_t
+xed_state_get_address_width(const xed_state_t* p)
 {
     switch(xed_state_get_machine_mode(p))
     {
@@ -199,8 +192,9 @@ static XED_INLINE xed_address_width_enum_t  xed_state_get_address_width(const xe
 //@{
 /// set the STACK address width
 /// @ingroup INIT
-static XED_INLINE void  xed_state_set_stack_address_width(xed_state_t* p,
-        xed_address_width_enum_t arg_addr_width)
+static XED_INLINE void
+xed_state_set_stack_address_width(xed_state_t* p,
+                                  xed_address_width_enum_t arg_addr_width)
 {
     p->stack_addr_width = arg_addr_width;
 }

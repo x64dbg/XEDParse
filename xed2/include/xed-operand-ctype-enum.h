@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -43,7 +43,6 @@ typedef enum
     XED_OPERAND_CTYPE_XED_CHIP_ENUM_T,
     XED_OPERAND_CTYPE_XED_ERROR_ENUM_T,
     XED_OPERAND_CTYPE_XED_ICLASS_ENUM_T,
-    XED_OPERAND_CTYPE_XED_INT32_T,
     XED_OPERAND_CTYPE_XED_INT64_T,
     XED_OPERAND_CTYPE_XED_OPERAND_ELEMENT_TYPE_ENUM_T,
     XED_OPERAND_CTYPE_XED_REG_ENUM_T,

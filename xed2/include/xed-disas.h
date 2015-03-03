@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -61,11 +61,5 @@ typedef  int (*xed_disassembly_callback_fn_t)(
     xed_uint32_t  buffer_length,
     xed_uint64_t* offset,
     void*         context);
-
-/// @ingroup PRINT
-/// Register a disassembly call back function of type
-/// #xed_disassembly_callback_fn_t to get called when the disassembler
-/// needs to get a symbol and offset for an address.
-XED_DLL_EXPORT void xed_register_disassembly_callback(xed_disassembly_callback_fn_t f);
 
 #endif

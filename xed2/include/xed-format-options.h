@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -59,6 +59,9 @@ typedef struct
 
     /// do not sign extend signed immediates
     unsigned int no_sign_extend_signed_immediates;
+
+    /// write-mask-with-curly-brackets, omit k0
+    unsigned int write_mask_curly_k0;
 
 } xed_format_options_t;
 

@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -73,12 +73,16 @@ typedef enum
     XED_CHIP_SALTWELL,
     XED_CHIP_SILVERMONT,
     XED_CHIP_AMD,
-    XED_CHIP_BROADWELL,
     XED_CHIP_GOLDMONT,
-    XED_CHIP_SKYLAKE,
     XED_CHIP_SANDYBRIDGE,
     XED_CHIP_IVYBRIDGE,
     XED_CHIP_HASWELL,
+    XED_CHIP_BROADWELL,
+    XED_CHIP_SKYLAKE,
+    XED_CHIP_SKYLAKE_SERVER,
+    XED_CHIP_MEMORY_FUTURE,
+    XED_CHIP_KNL,
+    XED_CHIP_AVX512_FUTURE,
     XED_CHIP_ALL,
     XED_CHIP_LAST
 } xed_chip_enum_t;

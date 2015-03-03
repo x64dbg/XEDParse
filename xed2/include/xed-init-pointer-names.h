@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -36,5 +36,5 @@ END_LEGAL */
 #if !defined(_XED_INIT_POINTER_NAMES_H_)
 # define _XED_INIT_POINTER_NAMES_H_
 #include "xed-internal-header.h"
-#define XED_MAX_POINTER_NAMES 33
+#define XED_MAX_POINTER_NAMES 65
 #endif

@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -57,16 +57,21 @@ struct xed_decoder_vars_s;
 /// operand order.  See @ref DEC for API documentation.
 typedef struct xed_decoded_inst_s
 {
-    /// The operand storage fields discovered during decoding. This same array is used by encode.
+    /// The _operands are storage for information discovered during
+    /// decoding. They are also used by encode.  The accessors for these
+    /// operands all have the form xed3_operand_{get,set}_*(). They should
+    /// be considered internal and subject to change over time. It is
+    /// preferred that you use xed_decoded_inst_*() or the
+    /// xed_operand_values_*() functions when available.
     xed_operand_storage_t _operands;
 
 #if defined(XED_ENCODER)
     /// Used for encode operand ordering. Not set by decode.
     xed_uint8_t _operand_order[XED_ENCODE_ORDER_MAX_OPERANDS];
-#endif
-    xed_uint8_t _decoded_length;
     /// Length of the _operand_order[] array.
     xed_uint8_t _n_operand_order;
+#endif
+    xed_uint8_t _decoded_length;
 
     /// when we decode an instruction, we set the _inst and get the
     /// properites of that instruction here. This also points to the
@@ -80,11 +85,10 @@ typedef struct xed_decoded_inst_s
         const xed_uint8_t* _dec;
     } _byte_array;
 
-    // These are stack allocated by xed_encode() or xed_decode(). These are
-    // per-encode or per-decode transitory data.
+    // The ev field is stack allocated by xed_encode(). It is per-encode
+    // transitory data.
     union
     {
-
         /* user_data is available as a user data storage field after
          * decoding. It does not live across re-encodes or re-decodes. */
         xed_uint64_t user_data;

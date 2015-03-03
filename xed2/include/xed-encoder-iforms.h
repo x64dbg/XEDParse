@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -49,19 +49,27 @@ typedef struct xed_encoder_iforms_s
     xed_uint32_t x_VEXED_REX;
     xed_uint32_t x_REMOVE_SEGMENT;
     xed_uint32_t x_VSIB_ENC;
+    xed_uint32_t x_EVEX_REXB_ENC;
     xed_uint32_t x_MODRM_RM_ENCODE_EA64_SIB0;
     xed_uint32_t x_VEX_REXXB_ENC;
+    xed_uint32_t x_EVEX_REXRR_ENC;
+    xed_uint32_t x_AVX512_EVEX_BYTE3_ENC;
+    xed_uint32_t x_EVEX_REXW_VVVV_ENC;
     xed_uint32_t x_VEX_REG_ENC;
+    xed_uint32_t x_UISA_SE_IMM8;
     xed_uint32_t x_SIMM8;
+    xed_uint32_t x_XOP_MAP_ENC;
     xed_uint32_t x_MODRM_RM_ENCODE_EA32_SIB0;
     xed_uint32_t x_UIMM8;
     xed_uint32_t x_MODRM_RM_ENCODE_EA16_SIB0;
     xed_uint32_t x_XOP_REXXB_ENC;
+    xed_uint32_t x_EVEX_MAP_ENC;
     xed_uint32_t x_MEMDISP8;
     xed_uint32_t x_MODRM_RM_ENCODE;
     xed_uint32_t x_REX_PREFIX_ENC;
     xed_uint32_t x_UIMM16;
     xed_uint32_t x_VEX_TYPE_ENC;
+    xed_uint32_t x_EVEX_UPP_ENC;
     xed_uint32_t x_VEX_REXR_ENC;
     xed_uint32_t x_BRDISP32;
     xed_uint32_t x_MEMDISP32;
@@ -71,13 +79,14 @@ typedef struct xed_encoder_iforms_s
     xed_uint32_t x_UIMM32;
     xed_uint32_t x_SIMMz;
     xed_uint32_t x_UIMMv;
-    xed_uint32_t x_XOP_MAP_ENC;
+    xed_uint32_t x_EVEX_62_REXR_ENC;
     xed_uint32_t x_DISP_NT;
     xed_uint32_t x_MODRM_MOD_ENCODE;
     xed_uint32_t x_MEMDISP;
     xed_uint32_t x_VSIB_ENC_BASE;
     xed_uint32_t x_BRDISP8;
     xed_uint32_t x_BRDISPz;
+    xed_uint32_t x_EVEX_REXX_ENC;
     xed_uint32_t x_XOP_TYPE_ENC;
 } xed_encoder_iforms_t;
 #endif

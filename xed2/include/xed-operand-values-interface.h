@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -242,6 +242,7 @@ xed_operand_values_accesses_memory(const xed_operand_values_t* p);
 XED_DLL_EXPORT unsigned int
 xed_operand_values_number_of_memory_operands(const xed_operand_values_t* p);
 
+/// return bytes
 /// @ingroup OPERANDS
 XED_DLL_EXPORT unsigned int
 xed_operand_values_get_memory_operand_length(const xed_operand_values_t* p,
@@ -331,29 +332,25 @@ xed_operand_values_get_memory_displacement_length(const xed_operand_values_t* p)
 /// @ingroup OPERANDS
 /// Return the memory displacement width in BITS
 XED_DLL_EXPORT xed_uint32_t
-xed_operand_values_get_memory_displacement_length_bits(const xed_operand_values_t* p);
+xed_operand_values_get_memory_displacement_length_bits(
+    const xed_operand_values_t* p);
 
 /// @ingroup OPERANDS
 /// Return the raw memory displacement width in BITS(ignores scaling)
 XED_DLL_EXPORT xed_uint32_t
-xed_operand_values_get_memory_displacement_length_bits_raw(const xed_operand_values_t* p);
+xed_operand_values_get_memory_displacement_length_bits_raw(
+    const xed_operand_values_t* p);
 
-/// @ingroup OPERANDS
+/// Returns the potentially scaled value of the memory
+/// displacement. Certain AVX512 memory displacements are scaled before
+/// they are used.  @ingroup OPERANDS
 XED_DLL_EXPORT xed_int64_t
 xed_operand_values_get_memory_displacement_int64(const xed_operand_values_t* p);
 
-/// @ingroup OPERANDS
+/// Returns the unscaled (raw) memory displacement. Certain AVX512 memory
+/// displacements are scaled before they are used.  @ingroup OPERANDS
 XED_DLL_EXPORT xed_int64_t
-xed3_operand_get_memory_displacement_int64(const xed_operand_values_t* p);
-
-/// @ingroup OPERANDS
-XED_DLL_EXPORT xed_int64_t
-xed3_operand_get_memory_displacement_int64_raw(const xed_operand_values_t* p);
-
-/// @ingroup OPERANDS
-XED_DLL_EXPORT xed_int32_t
-xed3_operand_get_branch_displacement_int32(const xed_operand_values_t* p);
-
+xed_operand_values_get_memory_displacement_int64_raw(const xed_operand_values_t* p);
 
 /// @ingroup OPERANDS
 XED_DLL_EXPORT xed_uint8_t
@@ -370,7 +367,8 @@ xed_operand_values_get_branch_displacement_length(const xed_operand_values_t* p)
 /// @ingroup OPERANDS
 /// Return the branch displacement width in bits
 XED_DLL_EXPORT xed_uint32_t
-xed_operand_values_get_branch_displacement_length_bits(const xed_operand_values_t* p);
+xed_operand_values_get_branch_displacement_length_bits(
+    const xed_operand_values_t* p);
 
 /// @ingroup OPERANDS
 XED_DLL_EXPORT xed_int32_t
@@ -425,7 +423,7 @@ xed_operand_values_set_effective_operand_width(xed_operand_values_t* p,
 XED_DLL_EXPORT void
 xed_operand_values_set_effective_address_width(xed_operand_values_t* p,
         unsigned int width);
-
+/// takes bytes, not bits, as an argument
 /// @ingroup OPERANDS
 XED_DLL_EXPORT void
 xed_operand_values_set_memory_operand_length(xed_operand_values_t* p,

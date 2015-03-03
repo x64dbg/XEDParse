@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -37,10 +37,6 @@ END_LEGAL */
 # define _XED_OPERAND_ACCESSORS_H_
 #include "xed-decoded-inst.h"
 #include "xed-operand-storage.h"
-static XED_INLINE xed_bits_t xed3_operand_get_xsrc(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_xsrc(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_sib(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_sib(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -64,6 +60,10 @@ static XED_INLINE void xed3_operand_set_using_default_segment1(xed_decoded_inst_
 static XED_INLINE xed_bits_t xed3_operand_get_hint(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_hint(xed_decoded_inst_t* d, xed_bits_t opval);
+
+static XED_INLINE xed_bits_t xed3_operand_get_sae(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_sae(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_mode_first_prefix(const xed_decoded_inst_t* d);
 
@@ -93,21 +93,9 @@ static XED_INLINE xed_chip_enum_t xed3_operand_get_chip(const xed_decoded_inst_t
 
 static XED_INLINE void xed3_operand_set_chip(xed_decoded_inst_t* d, xed_chip_enum_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vexpp_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexpp_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_rexxp(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_rexxp(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_amd3dnow(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_amd3dnow(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_vexpfx_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexpfx_op(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_rep_able(const xed_decoded_inst_t* d);
 
@@ -137,10 +125,6 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_seg0(const xed_decoded_inst_t*
 
 static XED_INLINE void xed3_operand_set_seg0(xed_decoded_inst_t* d, xed_reg_enum_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vexpp(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexpp(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_nprefixes(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_nprefixes(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -157,9 +141,9 @@ static XED_INLINE xed_bits_t xed3_operand_get_scale(const xed_decoded_inst_t* d)
 
 static XED_INLINE void xed3_operand_set_scale(xed_decoded_inst_t* d, xed_bits_t opval);
 
-static XED_INLINE xed_int32_t xed3_operand_get_brdisp(const xed_decoded_inst_t* d);
+static XED_INLINE xed_bits_t xed3_operand_get_llrc(const xed_decoded_inst_t* d);
 
-static XED_INLINE void xed3_operand_set_brdisp(xed_decoded_inst_t* d, xed_int32_t opval);
+static XED_INLINE void xed3_operand_set_llrc(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_sreg(const xed_decoded_inst_t* d);
 
@@ -168,10 +152,6 @@ static XED_INLINE void xed3_operand_set_sreg(xed_decoded_inst_t* d, xed_bits_t o
 static XED_INLINE xed_bits_t xed3_operand_get_esrc(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_esrc(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_vexl(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexl(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_nrexes(const xed_decoded_inst_t* d);
 
@@ -201,6 +181,10 @@ static XED_INLINE xed_bits_t xed3_operand_get_pos_disp(const xed_decoded_inst_t*
 
 static XED_INLINE void xed3_operand_set_pos_disp(xed_decoded_inst_t* d, xed_bits_t opval);
 
+static XED_INLINE xed_bits_t xed3_operand_get_ubit(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_ubit(xed_decoded_inst_t* d, xed_bits_t opval);
+
 static XED_INLINE xed_bits_t xed3_operand_get_vexdest210(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_vexdest210(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -213,10 +197,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_refining(const xed_decoded_inst_t*
 
 static XED_INLINE void xed3_operand_set_refining(xed_decoded_inst_t* d, xed_bits_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vexr_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexr_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_ptr(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_ptr(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -224,10 +204,6 @@ static XED_INLINE void xed3_operand_set_ptr(xed_decoded_inst_t* d, xed_bits_t op
 static XED_INLINE xed_bits_t xed3_operand_get_p4(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_p4(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_lbit(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_lbit(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_modep55c(const xed_decoded_inst_t* d);
 
@@ -237,17 +213,21 @@ static XED_INLINE xed_iclass_enum_t xed3_operand_get_iclass(const xed_decoded_in
 
 static XED_INLINE void xed3_operand_set_iclass(xed_decoded_inst_t* d, xed_iclass_enum_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vmap(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vmap(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_uint8_t xed3_operand_get_imm_width(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_imm_width(xed_decoded_inst_t* d, xed_uint8_t opval);
 
+static XED_INLINE xed_bits_t xed3_operand_get_bcrc(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_bcrc(xed_decoded_inst_t* d, xed_bits_t opval);
+
 static XED_INLINE xed_error_enum_t xed3_operand_get_error(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_error(xed_decoded_inst_t* d, xed_error_enum_t opval);
+
+static XED_INLINE xed_bits_t xed3_operand_get_evexrr(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_evexrr(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_nelem(const xed_decoded_inst_t* d);
 
@@ -301,14 +281,6 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_base1(const xed_decoded_inst_t
 
 static XED_INLINE void xed3_operand_set_base1(xed_decoded_inst_t* d, xed_reg_enum_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_escvl_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_escvl_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_xmap43(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_xmap43(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_mod(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_mod(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -345,10 +317,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_rexr(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_rexr(xed_decoded_inst_t* d, xed_bits_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_rexbp(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_rexbp(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_encoder_preferred(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_encoder_preferred(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -369,17 +337,17 @@ static XED_INLINE xed_bits_t xed3_operand_get_prefix66(const xed_decoded_inst_t*
 
 static XED_INLINE void xed3_operand_set_prefix66(xed_decoded_inst_t* d, xed_bits_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vexb_op(const xed_decoded_inst_t* d);
+static XED_INLINE xed_bits_t xed3_operand_get_rexrr(const xed_decoded_inst_t* d);
 
-static XED_INLINE void xed3_operand_set_vexb_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_rexrp(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_rexrp(xed_decoded_inst_t* d, xed_bits_t opval);
+static XED_INLINE void xed3_operand_set_rexrr(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_asz(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_asz(xed_decoded_inst_t* d, xed_bits_t opval);
+
+static XED_INLINE xed_bits_t xed3_operand_get_mask(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_mask(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_mem1(const xed_decoded_inst_t* d);
 
@@ -396,10 +364,6 @@ static XED_INLINE void xed3_operand_set_pos_imm1(xed_decoded_inst_t* d, xed_bits
 static XED_INLINE xed_uint16_t xed3_operand_get_mem_width(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_mem_width(xed_decoded_inst_t* d, xed_uint16_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_xmap(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_xmap(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_mem0(const xed_decoded_inst_t* d);
 
@@ -424,6 +388,10 @@ static XED_INLINE void xed3_operand_set_lock(xed_decoded_inst_t* d, xed_bits_t o
 static XED_INLINE xed_bits_t xed3_operand_get_has_modrm(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_has_modrm(xed_decoded_inst_t* d, xed_bits_t opval);
+
+static XED_INLINE xed_bits_t xed3_operand_get_zeroing(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_zeroing(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_srm(const xed_decoded_inst_t* d);
 
@@ -453,10 +421,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_nseg_prefixes(const xed_decoded_in
 
 static XED_INLINE void xed3_operand_set_nseg_prefixes(xed_decoded_inst_t* d, xed_bits_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vexl_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexl_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_vex_c4(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_vex_c4(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -473,10 +437,6 @@ static XED_INLINE xed_operand_element_type_enum_t xed3_operand_get_type(const xe
 
 static XED_INLINE void xed3_operand_set_type(xed_decoded_inst_t* d, xed_operand_element_type_enum_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vexmm34_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexmm34_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_seg_ovd(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_seg_ovd(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -492,6 +452,10 @@ static XED_INLINE void xed3_operand_set_dummy(xed_decoded_inst_t* d, xed_bits_t 
 static XED_INLINE xed_bits_t xed3_operand_get_norex(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_norex(xed_decoded_inst_t* d, xed_bits_t opval);
+
+static XED_INLINE xed_bits_t xed3_operand_get_roundc(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_roundc(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_sibbase(const xed_decoded_inst_t* d);
 
@@ -529,17 +493,9 @@ static XED_INLINE xed_bits_t xed3_operand_get_ild_seg(const xed_decoded_inst_t* 
 
 static XED_INLINE void xed3_operand_set_ild_seg(xed_decoded_inst_t* d, xed_bits_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_mbits(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_mbits(xed_decoded_inst_t* d, xed_bits_t opval);
-
 static XED_INLINE xed_bits_t xed3_operand_get_df32(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_df32(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_vexx_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexx_op(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_realmode(const xed_decoded_inst_t* d);
 
@@ -548,6 +504,10 @@ static XED_INLINE void xed3_operand_set_realmode(xed_decoded_inst_t* d, xed_bits
 static XED_INLINE xed_bits_t xed3_operand_get_modrm_byte(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_modrm_byte(xed_decoded_inst_t* d, xed_bits_t opval);
+
+static XED_INLINE xed_bits_t xed3_operand_get_no_scale_disp8(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_no_scale_disp8(xed_decoded_inst_t* d, xed_bits_t opval);
 
 static XED_INLINE xed_bits_t xed3_operand_get_mode(const xed_decoded_inst_t* d);
 
@@ -561,6 +521,10 @@ static XED_INLINE xed_bits_t xed3_operand_get_sibscale(const xed_decoded_inst_t*
 
 static XED_INLINE void xed3_operand_set_sibscale(xed_decoded_inst_t* d, xed_bits_t opval);
 
+static XED_INLINE xed_bits_t xed3_operand_get_esrc3(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_esrc3(xed_decoded_inst_t* d, xed_bits_t opval);
+
 static XED_INLINE xed_bits_t xed3_operand_get_vl(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_vl(xed_decoded_inst_t* d, xed_bits_t opval);
@@ -569,34 +533,22 @@ static XED_INLINE xed_bits_t xed3_operand_get_max_bytes(const xed_decoded_inst_t
 
 static XED_INLINE void xed3_operand_set_max_bytes(xed_decoded_inst_t* d, xed_bits_t opval);
 
+static XED_INLINE xed_bits_t xed3_operand_get_modep5(const xed_decoded_inst_t* d);
+
+static XED_INLINE void xed3_operand_set_modep5(xed_decoded_inst_t* d, xed_bits_t opval);
+
 static XED_INLINE xed_bits_t xed3_operand_get_first_f2f3(const xed_decoded_inst_t* d);
 
 static XED_INLINE void xed3_operand_set_first_f2f3(xed_decoded_inst_t* d, xed_bits_t opval);
 
-static XED_INLINE xed_bits_t xed3_operand_get_vb2_op(const xed_decoded_inst_t* d);
+static XED_INLINE xed_bits_t xed3_operand_get_vexdest4(const xed_decoded_inst_t* d);
 
-static XED_INLINE void xed3_operand_set_vb2_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_vexmap_op(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_vexmap_op(xed_decoded_inst_t* d, xed_bits_t opval);
-
-static XED_INLINE xed_bits_t xed3_operand_get_modep5(const xed_decoded_inst_t* d);
-
-static XED_INLINE void xed3_operand_set_modep5(xed_decoded_inst_t* d, xed_bits_t opval);
+static XED_INLINE void xed3_operand_set_vexdest4(xed_decoded_inst_t* d, xed_bits_t opval);
 
 void xed3_get_generic_operand(const xed_decoded_inst_t* d, xed_operand_enum_t operand, void* ret_arg);
 
 void xed3_set_generic_operand(xed_decoded_inst_t* d, xed_operand_enum_t operand, xed_uint32_t val);
 
-static XED_INLINE xed_bits_t xed3_operand_get_xsrc(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.xsrc;
-}
-static XED_INLINE void xed3_operand_set_xsrc(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.xsrc = (xed_uint8_t)opval;
-}
 static XED_INLINE xed_bits_t xed3_operand_get_sib(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.sib;
@@ -644,6 +596,14 @@ static XED_INLINE xed_bits_t xed3_operand_get_hint(const xed_decoded_inst_t* d)
 static XED_INLINE void xed3_operand_set_hint(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.hint = (xed_uint8_t)opval;
+}
+static XED_INLINE xed_bits_t xed3_operand_get_sae(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.sae;
+}
+static XED_INLINE void xed3_operand_set_sae(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.sae = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_mode_first_prefix(const xed_decoded_inst_t* d)
 {
@@ -701,22 +661,6 @@ static XED_INLINE void xed3_operand_set_chip(xed_decoded_inst_t* d, xed_chip_enu
 {
     d->_operands.chip = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_vexpp_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexpp_op;
-}
-static XED_INLINE void xed3_operand_set_vexpp_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexpp_op = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_rexxp(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.rexxp;
-}
-static XED_INLINE void xed3_operand_set_rexxp(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.rexxp = (xed_uint8_t)opval;
-}
 static XED_INLINE xed_bits_t xed3_operand_get_amd3dnow(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.amd3dnow;
@@ -724,14 +668,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_amd3dnow(const xed_decoded_inst_t*
 static XED_INLINE void xed3_operand_set_amd3dnow(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.amd3dnow = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_vexpfx_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexpfx_op;
-}
-static XED_INLINE void xed3_operand_set_vexpfx_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexpfx_op = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_rep_able(const xed_decoded_inst_t* d)
 {
@@ -779,7 +715,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_seg1(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_seg1(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.seg1 = (xed_uint8_t)opval;
+    d->_operands.seg1 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_seg0(const xed_decoded_inst_t* d)
 {
@@ -787,15 +723,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_seg0(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_seg0(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.seg0 = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_vexpp(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexpp;
-}
-static XED_INLINE void xed3_operand_set_vexpp(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexpp = (xed_uint8_t)opval;
+    d->_operands.seg0 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_nprefixes(const xed_decoded_inst_t* d)
 {
@@ -811,7 +739,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_index(const xed_decoded_inst_t
 }
 static XED_INLINE void xed3_operand_set_index(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.index = (xed_uint8_t)opval;
+    d->_operands.index = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_ild_f2(const xed_decoded_inst_t* d)
 {
@@ -829,13 +757,13 @@ static XED_INLINE void xed3_operand_set_scale(xed_decoded_inst_t* d, xed_bits_t 
 {
     d->_operands.scale = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_int32_t xed3_operand_get_brdisp(const xed_decoded_inst_t* d)
+static XED_INLINE xed_bits_t xed3_operand_get_llrc(const xed_decoded_inst_t* d)
 {
-    return (xed_int32_t)d->_operands.brdisp;
+    return (xed_bits_t)d->_operands.llrc;
 }
-static XED_INLINE void xed3_operand_set_brdisp(xed_decoded_inst_t* d, xed_int32_t opval)
+static XED_INLINE void xed3_operand_set_llrc(xed_decoded_inst_t* d, xed_bits_t opval)
 {
-    d->_operands.brdisp = (xed_uint32_t)opval;
+    d->_operands.llrc = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_sreg(const xed_decoded_inst_t* d)
 {
@@ -852,14 +780,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_esrc(const xed_decoded_inst_t* d)
 static XED_INLINE void xed3_operand_set_esrc(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.esrc = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_vexl(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexl;
-}
-static XED_INLINE void xed3_operand_set_vexl(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexl = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_nrexes(const xed_decoded_inst_t* d)
 {
@@ -917,6 +837,14 @@ static XED_INLINE void xed3_operand_set_pos_disp(xed_decoded_inst_t* d, xed_bits
 {
     d->_operands.pos_disp = (xed_uint8_t)opval;
 }
+static XED_INLINE xed_bits_t xed3_operand_get_ubit(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.ubit;
+}
+static XED_INLINE void xed3_operand_set_ubit(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.ubit = (xed_uint8_t)opval;
+}
 static XED_INLINE xed_bits_t xed3_operand_get_vexdest210(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.vexdest210;
@@ -941,14 +869,6 @@ static XED_INLINE void xed3_operand_set_refining(xed_decoded_inst_t* d, xed_bits
 {
     d->_operands.refining = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_vexr_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexr_op;
-}
-static XED_INLINE void xed3_operand_set_vexr_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexr_op = (xed_uint8_t)opval;
-}
 static XED_INLINE xed_bits_t xed3_operand_get_ptr(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.ptr;
@@ -964,14 +884,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_p4(const xed_decoded_inst_t* d)
 static XED_INLINE void xed3_operand_set_p4(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.p4 = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_lbit(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.lbit;
-}
-static XED_INLINE void xed3_operand_set_lbit(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.lbit = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_modep55c(const xed_decoded_inst_t* d)
 {
@@ -989,14 +901,6 @@ static XED_INLINE void xed3_operand_set_iclass(xed_decoded_inst_t* d, xed_iclass
 {
     d->_operands.iclass = (xed_uint16_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_vmap(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vmap;
-}
-static XED_INLINE void xed3_operand_set_vmap(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vmap = (xed_uint8_t)opval;
-}
 static XED_INLINE xed_uint8_t xed3_operand_get_imm_width(const xed_decoded_inst_t* d)
 {
     return (xed_uint8_t)d->_operands.imm_width;
@@ -1005,6 +909,14 @@ static XED_INLINE void xed3_operand_set_imm_width(xed_decoded_inst_t* d, xed_uin
 {
     d->_operands.imm_width = (xed_uint8_t)opval;
 }
+static XED_INLINE xed_bits_t xed3_operand_get_bcrc(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.bcrc;
+}
+static XED_INLINE void xed3_operand_set_bcrc(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.bcrc = (xed_uint8_t)opval;
+}
 static XED_INLINE xed_error_enum_t xed3_operand_get_error(const xed_decoded_inst_t* d)
 {
     return (xed_error_enum_t)d->_operands.error;
@@ -1012,6 +924,14 @@ static XED_INLINE xed_error_enum_t xed3_operand_get_error(const xed_decoded_inst
 static XED_INLINE void xed3_operand_set_error(xed_decoded_inst_t* d, xed_error_enum_t opval)
 {
     d->_operands.error = (xed_uint8_t)opval;
+}
+static XED_INLINE xed_bits_t xed3_operand_get_evexrr(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.evexrr;
+}
+static XED_INLINE void xed3_operand_set_evexrr(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.evexrr = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_nelem(const xed_decoded_inst_t* d)
 {
@@ -1035,7 +955,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg8(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg8(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg8 = (xed_uint8_t)opval;
+    d->_operands.reg8 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg6(const xed_decoded_inst_t* d)
 {
@@ -1043,7 +963,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg6(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg6(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg6 = (xed_uint8_t)opval;
+    d->_operands.reg6 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg7(const xed_decoded_inst_t* d)
 {
@@ -1051,7 +971,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg7(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg7(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg7 = (xed_uint8_t)opval;
+    d->_operands.reg7 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg4(const xed_decoded_inst_t* d)
 {
@@ -1059,7 +979,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg4(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg4(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg4 = (xed_uint8_t)opval;
+    d->_operands.reg4 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg5(const xed_decoded_inst_t* d)
 {
@@ -1067,7 +987,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg5(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg5(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg5 = (xed_uint8_t)opval;
+    d->_operands.reg5 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg2(const xed_decoded_inst_t* d)
 {
@@ -1075,7 +995,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg2(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg2(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg2 = (xed_uint8_t)opval;
+    d->_operands.reg2 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg3(const xed_decoded_inst_t* d)
 {
@@ -1083,7 +1003,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg3(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg3(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg3 = (xed_uint8_t)opval;
+    d->_operands.reg3 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg0(const xed_decoded_inst_t* d)
 {
@@ -1091,7 +1011,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg0(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg0(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg0 = (xed_uint8_t)opval;
+    d->_operands.reg0 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_reg1(const xed_decoded_inst_t* d)
 {
@@ -1099,7 +1019,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_reg1(const xed_decoded_inst_t*
 }
 static XED_INLINE void xed3_operand_set_reg1(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.reg1 = (xed_uint8_t)opval;
+    d->_operands.reg1 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_base0(const xed_decoded_inst_t* d)
 {
@@ -1107,7 +1027,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_base0(const xed_decoded_inst_t
 }
 static XED_INLINE void xed3_operand_set_base0(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.base0 = (xed_uint8_t)opval;
+    d->_operands.base0 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_reg_enum_t xed3_operand_get_base1(const xed_decoded_inst_t* d)
 {
@@ -1115,23 +1035,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_base1(const xed_decoded_inst_t
 }
 static XED_INLINE void xed3_operand_set_base1(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.base1 = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_escvl_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.escvl_op;
-}
-static XED_INLINE void xed3_operand_set_escvl_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.escvl_op = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_xmap43(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.xmap43;
-}
-static XED_INLINE void xed3_operand_set_xmap43(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.xmap43 = (xed_uint8_t)opval;
+    d->_operands.base1 = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_mod(const xed_decoded_inst_t* d)
 {
@@ -1205,14 +1109,6 @@ static XED_INLINE void xed3_operand_set_rexr(xed_decoded_inst_t* d, xed_bits_t o
 {
     d->_operands.rexr = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_rexbp(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.rexbp;
-}
-static XED_INLINE void xed3_operand_set_rexbp(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.rexbp = (xed_uint8_t)opval;
-}
 static XED_INLINE xed_bits_t xed3_operand_get_encoder_preferred(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.encoder_preferred;
@@ -1253,21 +1149,13 @@ static XED_INLINE void xed3_operand_set_prefix66(xed_decoded_inst_t* d, xed_bits
 {
     d->_operands.prefix66 = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_vexb_op(const xed_decoded_inst_t* d)
+static XED_INLINE xed_bits_t xed3_operand_get_rexrr(const xed_decoded_inst_t* d)
 {
-    return (xed_bits_t)d->_operands.vexb_op;
+    return (xed_bits_t)d->_operands.rexrr;
 }
-static XED_INLINE void xed3_operand_set_vexb_op(xed_decoded_inst_t* d, xed_bits_t opval)
+static XED_INLINE void xed3_operand_set_rexrr(xed_decoded_inst_t* d, xed_bits_t opval)
 {
-    d->_operands.vexb_op = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_rexrp(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.rexrp;
-}
-static XED_INLINE void xed3_operand_set_rexrp(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.rexrp = (xed_uint8_t)opval;
+    d->_operands.rexrr = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_asz(const xed_decoded_inst_t* d)
 {
@@ -1276,6 +1164,14 @@ static XED_INLINE xed_bits_t xed3_operand_get_asz(const xed_decoded_inst_t* d)
 static XED_INLINE void xed3_operand_set_asz(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.asz = (xed_uint8_t)opval;
+}
+static XED_INLINE xed_bits_t xed3_operand_get_mask(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.mask;
+}
+static XED_INLINE void xed3_operand_set_mask(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.mask = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_mem1(const xed_decoded_inst_t* d)
 {
@@ -1308,14 +1204,6 @@ static XED_INLINE xed_uint16_t xed3_operand_get_mem_width(const xed_decoded_inst
 static XED_INLINE void xed3_operand_set_mem_width(xed_decoded_inst_t* d, xed_uint16_t opval)
 {
     d->_operands.mem_width = (xed_uint16_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_xmap(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.xmap;
-}
-static XED_INLINE void xed3_operand_set_xmap(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.xmap = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_mem0(const xed_decoded_inst_t* d)
 {
@@ -1365,6 +1253,14 @@ static XED_INLINE void xed3_operand_set_has_modrm(xed_decoded_inst_t* d, xed_bit
 {
     d->_operands.has_modrm = (xed_uint8_t)opval;
 }
+static XED_INLINE xed_bits_t xed3_operand_get_zeroing(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.zeroing;
+}
+static XED_INLINE void xed3_operand_set_zeroing(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.zeroing = (xed_uint8_t)opval;
+}
 static XED_INLINE xed_bits_t xed3_operand_get_srm(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.srm;
@@ -1403,7 +1299,7 @@ static XED_INLINE xed_reg_enum_t xed3_operand_get_outreg(const xed_decoded_inst_
 }
 static XED_INLINE void xed3_operand_set_outreg(xed_decoded_inst_t* d, xed_reg_enum_t opval)
 {
-    d->_operands.outreg = (xed_uint8_t)opval;
+    d->_operands.outreg = (xed_uint16_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_default_seg(const xed_decoded_inst_t* d)
 {
@@ -1420,14 +1316,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_nseg_prefixes(const xed_decoded_in
 static XED_INLINE void xed3_operand_set_nseg_prefixes(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.nseg_prefixes = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_vexl_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexl_op;
-}
-static XED_INLINE void xed3_operand_set_vexl_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexl_op = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_vex_c4(const xed_decoded_inst_t* d)
 {
@@ -1461,14 +1349,6 @@ static XED_INLINE void xed3_operand_set_type(xed_decoded_inst_t* d, xed_operand_
 {
     d->_operands.type = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_vexmm34_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexmm34_op;
-}
-static XED_INLINE void xed3_operand_set_vexmm34_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexmm34_op = (xed_uint8_t)opval;
-}
 static XED_INLINE xed_bits_t xed3_operand_get_seg_ovd(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.seg_ovd;
@@ -1500,6 +1380,14 @@ static XED_INLINE xed_bits_t xed3_operand_get_norex(const xed_decoded_inst_t* d)
 static XED_INLINE void xed3_operand_set_norex(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.norex = (xed_uint8_t)opval;
+}
+static XED_INLINE xed_bits_t xed3_operand_get_roundc(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.roundc;
+}
+static XED_INLINE void xed3_operand_set_roundc(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.roundc = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_sibbase(const xed_decoded_inst_t* d)
 {
@@ -1573,14 +1461,6 @@ static XED_INLINE void xed3_operand_set_ild_seg(xed_decoded_inst_t* d, xed_bits_
 {
     d->_operands.ild_seg = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_mbits(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.mbits;
-}
-static XED_INLINE void xed3_operand_set_mbits(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.mbits = (xed_uint8_t)opval;
-}
 static XED_INLINE xed_bits_t xed3_operand_get_df32(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.df32;
@@ -1588,14 +1468,6 @@ static XED_INLINE xed_bits_t xed3_operand_get_df32(const xed_decoded_inst_t* d)
 static XED_INLINE void xed3_operand_set_df32(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.df32 = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_vexx_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexx_op;
-}
-static XED_INLINE void xed3_operand_set_vexx_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexx_op = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_realmode(const xed_decoded_inst_t* d)
 {
@@ -1612,6 +1484,14 @@ static XED_INLINE xed_bits_t xed3_operand_get_modrm_byte(const xed_decoded_inst_
 static XED_INLINE void xed3_operand_set_modrm_byte(xed_decoded_inst_t* d, xed_bits_t opval)
 {
     d->_operands.modrm_byte = (xed_uint8_t)opval;
+}
+static XED_INLINE xed_bits_t xed3_operand_get_no_scale_disp8(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.no_scale_disp8;
+}
+static XED_INLINE void xed3_operand_set_no_scale_disp8(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.no_scale_disp8 = (xed_uint8_t)opval;
 }
 static XED_INLINE xed_bits_t xed3_operand_get_mode(const xed_decoded_inst_t* d)
 {
@@ -1637,6 +1517,14 @@ static XED_INLINE void xed3_operand_set_sibscale(xed_decoded_inst_t* d, xed_bits
 {
     d->_operands.sibscale = (xed_uint8_t)opval;
 }
+static XED_INLINE xed_bits_t xed3_operand_get_esrc3(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.esrc3;
+}
+static XED_INLINE void xed3_operand_set_esrc3(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.esrc3 = (xed_uint8_t)opval;
+}
 static XED_INLINE xed_bits_t xed3_operand_get_vl(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.vl;
@@ -1653,6 +1541,14 @@ static XED_INLINE void xed3_operand_set_max_bytes(xed_decoded_inst_t* d, xed_bit
 {
     d->_operands.max_bytes = (xed_uint8_t)opval;
 }
+static XED_INLINE xed_bits_t xed3_operand_get_modep5(const xed_decoded_inst_t* d)
+{
+    return (xed_bits_t)d->_operands.modep5;
+}
+static XED_INLINE void xed3_operand_set_modep5(xed_decoded_inst_t* d, xed_bits_t opval)
+{
+    d->_operands.modep5 = (xed_uint8_t)opval;
+}
 static XED_INLINE xed_bits_t xed3_operand_get_first_f2f3(const xed_decoded_inst_t* d)
 {
     return (xed_bits_t)d->_operands.first_f2f3;
@@ -1661,28 +1557,12 @@ static XED_INLINE void xed3_operand_set_first_f2f3(xed_decoded_inst_t* d, xed_bi
 {
     d->_operands.first_f2f3 = (xed_uint8_t)opval;
 }
-static XED_INLINE xed_bits_t xed3_operand_get_vb2_op(const xed_decoded_inst_t* d)
+static XED_INLINE xed_bits_t xed3_operand_get_vexdest4(const xed_decoded_inst_t* d)
 {
-    return (xed_bits_t)d->_operands.vb2_op;
+    return (xed_bits_t)d->_operands.vexdest4;
 }
-static XED_INLINE void xed3_operand_set_vb2_op(xed_decoded_inst_t* d, xed_bits_t opval)
+static XED_INLINE void xed3_operand_set_vexdest4(xed_decoded_inst_t* d, xed_bits_t opval)
 {
-    d->_operands.vb2_op = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_vexmap_op(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.vexmap_op;
-}
-static XED_INLINE void xed3_operand_set_vexmap_op(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.vexmap_op = (xed_uint8_t)opval;
-}
-static XED_INLINE xed_bits_t xed3_operand_get_modep5(const xed_decoded_inst_t* d)
-{
-    return (xed_bits_t)d->_operands.modep5;
-}
-static XED_INLINE void xed3_operand_set_modep5(xed_decoded_inst_t* d, xed_bits_t opval)
-{
-    d->_operands.modep5 = (xed_uint8_t)opval;
+    d->_operands.vexdest4 = (xed_uint8_t)opval;
 }
 #endif

@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -85,17 +85,21 @@ XED_DLL_EXPORT void xed_encoder_request_clear_rep(xed_encoder_request_t* p);
 /// @name Primary Encode Functions
 //@{
 /// @ingroup ENC
-XED_DLL_EXPORT void  xed_encoder_request_set_effective_operand_width(xed_encoder_request_t* p,
+XED_DLL_EXPORT void
+xed_encoder_request_set_effective_operand_width(xed_encoder_request_t* p,
         xed_uint_t width_bits);
 /// @ingroup ENC
-XED_DLL_EXPORT void  xed_encoder_request_set_effective_address_size(xed_encoder_request_t* p,
+XED_DLL_EXPORT void
+xed_encoder_request_set_effective_address_size(xed_encoder_request_t* p,
         xed_uint_t width_bits);
 /*! @ingroup ENC
- * Set the operands array element indexed by operand to the actual register name reg.
  *
- * @param[in] p                xed_encoder_request_t
- * @param[in] operand          indicates which register operand storage field to use
- * @param[in] reg              the actual register represented (EAX, etc.)  to store.
+ * Set the operands array element indexed by operand to the actual register
+ * name reg.
+ *
+ * @param[in] p            xed_encoder_request_t
+ * @param[in] operand      indicates which register operand storage field to use
+ * @param[in] reg          the actual register represented (EAX, etc.)  to store.
  */
 XED_DLL_EXPORT void xed_encoder_request_set_reg(xed_encoder_request_t* p,
         xed_operand_enum_t operand,
@@ -117,9 +121,10 @@ XED_DLL_EXPORT void xed_encoder_request_set_reg(xed_encoder_request_t* p,
  * @param[in] operand_index    xed_uint_t representing n'th operand position
  * @param[in] name             #xed_operand_enum_t operand name.
  */
-XED_DLL_EXPORT void xed_encoder_request_set_operand_order(xed_encoder_request_t* p,
-        xed_uint_t operand_index,
-        xed_operand_enum_t name);
+XED_DLL_EXPORT void
+xed_encoder_request_set_operand_order(xed_encoder_request_t* p,
+                                      xed_uint_t operand_index,
+                                      xed_operand_enum_t name);
 
 /*! @ingroup ENC
  * Retreive the name of the n'th operand in the operand order.
@@ -128,15 +133,16 @@ XED_DLL_EXPORT void xed_encoder_request_set_operand_order(xed_encoder_request_t*
  * @param[in] operand_index    xed_uint_t representing n'th operand position
  * @return The #xed_operand_enum_t operand name.
  */
-XED_DLL_EXPORT xed_operand_enum_t xed_encoder_request_get_operand_order(xed_encoder_request_t* p,
-        xed_uint_t operand_index);
+XED_DLL_EXPORT xed_operand_enum_t
+xed_encoder_request_get_operand_order(xed_encoder_request_t* p,
+                                      xed_uint_t operand_index);
 
 
 /// @ingroup ENC
 /// Retreive the number of entries in the encoder operand order array
 /// @return The number of entries in the encoder operand order array
-static XED_INLINE
-xed_uint_t xed_encoder_request_operand_order_entries(xed_encoder_request_t* p)
+static XED_INLINE xed_uint_t
+xed_encoder_request_operand_order_entries(xed_encoder_request_t* p)
 {
     return  p->_n_operand_order;
 }
@@ -149,7 +155,8 @@ xed_uint_t xed_encoder_request_operand_order_entries(xed_encoder_request_t* p)
 /// @ingroup ENC
 XED_DLL_EXPORT void xed_encoder_request_set_relbr(xed_encoder_request_t* p);
 /// @ingroup ENC
-XED_DLL_EXPORT void xed_encoder_request_set_branch_displacement(xed_encoder_request_t* p,
+XED_DLL_EXPORT void
+xed_encoder_request_set_branch_displacement(xed_encoder_request_t* p,
         xed_int32_t brdisp,
         xed_uint_t nbytes);
 /// @ingroup ENC
@@ -181,7 +188,8 @@ XED_DLL_EXPORT void xed_encoder_request_set_simm(xed_encoder_request_t* p,
 /// @name Memory
 //@{
 /// @ingroup ENC
-XED_DLL_EXPORT void xed_encoder_request_set_memory_displacement(xed_encoder_request_t* p,
+XED_DLL_EXPORT void
+xed_encoder_request_set_memory_displacement(xed_encoder_request_t* p,
         xed_int64_t memdisp,
         xed_uint_t nbytes);
 
@@ -192,7 +200,8 @@ XED_DLL_EXPORT void xed_encoder_request_set_mem0(xed_encoder_request_t* p);
 /// @ingroup ENC
 XED_DLL_EXPORT void xed_encoder_request_set_mem1(xed_encoder_request_t* p);
 /// @ingroup ENC
-XED_DLL_EXPORT void xed_encoder_request_set_memory_operand_length(xed_encoder_request_t* p,
+XED_DLL_EXPORT void
+xed_encoder_request_set_memory_operand_length(xed_encoder_request_t* p,
         xed_uint_t nbytes);
 /// @ingroup ENC
 XED_DLL_EXPORT void xed_encoder_request_set_seg0(xed_encoder_request_t* p,
@@ -210,15 +219,18 @@ XED_DLL_EXPORT void xed_encoder_request_set_base1(xed_encoder_request_t* p,
 XED_DLL_EXPORT void xed_encoder_request_set_index(xed_encoder_request_t* p,
         xed_reg_enum_t index_reg);
 /// @ingroup ENC
-XED_DLL_EXPORT void xed_encoder_request_set_scale(xed_encoder_request_t* p,
-        xed_uint_t scale);
+XED_DLL_EXPORT void
+xed_encoder_request_set_scale(xed_encoder_request_t* p,
+                              xed_uint_t scale);
 //@}
 
 //////////////////////////////////////////////
 /// @ingroup ENC
-XED_DLL_EXPORT const xed_operand_values_t* xed_encoder_request_operands_const(const xed_encoder_request_t* p);
+XED_DLL_EXPORT const xed_operand_values_t*
+xed_encoder_request_operands_const(const xed_encoder_request_t* p);
 /// @ingroup ENC
-XED_DLL_EXPORT xed_operand_values_t* xed_encoder_request_operands(xed_encoder_request_t* p);
+XED_DLL_EXPORT xed_operand_values_t*
+xed_encoder_request_operands(xed_encoder_request_t* p);
 
 /// @name Initialization
 //@{
@@ -226,11 +238,13 @@ XED_DLL_EXPORT xed_operand_values_t* xed_encoder_request_operands(xed_encoder_re
  * clear the operand order array
  * @param[in] p                xed_encoder_request_t
  */
-XED_DLL_EXPORT void xed_encoder_request_zero_operand_order(xed_encoder_request_t* p);
+XED_DLL_EXPORT void
+xed_encoder_request_zero_operand_order(xed_encoder_request_t* p);
 
 /// @ingroup ENC
-XED_DLL_EXPORT void  xed_encoder_request_zero_set_mode(xed_encoder_request_t* p,
-        const xed_state_t* dstate);
+XED_DLL_EXPORT void
+xed_encoder_request_zero_set_mode(xed_encoder_request_t* p,
+                                  const xed_state_t* dstate);
 /// @ingroup ENC
 XED_DLL_EXPORT void  xed_encoder_request_zero(xed_encoder_request_t* p) ;
 //@}
@@ -238,7 +252,8 @@ XED_DLL_EXPORT void  xed_encoder_request_zero(xed_encoder_request_t* p) ;
 struct xed_decoded_inst_s; //fwd decl
 /// @ingroup ENC
 /// Converts an decoder request to a valid encoder request.
-XED_DLL_EXPORT void  xed_encoder_request_init_from_decode(struct xed_decoded_inst_s* d);
+XED_DLL_EXPORT void
+xed_encoder_request_init_from_decode(struct xed_decoded_inst_s* d);
 
 /// @name String Printing
 //@{

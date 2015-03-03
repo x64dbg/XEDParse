@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -46,6 +46,7 @@ END_LEGAL */
 /// a union of flags bits
 union  xed_flag_set_s
 {
+    xed_uint32_t flat;
     struct
     {
         xed_uint32_t cf: 1; ///< bit 0
@@ -86,7 +87,7 @@ union  xed_flag_set_s
         xed_uint32_t fc2: 1; ///< x87 flag FC2 (not really part of rflags)
         xed_uint32_t fc3: 1; ///< x87 flag FC3 (not really part of rflags)
     } s;
-    xed_uint32_t flat;
+
 };
 
 typedef union xed_flag_set_s xed_flag_set_t;
@@ -157,11 +158,11 @@ xed_flag_action_write_action(xed_flag_action_enum_t a);
 
 ////////////////////////////////////////////////////////////////////////////
 
-#define XED_MAX_FLAG_ACTIONS (XED_MAX_ACTIONS_PER_SIMPLE_FLAG)
 /// @ingroup FLAGS
 /// A collection of #xed_flag_action_t's and unions of read and written flags
 typedef struct  xed_simple_flag_s
 {
+    ///number of flag actions associated with this record
     xed_uint8_t nflags;
 
     xed_uint8_t may_write; /* 1/0,  only using one bit */

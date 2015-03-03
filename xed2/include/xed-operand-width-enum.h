@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -119,6 +119,30 @@ typedef enum
     XED_OPERAND_WIDTH_YQ,
     XED_OPERAND_WIDTH_YPS,
     XED_OPERAND_WIDTH_YPD,
+    XED_OPERAND_WIDTH_VV,
+    XED_OPERAND_WIDTH_ZV,
+    XED_OPERAND_WIDTH_WRD,
+    XED_OPERAND_WIDTH_MSKW,
+    XED_OPERAND_WIDTH_ZMSKW,
+    XED_OPERAND_WIDTH_ZF32,
+    XED_OPERAND_WIDTH_ZF64,
+    XED_OPERAND_WIDTH_ZB,
+    XED_OPERAND_WIDTH_ZW,
+    XED_OPERAND_WIDTH_ZD,
+    XED_OPERAND_WIDTH_ZQ,
+    XED_OPERAND_WIDTH_ZUB,
+    XED_OPERAND_WIDTH_ZUW,
+    XED_OPERAND_WIDTH_ZUD,
+    XED_OPERAND_WIDTH_ZUQ,
+    XED_OPERAND_WIDTH_ZI8,
+    XED_OPERAND_WIDTH_ZI16,
+    XED_OPERAND_WIDTH_ZI32,
+    XED_OPERAND_WIDTH_ZI64,
+    XED_OPERAND_WIDTH_ZU8,
+    XED_OPERAND_WIDTH_ZU16,
+    XED_OPERAND_WIDTH_ZU32,
+    XED_OPERAND_WIDTH_ZU64,
+    XED_OPERAND_WIDTH_ZU128,
     XED_OPERAND_WIDTH_LAST
 } xed_operand_width_enum_t;
 

@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -238,6 +238,22 @@ typedef enum
     XED_REG_XMM13,
     XED_REG_XMM14,
     XED_REG_XMM15,
+    XED_REG_XMM16,
+    XED_REG_XMM17,
+    XED_REG_XMM18,
+    XED_REG_XMM19,
+    XED_REG_XMM20,
+    XED_REG_XMM21,
+    XED_REG_XMM22,
+    XED_REG_XMM23,
+    XED_REG_XMM24,
+    XED_REG_XMM25,
+    XED_REG_XMM26,
+    XED_REG_XMM27,
+    XED_REG_XMM28,
+    XED_REG_XMM29,
+    XED_REG_XMM30,
+    XED_REG_XMM31,
     XED_REG_YMM0,
     XED_REG_YMM1,
     XED_REG_YMM2,
@@ -254,6 +270,54 @@ typedef enum
     XED_REG_YMM13,
     XED_REG_YMM14,
     XED_REG_YMM15,
+    XED_REG_YMM16,
+    XED_REG_YMM17,
+    XED_REG_YMM18,
+    XED_REG_YMM19,
+    XED_REG_YMM20,
+    XED_REG_YMM21,
+    XED_REG_YMM22,
+    XED_REG_YMM23,
+    XED_REG_YMM24,
+    XED_REG_YMM25,
+    XED_REG_YMM26,
+    XED_REG_YMM27,
+    XED_REG_YMM28,
+    XED_REG_YMM29,
+    XED_REG_YMM30,
+    XED_REG_YMM31,
+    XED_REG_ZMM0,
+    XED_REG_ZMM1,
+    XED_REG_ZMM2,
+    XED_REG_ZMM3,
+    XED_REG_ZMM4,
+    XED_REG_ZMM5,
+    XED_REG_ZMM6,
+    XED_REG_ZMM7,
+    XED_REG_ZMM8,
+    XED_REG_ZMM9,
+    XED_REG_ZMM10,
+    XED_REG_ZMM11,
+    XED_REG_ZMM12,
+    XED_REG_ZMM13,
+    XED_REG_ZMM14,
+    XED_REG_ZMM15,
+    XED_REG_ZMM16,
+    XED_REG_ZMM17,
+    XED_REG_ZMM18,
+    XED_REG_ZMM19,
+    XED_REG_ZMM20,
+    XED_REG_ZMM21,
+    XED_REG_ZMM22,
+    XED_REG_ZMM23,
+    XED_REG_ZMM24,
+    XED_REG_ZMM25,
+    XED_REG_ZMM26,
+    XED_REG_ZMM27,
+    XED_REG_ZMM28,
+    XED_REG_ZMM29,
+    XED_REG_ZMM30,
+    XED_REG_ZMM31,
     XED_REG_LAST,
     XED_REG_BNDCFG_FIRST = XED_REG_BNDCFGU, //< PSEUDO
     XED_REG_BNDCFG_LAST = XED_REG_BNDCFGU, //<PSEUDO
@@ -300,9 +364,11 @@ typedef enum
     XED_REG_XCR_FIRST = XED_REG_XCR0, //< PSEUDO
     XED_REG_XCR_LAST = XED_REG_XCR0, //<PSEUDO
     XED_REG_XMM_FIRST = XED_REG_XMM0, //< PSEUDO
-    XED_REG_XMM_LAST = XED_REG_XMM15, //<PSEUDO
+    XED_REG_XMM_LAST = XED_REG_XMM31, //<PSEUDO
     XED_REG_YMM_FIRST = XED_REG_YMM0, //< PSEUDO
-    XED_REG_YMM_LAST = XED_REG_YMM15 //<PSEUDO
+    XED_REG_YMM_LAST = XED_REG_YMM31, //<PSEUDO
+    XED_REG_ZMM_FIRST = XED_REG_ZMM0, //< PSEUDO
+    XED_REG_ZMM_LAST = XED_REG_ZMM31 //<PSEUDO
 } xed_reg_enum_t;
 
 /// This converts strings to #xed_reg_enum_t types.

@@ -1,7 +1,7 @@
 /*BEGIN_LEGAL
 Intel Open Source License
 
-Copyright (c) 2002-2014 Intel Corporation. All rights reserved.
+Copyright (c) 2002-2015 Intel Corporation. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are
@@ -45,16 +45,23 @@ END_LEGAL */
 // DEFINES
 ////////////////////////////////////////////////////////////////////////////
 extern int xed_verbose;
-#if XED_MESSAGES==1
+#if defined(XED_MESSAGES)
 # include <stdio.h>
 extern  FILE* xed_log_file;
+# define XED_EMIT_MESSAGES  (xed_verbose >= 1)
+# define XED_INFO_VERBOSE   (xed_verbose >= 2)
+# define XED_INFO2_VERBOSE  (xed_verbose >= 3)
+# define XED_VERBOSE        (xed_verbose >= 4)
+# define XED_MORE_VERBOSE   (xed_verbose >= 5)
+# define XED_VERY_VERBOSE   (xed_verbose >= 6)
+#else
+# define XED_EMIT_MESSAGES  (0)
+# define XED_INFO_VERBOSE   (0)
+# define XED_INFO2_VERBOSE  (0)
+# define XED_VERBOSE        (0)
+# define XED_MORE_VERBOSE   (0)
+# define XED_VERY_VERBOSE   (0)
 #endif
-#define XED_EMIT_MESSAGES  (XED_MESSAGES==1 && xed_verbose >= 1)
-#define XED_INFO_VERBOSE   (XED_MESSAGES==1 && xed_verbose >= 2)
-#define XED_INFO2_VERBOSE  (XED_MESSAGES==1 && xed_verbose >= 3)
-#define XED_VERBOSE        (XED_MESSAGES==1 && xed_verbose >= 4)
-#define XED_MORE_VERBOSE   (XED_MESSAGES==1 && xed_verbose >= 5)
-#define XED_VERY_VERBOSE   (XED_MESSAGES==1 && xed_verbose >= 6)
 
 #if defined(__GNUC__)
 # define XED_FUNCNAME __func__
@@ -62,7 +69,7 @@ extern  FILE* xed_log_file;
 # define XED_FUNCNAME ""
 #endif
 
-#if XED_MESSAGES==1
+#if defined(XED_MESSAGES)
 #define XED2IMSG(x)                                             \
     do {                                                        \
         if (XED_EMIT_MESSAGES) {                                \
