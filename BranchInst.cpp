@@ -1,16 +1,21 @@
 #include "Translator.h"
 
-bool IsIClassJump(xed_iclass_enum_t IClass)
+bool IClassIsJump(xed_iclass_enum_t IClass)
 {
     return (IClass >= XED_ICLASS_JB && IClass <= XED_ICLASS_JZ) || (IClass >= XED_ICLASS_LOOP && IClass <= XED_ICLASS_LOOPNE);
 }
 
-bool IsIClassCall(xed_iclass_enum_t IClass)
+bool IClassIsCall(xed_iclass_enum_t IClass)
 {
     return (IClass == XED_ICLASS_CALL_FAR || IClass == XED_ICLASS_CALL_NEAR);
 }
 
-int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
+bool IClassIsBranch(xed_iclass_enum_t IClass)
+{
+    return IClassIsJump(IClass) || IClassIsCall(IClass);
+}
+
+int IClassBranchLength(xed_iclass_enum_t IClass, bool Imm8)
 {
     switch(IClass)
     {
@@ -57,7 +62,7 @@ int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8)
 bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
 {
     // Check if it needs to be fixed
-    if(!IsIClassJump(Instruction->Class) && !IsIClassCall(Instruction->Class))
+    if(!IClassIsBranch(Instruction->Class))
         return true;
 
     // Any regular branch instruction can only have one operand max
@@ -91,8 +96,8 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
         //
         // CALL doesn't apply to this
         // IF DELTA <= 127+ShortJumpLen (for Forward Jumps) && DELTA > -127 (for Backward Jumps) THEN [SHORT JUMP]
-        int branchClass = BranchClassBytes(Instruction->Class, (delta <= 127 + 2) && (delta > -127));
-        delta -= branchClass;
+        int branchClass = IClassBranchLength(Instruction->Class, (delta <= 127 + 2) && (delta > -127));
+        delta           -= branchClass;
 
         // Branches can't have a displacement larger than 32 bits
         ULONGLONG masked = delta & 0xFFFFFFFF00000000;

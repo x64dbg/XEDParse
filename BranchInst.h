@@ -1,6 +1,7 @@
 #pragma once
 
-bool IsIClassJump(xed_iclass_enum_t IClass);
-bool IsIClassCall(xed_iclass_enum_t IClass);
-int BranchClassBytes(xed_iclass_enum_t IClass, bool Imm8);
+bool IClassIsJump(xed_iclass_enum_t IClass);
+bool IClassIsCall(xed_iclass_enum_t IClass);
+bool IClassIsBranch(xed_iclass_enum_t IClass);
+int IClassBranchLength(xed_iclass_enum_t IClass, bool Imm8);
 bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction);
