@@ -147,7 +147,7 @@ int InstructionToTokens(const char* Value, char Tokens[8][64])
     bufPtr = GrabInstToken(Tokens[tokenIndex], bufPtr, false);
 
     // See if it was a prefix
-    if(StringToPrefix(Tokens[tokenIndex++]) != PREFIX_NONE)
+    if(PrefixFromString(Tokens[tokenIndex++]) != PREFIX_NONE)
     {
         // There was a prefix but nothing after it
         if(!bufPtr)
@@ -222,7 +222,7 @@ bool ParseInstString(XEDPARSE* Parse, Inst* Instruction)
     }
 
     // Prefix
-    Instruction->Prefix = StringToPrefix(tokens[tokenIndex]);
+    Instruction->Prefix = PrefixFromString(tokens[tokenIndex]);
 
     if(Instruction->Prefix != PREFIX_NONE)
         tokenIndex++;

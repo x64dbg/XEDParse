@@ -15,7 +15,7 @@ xed_encoder_operand_t OperandToXed(InstOperand* Operand)
 
     // Handle special cases for certain memory operations
     // Examples: FXSAVE [], FLDENV []
-    int bitsize = (Operand->Size == SIZE_UNSET) ? Operand->BitSize : opsizetobits(Operand->Size);
+    int bitsize = (Operand->Size == SIZE_UNSET) ? Operand->BitSize : OpsizeToBits(Operand->Size);
 
     // Use the high level encoder interface
     switch(Operand->Type)
@@ -47,7 +47,7 @@ xed_encoder_operand_t OperandToXed(InstOperand* Operand)
         if(Operand->Mem.Disp)
         {
             o.u.mem.disp.displacement       = Operand->Mem.DispVal;
-            o.u.mem.disp.displacement_width = opsizetobits(Operand->Mem.DispWidth);
+            o.u.mem.disp.displacement_width = OpsizeToBits(Operand->Mem.DispWidth);
         }
 
         return o;

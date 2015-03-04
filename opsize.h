@@ -47,13 +47,13 @@ static OpsizeEntry OpsizeEntryTable[] =
     { "UNSET",      SIZE_UNSET,     1,  8   },
 };
 
-unsigned int opsizetobits(OPSIZE opsize);
-int opsizetoint(OPSIZE opsize);
-OPSIZE bitstoopsize(int bits);
-OPSIZE inttoopsize(int opsize);
-int opsizetoeosz(OPSIZE Value);
+int OpsizeToBits(OPSIZE opsize);
+int OpsizeToInt(OPSIZE opsize);
+OPSIZE OpsizeFromBits(int bits);
+OPSIZE OpsizeFromInt(int opsize);
+int OpsizeToEosz(OPSIZE Value);
 
-OPSIZE StringToOpsize(const char* Value);
+OPSIZE OpsizeFromString(const char* Value);
 const char* OpsizeToString(OPSIZE Size);
 
-OPSIZE ValueToOpsize(LONGLONG Value);
+OPSIZE OpsizeFromValue(LONGLONG Value);

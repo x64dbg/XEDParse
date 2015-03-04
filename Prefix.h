@@ -9,4 +9,4 @@ enum PREFIX
 };
 
 const char* PrefixToString(PREFIX prefix);
-PREFIX StringToPrefix(const char* Value);
+PREFIX PrefixFromString(const char* Value);

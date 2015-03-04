@@ -15,7 +15,7 @@ const char* PrefixToString(PREFIX prefix)
     return "";
 }
 
-PREFIX StringToPrefix(const char* Value)
+PREFIX PrefixFromString(const char* Value)
 {
     if(!_stricmp(Value, "lock"))
         return PREFIX_LOCK;

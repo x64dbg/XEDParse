@@ -1,21 +1,21 @@
 #include "Translator.h"
 
-unsigned int opsizetobits(OPSIZE opsize)
+int OpsizeToBits(OPSIZE opsize)
 {
     return OpsizeEntryTable[opsize].Bits;
 }
 
-int opsizetoint(OPSIZE opsize)
+int OpsizeToInt(OPSIZE opsize)
 {
     return OpsizeEntryTable[opsize].Bytes;
 }
 
-OPSIZE bitstoopsize(int bits)
+OPSIZE OpsizeFromBits(int bits)
 {
-    return inttoopsize(bits / 8);
+    return OpsizeFromInt(bits / 8);
 }
 
-OPSIZE inttoopsize(int opsize)
+OPSIZE OpsizeFromInt(int opsize)
 {
     switch(opsize)
     {
@@ -42,7 +42,7 @@ OPSIZE inttoopsize(int opsize)
     return SIZE_UNSET;
 }
 
-int opsizetoeosz(OPSIZE Value)
+int OpsizeToEosz(OPSIZE Value)
 {
     // OPSIZE to XED's effective operand size
     switch(Value)
@@ -60,7 +60,7 @@ int opsizetoeosz(OPSIZE Value)
     return 0;
 }
 
-OPSIZE StringToOpsize(const char* Value)
+OPSIZE OpsizeFromString(const char* Value)
 {
     for(int i = 0; i < ARRAYSIZE(OpsizeEntryTable); i++)
     {
@@ -76,10 +76,10 @@ const char* OpsizeToString(OPSIZE Size)
     return OpsizeEntryTable[Size].Name;
 }
 
-OPSIZE ValueToOpsize(LONGLONG Value)
+OPSIZE OpsizeFromValue(LONGLONG Value)
 {
     int sign    = xed_shortest_width_signed(Value, 0xFF);
     int unsign  = xed_shortest_width_unsigned(Value, 0xFF);
 
-    return inttoopsize(min(sign, unsign));
+    return OpsizeFromInt(min(sign, unsign));
 }

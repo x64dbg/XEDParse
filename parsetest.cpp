@@ -41,7 +41,7 @@ void OperandToString(char* Buffer, InstOperand* Operand)
                 base,
                 scale,
                 Operand->Mem.DispVal,
-                opsizetobits(Operand->Mem.DispWidth));
+                OpsizeToBits(Operand->Mem.DispWidth));
     }
     break;
 

@@ -6,7 +6,7 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
     // Displacement = name or number
     // Base         = register
     REG registerVal = getregister(Value);
-    ULONGLONG disp = 0;
+    ULONGLONG disp  = 0;
 
     if(registerVal != REG_INVALID)
     {
@@ -27,16 +27,16 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
     {
         // It's the displacement
         //
-        // Displacement is either /8, /32, /64
+        // Displacement is either /8, /32, or /64
         // 5h = 101b
         Operand->Mem.Disp    = true;
         Operand->Mem.DispVal = disp;
         bool sign            = (Value[0] == '-');
 
         if(sign)
-            Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_signed(disp, 0x5));
+            Operand->Mem.DispWidth = OpsizeFromInt(xed_shortest_width_signed(disp, 0x5));
         else
-            Operand->Mem.DispWidth = inttoopsize(xed_shortest_width_unsigned(disp, 0x5));
+            Operand->Mem.DispWidth = OpsizeFromInt(xed_shortest_width_unsigned(disp, 0x5));
 
         Operand->Mem.DispWidth = PromoteImmediateWidth(sign, disp, Operand->Mem.DispWidth);
     }
@@ -49,7 +49,7 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
 void SetMemoryIndexOrScale(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
 {
     // Index = register
-    // Scale = 1, 2, 4, 8
+    // Scale = 1, 2, 4, or 8
     REG registerVal = getregister(Value);
     ULONGLONG scale = 0;
 
@@ -73,14 +73,15 @@ void SetMemoryIndexOrScale(XEDPARSE* Parse, const char* Value, InstOperand* Oper
 
 bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
 {
-    char prefix[64];
-    char calc[64];
-
     // Copy the prefix into a buffer
+    char prefix[64];
+
     strcpy(prefix, Value);
     *strchr(prefix, '[') = '\0';
 
     // Copy the calculation into a buffer (strrchr is intentional)
+    char calc[64];
+
     strcpy(calc, strrchr(Value, '[') + 1);
     *strchr(calc, ']') = '\0';
 
@@ -113,7 +114,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
         }
 
         // Determine the prefix size
-        Operand->Size = StringToOpsize(prefix);
+        Operand->Size = OpsizeFromString(prefix);
 
         // If the size is UNSET and there's still chars left in the string,
         // it is an invalid identifier
@@ -124,7 +125,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
         }
 
         // Update the effective operand size for XED
-        Operand->XedEOSZ = opsizetoeosz(Operand->Size);
+        Operand->XedEOSZ = OpsizeToEosz(Operand->Size);
     }
 
     // Begin determining the calculation
@@ -136,10 +137,11 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     }
 
     char temp[32];
-    char* base = temp;
+    char* ptr    = calc;
+    char* base   = temp;
     bool mulFlag = false;
 
-    for(char* ptr = calc;; ptr++)
+    for(;; ptr++)
     {
         *base = '\0';
 
@@ -225,8 +227,10 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
             }
         }
     }
-    else if(!Operand->Mem.Base && Operand->Mem.Index && Operand->Mem.Scale)  // MOV EAX, [ECX*8]
+    else if(!Operand->Mem.Base && Operand->Mem.Index && Operand->Mem.Scale)
     {
+        // Handle when only an index register and scale are set
+        // Ex: MOV EAX, [ECX * 8]
         Operand->Mem.Disp      = true;
         Operand->Mem.DispVal   = 0;
         Operand->Mem.DispWidth = SIZE_DWORD;

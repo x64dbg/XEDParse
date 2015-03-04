@@ -13,9 +13,9 @@ int ResizeOperandImmediate(InstOperand* Operand, xed_iclass_enum_t IClass, int F
     // but check if it can be supported
     if(FixedSize < LargestSize)
     {
-        OPSIZE bitSize = bitstoopsize(FixedSize);
+        OPSIZE bitSize = OpsizeFromBits(FixedSize);
         OPSIZE newSize = PromoteImmediateWidth(Operand->Imm.Signed, Operand->Imm.imm, bitSize);
-        int newBits    = opsizetobits(newSize);
+        int newBits    = OpsizeToBits(newSize);
 
         // The newer size might exceed LargestSize, so limit it
         return min(newBits, LargestSize);
@@ -38,7 +38,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
     {
         // Find the smallest instruction imm size that fits the input
         // Set an arbitrarily high value for fixedSize
-        int targetSize  = opsizetobits(Operand->Size);
+        int targetSize  = OpsizeToBits(Operand->Size);
         int largestSize = 0;
         int fixedSize   = INT_MAX;
 
@@ -65,7 +65,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
         }
 
         fixedSize     = ResizeOperandImmediate(Operand, IClass, fixedSize, largestSize);
-        Operand->Size = bitstoopsize(fixedSize);
+        Operand->Size = OpsizeFromBits(fixedSize);
         return true;
     }
     break;
@@ -99,7 +99,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             unsigned int size = xed_operand_width_bits(op, Operand->XedEOSZ);
 
             // Is it a non-standard operand size?
-            if(size > opsizetobits(SIZE_ZMMWORD) || memoryOperandSize > opsizetobits(SIZE_ZMMWORD))
+            if(size > OpsizeToBits(SIZE_ZMMWORD) || memoryOperandSize > OpsizeToBits(SIZE_ZMMWORD))
                 memoryOperandCount = 0;
 
             memoryOperandCount++;
@@ -113,7 +113,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             return false;
         }
 
-        Operand->Size    = bitstoopsize(memoryOperandSize);
+        Operand->Size    = OpsizeFromBits(memoryOperandSize);
         Operand->BitSize = memoryOperandSize;
         return true;
     }
@@ -138,7 +138,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
         // INSTRUCTION REG, IMM
         case OPERAND_IMM:
         {
-            int targetSize  = opsizetobits(Operands[1].Size);
+            int targetSize  = OpsizeToBits(Operands[1].Size);
             int largestSize = 0;
             int fixedSize   = INT_MAX;
 
@@ -152,7 +152,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 if(!xed_operand_template_is_register(xedOp[0]))
                     continue;
 
-                if(xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ) != opsizetobits(Operands[0].Size))
+                if(xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ) != OpsizeToBits(Operands[0].Size))
                     continue;
 
                 // Check compatible immediate types
@@ -174,7 +174,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
             }
 
             fixedSize        = ResizeOperandImmediate(&Operands[1], IClass, fixedSize, largestSize);
-            Operands[1].Size = bitstoopsize(fixedSize);
+            Operands[1].Size = OpsizeFromBits(fixedSize);
             return true;
         }
         break;
@@ -198,7 +198,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 if(!xed_operand_template_is_register(xedOp[0]))
                     continue;
 
-                if(xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ) != opsizetobits(Operands[0].Size))
+                if(xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ) != OpsizeToBits(Operands[0].Size))
                     continue;
 
                 // Check compatible memory types
@@ -221,7 +221,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
-            Operands[1].Size    = bitstoopsize(memoryOperandSize);
+            Operands[1].Size    = OpsizeFromBits(memoryOperandSize);
             Operands[1].BitSize = memoryOperandSize;
             return true;
         }
@@ -250,7 +250,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 if(!xed_operand_template_is_register(xedOp[1]))
                     continue;
 
-                if(xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ) != opsizetobits(Operands[1].Size))
+                if(xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ) != OpsizeToBits(Operands[1].Size))
                     continue;
 
                 // Check compatible memory types
@@ -273,7 +273,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
-            Operands[0].Size    = bitstoopsize(memoryOperandSize);
+            Operands[0].Size    = OpsizeFromBits(memoryOperandSize);
             Operands[0].BitSize = memoryOperandSize;
             return true;
         }
@@ -290,7 +290,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
             int memoryOperandCount = 0;
             int memoryOperandSize  = 0;
 
-            int targetSize  = opsizetobits(Operands[1].Size);
+            int targetSize  = OpsizeToBits(Operands[1].Size);
             int fixedSize   = INT_MAX;
 
             for(int i = 0; i < type->InstructionCount; i++)
@@ -325,7 +325,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 else
                 {
                     // Size was set, skip anything smaller
-                    if(memSize < (int)opsizetobits(Operands[0].Size))
+                    if(memSize < (int)OpsizeToBits(Operands[0].Size))
                         continue;
                 }
 
@@ -343,7 +343,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                     return false;
                 }
 
-                Operands[0].Size    = bitstoopsize(memoryOperandSize);
+                Operands[0].Size    = OpsizeFromBits(memoryOperandSize);
                 Operands[0].BitSize = memoryOperandSize;
             }
 
@@ -353,8 +353,8 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
-            fixedSize           = ResizeOperandImmediate(&Operands[1], IClass, fixedSize, opsizetobits(Operands[0].Size));
-            Operands[1].Size    = bitstoopsize(fixedSize);
+            fixedSize           = ResizeOperandImmediate(&Operands[1], IClass, fixedSize, OpsizeToBits(Operands[0].Size));
+            Operands[1].Size    = OpsizeFromBits(fixedSize);
             Operands[1].BitSize = fixedSize;
             return true;
         }

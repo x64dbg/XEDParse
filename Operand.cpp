@@ -7,7 +7,7 @@ OPSIZE PromoteImmediateWidth(bool Signed, ULONGLONG Value, OPSIZE Width)
     //
     // half     = pow(2, n_bits - 1);
     // minhalf  = -half;
-    xed_uint64_t maxhalf = 1 << (opsizetobits(Width) - 1);
+    xed_uint64_t maxhalf = 1 << (OpsizeToBits(Width) - 1);
     xed_uint64_t minhalf = 1 + (~maxhalf);
 
     // Values that are <  -(MAX_VALUE/2) need to use the next biggest size
@@ -88,7 +88,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
         Operand->Type       = OPERAND_REG;
         Operand->Segment    = SEG_INVALID;
         Operand->Size       = getregsize(registerVal);
-        Operand->XedEOSZ    = opsizetoeosz(Operand->Size);
+        Operand->XedEOSZ    = OpsizeToEosz(Operand->Size);
         Operand->Reg.Reg    = registerVal;
         Operand->Reg.XedReg = regtoxed(registerVal);
     }
@@ -117,7 +117,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
         // Immediate
         Operand->Type       = OPERAND_IMM;
         Operand->Segment    = SEG_INVALID;
-        Operand->Size       = ValueToOpsize(immVal);
+        Operand->Size       = OpsizeFromValue(immVal);
         Operand->XedEOSZ    = EOSZ_64_32(Parse->x64);
         Operand->Imm.Signed = (Value[0] == '-');
         Operand->Imm.imm    = immVal;

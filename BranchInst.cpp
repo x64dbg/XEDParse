@@ -63,7 +63,7 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
     // Any regular branch instruction can only have one operand max
     if(Instruction->OperandCount > 1)
     {
-        // Far jumps are the exception: jmp far 0xea231000, 0x1000
+        // Far jumps are the exception: JMP FAR 0xEA231000, 0x1000
         if(Instruction->OperandCount == 2 && Instruction->Far)
         {
             Instruction->OperandCount           = 2;
@@ -96,6 +96,7 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
 
         // Branches can't have a displacement larger than 32 bits
         ULONGLONG masked = delta & 0xFFFFFFFF00000000;
+
         if(masked != 0 && masked != 0xFFFFFFFF00000000)
         {
             strcpy(Parse->error, "Branch displacement is too large");
