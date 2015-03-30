@@ -13,7 +13,7 @@ enum OPERAND_TYPE
 struct InstOperand
 {
     OPERAND_TYPE    Type;
-    SEG             Segment;
+    REG             Segment;
     MEMSIZE         Size;
     int             BitSize;
     int             XedEOSZ;

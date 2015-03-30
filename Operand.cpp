@@ -86,7 +86,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
     {
         // Register
         Operand->Type       = OPERAND_REG;
-        Operand->Segment    = SEG_INVALID;
+        Operand->Segment    = REG_INVALID;
         Operand->Size       = getregsize(registerVal);
         Operand->XedEOSZ    = OpsizeToEosz(Operand->Size);
         Operand->Reg.Reg    = registerVal;
@@ -96,7 +96,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
     {
         // Memory
         Operand->Type       = OPERAND_MEM;
-        Operand->Segment    = SEG_INVALID;
+        Operand->Segment    = REG_INVALID;
         Operand->Size       = SIZE_UNSET;
         Operand->XedEOSZ    = EOSZ_64_32(Parse->x64);
 
@@ -106,7 +106,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
     {
         // Segment selector operand
         Operand->Type       = OPERAND_SEGSEL;
-        Operand->Segment    = SEG_INVALID;
+        Operand->Segment    = REG_INVALID;
         Operand->Size       = SIZE_DWORD;
         Operand->XedEOSZ    = EOSZ_64_32(Parse->x64);
 
@@ -116,7 +116,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
     {
         // Immediate
         Operand->Type       = OPERAND_IMM;
-        Operand->Segment    = SEG_INVALID;
+        Operand->Segment    = REG_INVALID;
         Operand->Size       = OpsizeFromValue(immVal);
         Operand->XedEOSZ    = EOSZ_64_32(Parse->x64);
         Operand->Imm.Signed = (Value[0] == '-');

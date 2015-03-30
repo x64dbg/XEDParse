@@ -246,17 +246,6 @@ enum REG
     REG_SS,
 };
 
-enum SEG
-{
-    SEG_INVALID,
-    SEG_CS,
-    SEG_DS,
-    SEG_ES,
-    SEG_FS,
-    SEG_GS,
-    SEG_SS,
-};
-
 struct RegEntry
 {
     const char*      Name;
@@ -503,26 +492,6 @@ static RegEntry RegisterIds[] =
     { "ss", REG_SS, XED_REG_SS, SIZE_WORD },
 };
 
-struct SegEntry
-{
-    const char*      Name;
-    SEG             SegId;
-    xed_reg_enum_t  XedId;
-    REGSIZE         Size;
-};
-
-static SegEntry SegmentIds[] =
-{
-    /* Segment registers (same as RegisterIds) */
-    { "sinval", SEG_INVALID, XED_REG_INVALID, SIZE_WORD },
-    { "cs", SEG_CS, XED_REG_CS, SIZE_WORD },
-    { "ds", SEG_DS, XED_REG_DS, SIZE_WORD },
-    { "es", SEG_ES, XED_REG_ES, SIZE_WORD },
-    { "fs", SEG_FS, XED_REG_FS, SIZE_WORD },
-    { "gs", SEG_GS, XED_REG_GS, SIZE_WORD },
-    { "ss", SEG_SS, XED_REG_SS, SIZE_WORD },
-};
-
 bool IsControlRegister(REG reg);
 bool IsDebugRegister(REG reg);
 bool IsSegmentRegister(REG reg);
@@ -530,13 +499,9 @@ bool IsXmmRegister(REG reg);
 bool IsYmmRegister(REG reg);
 
 REG getregister(const char* text);
-SEG getsegment(const char* text);
 
 xed_reg_enum_t regtoxed(REG reg);
-xed_reg_enum_t segtoxed(SEG seg);
 
 const char* regtostring(REG reg);
-const char* segtostring(SEG seg);
 
 REGSIZE getregsize(REG reg);
-REGSIZE getsegsize(SEG seg);

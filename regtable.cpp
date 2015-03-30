@@ -22,7 +22,12 @@ bool IsXmmRegister(REG reg)
 
 bool IsYmmRegister(REG reg)
 {
-    return (reg >= REG_YMM0 && reg <= REG_YMM15);
+    return (reg >= REG_YMM0 && reg <= REG_YMM31);
+}
+
+bool IsZmmRegister(REG reg)
+{
+    return (reg >= REG_ZMM0 && reg <= REG_ZMM31);
 }
 
 REG getregister(const char* text)
@@ -38,27 +43,9 @@ REG getregister(const char* text)
     return REG_INVALID;
 }
 
-SEG getsegment(const char* text)
-{
-    // Loop through each entry looking for the segment register
-    for(int i = 0; i < ARRAYSIZE(SegmentIds); i++)
-    {
-        if(!_stricmp(SegmentIds[i].Name, text))
-            return SegmentIds[i].SegId;
-    }
-
-    // No segment found or it was not implemented
-    return SEG_INVALID;
-}
-
 xed_reg_enum_t regtoxed(REG reg)
 {
     return RegisterIds[reg].XedId;
-}
-
-xed_reg_enum_t segtoxed(SEG seg)
-{
-    return SegmentIds[seg].XedId;
 }
 
 const char* regtostring(REG reg)
@@ -66,17 +53,7 @@ const char* regtostring(REG reg)
     return RegisterIds[reg].Name;
 }
 
-const char* segtostring(SEG seg)
-{
-    return SegmentIds[seg].Name;
-}
-
 REGSIZE getregsize(REG reg)
 {
     return RegisterIds[reg].Size;
-}
-
-REGSIZE getsegsize(SEG seg)
-{
-    return SegmentIds[seg].Size;
 }

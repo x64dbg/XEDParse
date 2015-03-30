@@ -399,7 +399,7 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
     // Special case for LEA (Segments can't be used here)
     //
     if(Instruction->Class == XED_ICLASS_LEA)
-        Instruction->Operands[1].Segment = SEG_INVALID;
+        Instruction->Operands[1].Segment = REG_INVALID;
 
     //
     // Special case for XCHG (Flip memory operand)

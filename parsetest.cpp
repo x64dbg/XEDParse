@@ -37,7 +37,7 @@ void OperandToString(char* Buffer, InstOperand* Operand)
 
         sprintf(Buffer, "%s ptr %s:[%s%s0x%llX/%d]",
                 OpsizeToString(Operand->Size),
-                segtostring(Operand->Segment),
+                regtostring(Operand->Segment),
                 base,
                 scale,
                 Operand->Mem.DispVal,

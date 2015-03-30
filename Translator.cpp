@@ -32,7 +32,7 @@ xed_encoder_operand_t OperandToXed(InstOperand* Operand)
     case OPERAND_MEM:
         // See xed_mem_bisd @ xed-encoder-hl.h
         o.type      = XED_ENCODER_OPERAND_TYPE_MEM;
-        o.u.mem.seg = segtoxed(Operand->Segment);
+        o.u.mem.seg = regtoxed(Operand->Segment);
         o.width     = bitsize;
 
         if(Operand->Mem.Base)

@@ -101,9 +101,9 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
             char* segPtr = (prefix + (len - 2));
 
             // See if the segment is actually valid
-            SEG segment = getsegment(segPtr);
+            REG segment = getregister(segPtr);
 
-            if(segment != SEG_INVALID)
+            if(segment != REG_INVALID)
             {
                 // Set the new segment
                 Operand->Segment = segment;
@@ -179,19 +179,19 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     }
 
     // Fix up the operand segment
-    if(Operand->Segment == SEG_INVALID)
+    if(Operand->Segment == REG_INVALID)
     {
         if(Operand->Mem.BaseVal == REG_ESP && !Parse->x64)
         {
             // If the segment isn't set and the base is ESP,
             // set the segment to SS
-            Operand->Segment = SEG_SS;
+            Operand->Segment = REG_SS;
         }
         else
         {
             // Default to DS
             // 64-bit doesn't have true segments except for FS/GS/DS
-            Operand->Segment = SEG_DS;
+            Operand->Segment = REG_DS;
         }
     }
 
@@ -203,7 +203,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
 
         // Use RIP-relative addressing per default when on x64 and when the displacement is set
         // and when the segment is SEG_DS
-        if(Parse->x64 && Operand->Segment == SEG_DS)
+        if(Parse->x64 && Operand->Segment == REG_DS)
         {
             if(!Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
             {
