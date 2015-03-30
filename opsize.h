@@ -33,6 +33,7 @@ struct OpsizeEntry
 
 static OpsizeEntry OpsizeEntryTable[] =
 {
+    { "UNSET",      SIZE_UNSET,     1,  8   },
     { "byte",       SIZE_BYTE,      1,  8   },
     { "word",       SIZE_WORD,      2,  16  },
     { "dword",      SIZE_DWORD,     4,  32  },
@@ -44,7 +45,6 @@ static OpsizeEntry OpsizeEntryTable[] =
     { "ymmword",    SIZE_YMMWORD,   32, 256 },
     { "zmmword",    SIZE_ZMMWORD,   64, 512 },
     { "32_64",      SIZE_32_64,     0,  0   },
-    { "UNSET",      SIZE_UNSET,     1,  8   },
 };
 
 int OpsizeToBits(OPSIZE opsize);

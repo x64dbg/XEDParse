@@ -32,14 +32,14 @@ xed_encoder_operand_t OperandToXed(InstOperand* Operand)
     case OPERAND_MEM:
         // See xed_mem_bisd @ xed-encoder-hl.h
         o.type      = XED_ENCODER_OPERAND_TYPE_MEM;
-        o.u.mem.seg = regtoxed(Operand->Segment);
+        o.u.mem.seg = RegToXed(Operand->Segment);
         o.width     = bitsize;
 
         if(Operand->Mem.Base)
-            o.u.mem.base = regtoxed(Operand->Mem.BaseVal);
+            o.u.mem.base = RegToXed(Operand->Mem.BaseVal);
 
         if(Operand->Mem.Index)
-            o.u.mem.index = regtoxed(Operand->Mem.IndexVal);
+            o.u.mem.index = RegToXed(Operand->Mem.IndexVal);
 
         if(Operand->Mem.Scale)
             o.u.mem.scale = Operand->Mem.ScaleVal;

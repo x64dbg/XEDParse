@@ -5,7 +5,7 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
 {
     // Displacement = name or number
     // Base         = register
-    REG registerVal = getregister(Value);
+    REG registerVal = RegFromString(Value);
     ULONGLONG disp  = 0;
 
     if(registerVal != REG_INVALID)
@@ -50,7 +50,7 @@ void SetMemoryIndexOrScale(XEDPARSE* Parse, const char* Value, InstOperand* Oper
 {
     // Index = register
     // Scale = 1, 2, 4, or 8
-    REG registerVal = getregister(Value);
+    REG registerVal = RegFromString(Value);
     ULONGLONG scale = 0;
 
     if(registerVal != REG_INVALID)
@@ -101,7 +101,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
             char* segPtr = (prefix + (len - 2));
 
             // See if the segment is actually valid
-            REG segment = getregister(segPtr);
+            REG segment = RegFromString(segPtr);
 
             if(segment != REG_INVALID)
             {

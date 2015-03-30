@@ -293,5 +293,8 @@
     <ClInclude Include="MemOperand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RegisterTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

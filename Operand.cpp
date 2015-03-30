@@ -79,7 +79,7 @@ bool HandleSegSelectorOperand(XEDPARSE* Parse, const char* Value, InstOperand* O
 
 bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
 {
-    REG registerVal     = getregister(Value);
+    REG registerVal     = RegFromString(Value);
     ULONGLONG immVal    = 0;
 
     if(registerVal != REG_INVALID)
@@ -87,10 +87,10 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
         // Register
         Operand->Type       = OPERAND_REG;
         Operand->Segment    = REG_INVALID;
-        Operand->Size       = getregsize(registerVal);
+        Operand->Size       = RegGetSize(registerVal);
         Operand->XedEOSZ    = OpsizeToEosz(Operand->Size);
         Operand->Reg.Reg    = registerVal;
-        Operand->Reg.XedReg = regtoxed(registerVal);
+        Operand->Reg.XedReg = RegToXed(registerVal);
     }
     else if(strchr(Value, '[') && strchr(Value, ']'))
     {

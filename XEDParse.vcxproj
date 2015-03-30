@@ -33,6 +33,7 @@
     <ClInclude Include="Parser.h" />
     <ClInclude Include="ParseTest.h" />
     <ClInclude Include="Prefix.h" />
+    <ClInclude Include="RegisterTable.h" />
     <ClInclude Include="RegTable.h" />
     <ClInclude Include="Translator.h" />
     <ClInclude Include="Validator.h" />

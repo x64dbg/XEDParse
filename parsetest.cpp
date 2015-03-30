@@ -11,7 +11,7 @@ void OperandToString(char* Buffer, InstOperand* Operand)
         break;
 
     case OPERAND_REG:
-        strcpy(Buffer, regtostring(Operand->Reg.Reg));
+        strcpy(Buffer, RegToString(Operand->Reg.Reg));
         break;
 
     case OPERAND_IMM:
@@ -30,14 +30,14 @@ void OperandToString(char* Buffer, InstOperand* Operand)
         memset(scale, 0, sizeof(scale));
 
         if(Operand->Mem.Base)
-            sprintf(base, "%s + ", regtostring(Operand->Mem.BaseVal));
+            sprintf(base, "%s + ", RegToString(Operand->Mem.BaseVal));
 
         if(Operand->Mem.Index)
-            sprintf(scale, "%s * %d + ", regtostring(Operand->Mem.IndexVal), Operand->Mem.ScaleVal);
+            sprintf(scale, "%s * %d + ", RegToString(Operand->Mem.IndexVal), Operand->Mem.ScaleVal);
 
         sprintf(Buffer, "%s ptr %s:[%s%s0x%llX/%d]",
                 OpsizeToString(Operand->Size),
-                regtostring(Operand->Segment),
+                RegToString(Operand->Segment),
                 base,
                 scale,
                 Operand->Mem.DispVal,

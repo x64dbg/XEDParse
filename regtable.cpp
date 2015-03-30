@@ -30,7 +30,7 @@ bool IsZmmRegister(REG reg)
     return (reg >= REG_ZMM0 && reg <= REG_ZMM31);
 }
 
-REG getregister(const char* text)
+REG RegFromString(const char* text)
 {
     // Loop through each entry looking for the register
     for(int i = 0; i < ARRAYSIZE(RegisterIds); i++)
@@ -43,17 +43,17 @@ REG getregister(const char* text)
     return REG_INVALID;
 }
 
-xed_reg_enum_t regtoxed(REG reg)
+xed_reg_enum_t RegToXed(REG reg)
 {
     return RegisterIds[reg].XedId;
 }
 
-const char* regtostring(REG reg)
+const char* RegToString(REG reg)
 {
     return RegisterIds[reg].Name;
 }
 
-REGSIZE getregsize(REG reg)
+REGSIZE RegGetSize(REG reg)
 {
     return RegisterIds[reg].Size;
 }
