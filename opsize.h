@@ -6,6 +6,7 @@
 
 enum OPSIZE
 {
+    SIZE_UNSET,     // No size set
     SIZE_BYTE,      // Byte
     SIZE_WORD,      // Word
     SIZE_DWORD,     // Double Word
@@ -17,7 +18,6 @@ enum OPSIZE
     SIZE_YMMWORD,   // YMM Word
     SIZE_ZMMWORD,   // ZMM Word
     SIZE_32_64,     // 32 or 64 bits
-    SIZE_UNSET,     // No size set
 };
 
 typedef OPSIZE MEMSIZE;
@@ -33,6 +33,7 @@ struct OpsizeEntry
 
 static OpsizeEntry OpsizeEntryTable[] =
 {
+    // See: enum OPSIZE
     { "UNSET",      SIZE_UNSET,     1,  8   },
     { "byte",       SIZE_BYTE,      1,  8   },
     { "word",       SIZE_WORD,      2,  16  },
