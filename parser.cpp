@@ -199,12 +199,14 @@ bool ParseInstString(XEDPARSE* Parse, Inst* Instruction)
     strcpy(buf, Parse->instr);
 
     // Find near/far modifiers
-    Instruction->Near = StrDel(buf, "near", ' ');
-    Instruction->Far  = StrDel(buf, "far", ' ');
+    Instruction->Near  = StrDel(buf, "near", ' ');
+    Instruction->Far   = StrDel(buf, "far", ' ');
+    Instruction->Short = StrDel(buf, "short", ' ');
 
-    if(Instruction->Near && Instruction->Far)
+    // Limit the number of possible modifiers to 1 at a time
+    if(((int)Instruction->Near + (int)Instruction->Far + (int)Instruction->Short) > 1)
     {
-        strcpy(Parse->error, "Instruction cannot be near and far");
+        strcpy(Parse->error, "Instruction cannot have multiple modifiers (short, near, far)");
         return false;
     }
 

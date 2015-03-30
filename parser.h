@@ -16,6 +16,7 @@ struct Inst
 
     bool                Near;
     bool                Far;
+    bool                Short;
 
     int                 OperandCount;
     InstOperand         Operands[4];

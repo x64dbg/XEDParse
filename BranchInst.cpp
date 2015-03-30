@@ -63,7 +63,16 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
 {
     // Check if it needs to be fixed
     if(!IClassIsBranch(Instruction->Class))
+    {
+        // Instructions that are not a branch cannot have the 'short' modifier
+        if(Instruction->Short)
+        {
+            strcpy(Parse->error, "Unsupported 'short' modifier for instruction");
+            return false;
+        }
+
         return true;
+    }
 
     // Any regular branch instruction can only have one operand max
     if(Instruction->OperandCount > 1)
@@ -94,10 +103,18 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
         //
         // Modify the delta so that it accommodates for the instruction size
         //
-        // CALL doesn't apply to this
+        // IF NOT CALL
+        // and
         // IF DELTA <= 127+ShortJumpLen (for Forward Jumps) && DELTA > -127 (for Backward Jumps) THEN [SHORT JUMP]
         int branchClass = IClassBranchLength(Instruction->Class, (delta <= 127 + 2) && (delta > -127));
         delta           -= branchClass;
+
+        // Short jumps are required to be 2 bytes or less
+        if(Instruction->Short && branchClass > 2)
+        {
+            strcpy(Parse->error, "Unable to use a short jump for displacement");
+            return false;
+        }
 
         // Branches can't have a displacement larger than 32 bits
         ULONGLONG masked = delta & 0xFFFFFFFF00000000;
@@ -119,7 +136,7 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
     }
     else if(operand->Type == OPERAND_MEM)
     {
-        // JMP/CALL FARWORD PTR
+        // JMP/CALL FARWORD PTR[]
         if(Instruction->Class == XED_ICLASS_CALL_FAR || Instruction->Class == XED_ICLASS_JMP_FAR)
         {
             if(operand->Size != SIZE_UNSET && operand->Size != SIZE_FWORD)

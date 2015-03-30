@@ -13,7 +13,7 @@ xed_encoder_operand_t OperandToXed(InstOperand* Operand)
     xed_encoder_operand_t o;
     memset(&o, 0, sizeof(xed_encoder_operand_t));
 
-    // Handle special cases for certain memory operations
+    // Handle special memory operations with non-standard sizes
     // Examples: FXSAVE [], FLDENV []
     int bitsize = (Operand->Size == SIZE_UNSET) ? Operand->BitSize : OpsizeToBits(Operand->Size);
 
