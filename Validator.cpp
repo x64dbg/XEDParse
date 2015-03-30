@@ -453,7 +453,8 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
         if(Instruction->Class == XED_ICLASS_OUT)
         {
             // Example: OUT 0xE9, EAX
-            return true;
+            if(Instruction->Operands[1].Type == OPERAND_REG)
+                return true;
         }
 
         strcpy(Parse->error, "Operand immediate mismatch");
