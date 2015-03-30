@@ -19,7 +19,7 @@
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="ParseTest.cpp" />
     <ClCompile Include="Prefix.cpp" />
-    <ClCompile Include="RegTable.cpp" />
+    <ClCompile Include="Register.cpp" />
     <ClCompile Include="Validator.cpp" />
     <ClCompile Include="Translator.cpp" />
     <ClCompile Include="XEDParse.cpp" />
@@ -34,7 +34,7 @@
     <ClInclude Include="ParseTest.h" />
     <ClInclude Include="Prefix.h" />
     <ClInclude Include="RegisterTable.h" />
-    <ClInclude Include="RegTable.h" />
+    <ClInclude Include="Register.h" />
     <ClInclude Include="Translator.h" />
     <ClInclude Include="Validator.h" />
     <ClInclude Include="xed2\include\xed-address-width-enum.h" />

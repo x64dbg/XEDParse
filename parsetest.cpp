@@ -1,5 +1,5 @@
 #include "ParseTest.h"
-#include "RegTable.h"
+#include "Register.h"
 #include <stdio.h>
 
 void OperandToString(char* Buffer, InstOperand* Operand)
@@ -16,9 +16,9 @@ void OperandToString(char* Buffer, InstOperand* Operand)
 
     case OPERAND_IMM:
         if(Operand->Imm.Signed && Operand->Imm.simm < 0)
-            sprintf(Buffer, "-0x%llx", (~Operand->Imm.imm) + 1);
+            sprintf(Buffer, "-0x%llX", (~Operand->Imm.imm) + 1);
         else
-            sprintf(Buffer, "0x%llx", Operand->Imm.imm);
+            sprintf(Buffer, "0x%llX", Operand->Imm.imm);
         break;
 
     case OPERAND_MEM:
@@ -46,7 +46,7 @@ void OperandToString(char* Buffer, InstOperand* Operand)
     break;
 
     case OPERAND_SEGSEL:
-        sprintf(Buffer, "0x%llx", Operand->Sel.Offset);
+        sprintf(Buffer, "0x%llX", Operand->Sel.Offset);
         break;
     }
 }

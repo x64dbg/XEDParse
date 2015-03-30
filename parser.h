@@ -3,7 +3,7 @@
 
 #include "XEDParse.h"
 #include "OpSize.h"
-#include "RegTable.h"
+#include "Register.h"
 #include "Operand.h"
 #include "MemOperand.h"
 #include "Prefix.h"
