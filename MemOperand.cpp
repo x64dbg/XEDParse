@@ -88,6 +88,9 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     // Gather any information & check the prefix validity
     if(strlen(prefix) > 0)
     {
+        // Prefix must be lowercase
+        _strlwr(prefix);
+
         // Remove 'ptr' if it exists and remove colons
         StrDel(prefix, "ptr", '\0');
         StrDel(prefix, ":", '\0');
@@ -124,7 +127,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
             return false;
         }
 
-        // Update the effective operand size for XED
+        // Update the effective operand size for Xed
         Operand->XedEOSZ = OpsizeToEosz(Operand->Size);
     }
 

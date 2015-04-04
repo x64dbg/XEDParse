@@ -4,19 +4,23 @@
 
 static bool isinbase(char ch, const char* base)
 {
-    int len = strlen(base);
-    for(int i = 0; i < len; i++)
-        if(tolower(ch) == tolower(base[i]))
+    for(; *base != '\0'; base++)
+    {
+        if(tolower(ch) == tolower(*base))
             return true;
+    }
+
     return false;
 }
 
 static bool isbase(const char* text, const char* base)
 {
-    int len = strlen(text);
-    for(int i = 0; i < len; i++)
-        if(!isinbase(text[i], base))
+    for(; *text != '\0'; text++)
+    {
+        if(!isinbase(*text, base))
             return false;
+    }
+
     return true;
 }
 
@@ -26,6 +30,7 @@ bool valfromstring(const char* text, ULONGLONG* value)
     if(text[0] == '\0')
         return false;
 
+    // Set the negative flag if needed
     bool negative = false;
 
     if(text[0] == '-')
@@ -35,7 +40,7 @@ bool valfromstring(const char* text, ULONGLONG* value)
     }
 
     // Hexadecimal with '0x' prefix
-    if(text[0] == '0' && text[1] == 'x')
+    if(text[0] == '0' && tolower(text[1]) == 'x')
         text++;
 
     switch(tolower(*text++))
@@ -235,7 +240,7 @@ bool ParseInstString(XEDPARSE* Parse, Inst* Instruction)
     // Operands
     for(int i = tokenIndex; i < tokenCount; i++)
     {
-        if(!AnalyzeOperand(Parse, _strlwr(tokens[i]), &Instruction->Operands[Instruction->OperandCount++]))
+        if(!AnalyzeOperand(Parse, tokens[i], &Instruction->Operands[Instruction->OperandCount++]))
             return false;
     }
 

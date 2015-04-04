@@ -36,8 +36,8 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
 
     case OPERAND_IMM:
     {
-        // Find the smallest instruction imm size that fits the input
-        // Set an arbitrarily high value for fixedSize
+        // Find the smallest instruction imm size that fits the input.
+        // Set an arbitrarily high value for fixedSize.
         int targetSize  = OpsizeToBits(Operand->Size);
         int largestSize = 0;
         int fixedSize   = INT_MAX;
@@ -95,7 +95,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
 
             // Some instructions (FSAVE, FXSAVE, FNSAVE) have different bit
             // sizes such as 752 or 864. Anything > 512 bits is skipped after
-            // the first entry
+            // the first entry.
             unsigned int size = xed_operand_width_bits(op, Operand->XedEOSZ);
 
             // Is it a non-standard operand size?

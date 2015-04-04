@@ -64,7 +64,7 @@ char* InstMnemonicToXed(XEDPARSE* Parse, Inst* Instruction)
             strcpy(Instruction->Mnemonic, "ret_far");
     }
 
-    // 32-bit and 64-bit save all registers handling
+    // 32-bit and 64-bit save flags handling
     if(!_stricmp(Instruction->Mnemonic, "pushf") || !_stricmp(Instruction->Mnemonic, "popf"))
     {
         if(Parse->x64)

@@ -20,8 +20,8 @@ void XEDParseSetMode(bool X64, xed_state_t* State)
 
 XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDParse)
 {
-    // Initialize all of the tables only once
-    // This is mainly independent to everything else
+    // Initialize all of the tables only once.
+    // This is mainly independent to everything else.
     LookupTableInit();
 
     Inst instruction;

@@ -77,6 +77,7 @@ void InstructionToString(char* Buffer, Inst* Instruction)
             strcat(Buffer, ", ");
         }
 
+        // Remove the final trailing comma
         *strrchr(Buffer, ',') = '\0';
     }
 }
