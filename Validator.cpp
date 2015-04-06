@@ -82,7 +82,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
         // This defaults to the full size, which is all 32 or all 64 bits,
         // if the instruction has multiple memory types -> AMBIGUOUS
         unsigned int memoryOperandCount = 0;
-        unsigned int memoryOperandSize  = 0;
+        int memoryOperandSize  = 0;
 
         for(int i = 0; i < type->InstructionCount; i++)
         {
@@ -96,7 +96,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             // Some instructions (FSAVE, FXSAVE, FNSAVE) have different bit
             // sizes such as 752 or 864. Anything > 512 bits is skipped after
             // the first entry.
-            unsigned int size = xed_operand_width_bits(op, Operand->XedEOSZ);
+            int size = (int)xed_operand_width_bits(op, Operand->XedEOSZ);
 
             // Is it a non-standard operand size?
             if(size > OpsizeToBits(SIZE_ZMMWORD) || memoryOperandSize > OpsizeToBits(SIZE_ZMMWORD))
