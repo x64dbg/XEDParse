@@ -6,7 +6,7 @@ IClassType XedInstLookupTable[XED_ICLASS_LAST];
 int ResizeOperandImmediate(InstOperand* Operand, xed_iclass_enum_t IClass, int FixedSize, int LargestSize)
 {
     // Branches are skipped here
-    if(!IClassIsBranch(IClass))
+    if(IClassIsBranch(IClass))
         return FixedSize;
 
     // The value size might need adjustment if the sign bit is set,
