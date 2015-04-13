@@ -4,11 +4,15 @@
 #include <windows.h>
 
 //XEDParse defines
+#ifdef XEDPARSE_STATIC
+#define XEDPARSE_EXPORT
+#else
 #ifdef XEDPARSE_BUILD
 #define XEDPARSE_EXPORT __declspec(dllexport)
 #else
 #define XEDPARSE_EXPORT __declspec(dllimport)
 #endif //XEDPARSE_BUILD
+#endif
 
 #define XEDPARSE_CALL //calling convention
 
