@@ -40,25 +40,25 @@ struct InstOperand
 
         struct
         {
-            bool Disp;
-            xed_uint64_t DispVal;
-            MEMSIZE DispWidth;
-            bool DispRipRelative;
+            bool            Disp;
+            xed_uint64_t    DispVal;
+            MEMSIZE         DispWidth;
+            bool            DispRipRelative;
 
-            bool Scale;
-            xed_uint64_t ScaleVal;
+            bool            Scale;
+            xed_uint64_t    ScaleVal;
 
-            bool Base;
-            REG BaseVal;
+            bool    Base;
+            REG     BaseVal;
 
-            bool Index;
-            REG IndexVal;
+            bool    Index;
+            REG     IndexVal;
         } Mem;
 
         struct
         {
-            USHORT Selector;
-            xed_int_t Offset;
+            USHORT      Selector;
+            xed_int_t   Offset;
         } Sel;
     };
 };
