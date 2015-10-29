@@ -24,6 +24,23 @@ static bool isbase(const char* text, const char* base)
     return true;
 }
 
+static bool parsebinary(const char* text, ULONGLONG* value)
+{
+    if(!isbase(text, "01"))
+        return false;
+    ULONGLONG result = 0;
+    int len = strlen(text);
+    for(int i = 0; i < len; i++)
+    {
+        if(i)
+            result <<= 1;
+        if(text[i] == '1')
+            result++;
+    }
+    *value = result;
+    return true;
+}
+
 bool valfromstring(const char* text, ULONGLONG* value)
 {
     // Check if the string has any actual characters
@@ -58,11 +75,18 @@ bool valfromstring(const char* text, ULONGLONG* value)
         break;
 
     case '.':
-        // Decimal
-        if(!isbase(text, "0123456789"))
-            return false;
+        if(tolower(text[0]) == 'b')  // Binary
+        {
+            if(!parsebinary(text + 1, value))
+                return false;
+        }
+        else // Decimal
+        {
+            if(!isbase(text, "0123456789"))
+                return false;
 
-        sscanf(text, "%llu", value);
+            sscanf(text, "%llu", value);
+        }
         break;
 
     case 'o':
@@ -71,14 +95,6 @@ bool valfromstring(const char* text, ULONGLONG* value)
             return false;
 
         sscanf(text, "%llo", value);
-        break;
-
-    case 'b':
-        // Binary
-        if(!isbase(text, "01"))
-            return false;
-
-        return false;
         break;
     }
 
