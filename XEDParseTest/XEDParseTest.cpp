@@ -1,9 +1,51 @@
 #include <windows.h>
 #include <stdio.h>
 #include "..\XEDParse.h"
+#include "Tests.h"
+
+void RunTests()
+{
+    for(int i = 0; i < ARRAYSIZE(XED_AllTests); i++)
+    {
+        XEDPARSE parse;
+        memset(&parse, 0, sizeof(parse));
+
+        // Copy input parameters
+        parse.x64 = XED_AllTests[i].LongMode;
+        parse.cip = XED_AllTests[i].Ip;
+
+        strcpy_s(parse.instr, XED_AllTests[i].Asm);
+
+        // Try to assemble the string
+        if(XEDParseAssemble(&parse) != XEDPARSE_OK)
+        {
+            printf("Test failed on index %i: %s\n", i, parse.error);
+            continue;
+        }
+
+        // Compare output data with the predetermined struct
+        // Compare output length
+        if(parse.dest_size != XED_AllTests[i].DataLen)
+        {
+            printf("Test failed on index %i: Output hex length mismatch (%d != %d)\n", i, parse.dest_size, XED_AllTests[i].DataLen);
+            continue;
+        }
+
+        // Compare pure data
+        if(memcmp(XED_AllTests[i].Data, parse.dest, parse.dest_size) != 0)
+        {
+            printf("Test failed on index %i: Output hex mismatch\n", i);
+            continue;
+        }
+
+        printf("Test %i passed\n", i);
+    }
+}
 
 int main(int argc, char* argv[])
 {
+    RunTests();
+
     if(argc < 2) //no arguments provided
     {
         XEDPARSE parse;
