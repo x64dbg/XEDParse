@@ -18,40 +18,40 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="XEDParse.cpp">
+    <ClCompile Include="src\BranchInst.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MnemonicTable.cpp">
+    <ClCompile Include="src\MemOperand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Operand.cpp">
+    <ClCompile Include="src\MnemonicTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Prefix.cpp">
+    <ClCompile Include="src\Operand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Validator.cpp">
+    <ClCompile Include="src\OpSize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Translator.cpp">
+    <ClCompile Include="src\Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Parser.cpp">
+    <ClCompile Include="src\ParseTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OpSize.cpp">
+    <ClCompile Include="src\Prefix.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ParseTest.cpp">
+    <ClCompile Include="src\Register.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BranchInst.cpp">
+    <ClCompile Include="src\Validator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MemOperand.cpp">
+    <ClCompile Include="src\Translator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Register.cpp">
+    <ClCompile Include="src\XEDParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,40 +260,40 @@
     <ClInclude Include="xed2\include\xed-version.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
-    <ClInclude Include="MnemonicTable.h">
+    <ClInclude Include="src\BranchInst.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Operand.h">
+    <ClInclude Include="src\MemOperand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Prefix.h">
+    <ClInclude Include="src\MnemonicTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Validator.h">
+    <ClInclude Include="src\Operand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Translator.h">
+    <ClInclude Include="src\OpSize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Parser.h">
+    <ClInclude Include="src\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OpSize.h">
+    <ClInclude Include="src\ParseTest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParseTest.h">
+    <ClInclude Include="src\Prefix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BranchInst.h">
+    <ClInclude Include="src\RegisterTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MemOperand.h">
+    <ClInclude Include="src\Register.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RegisterTable.h">
+    <ClInclude Include="src\Translator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Register.h">
+    <ClInclude Include="src\Validator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
