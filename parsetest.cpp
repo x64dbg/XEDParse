@@ -53,7 +53,7 @@ void OperandToString(char* Buffer, InstOperand* Operand)
 
 void InstructionToString(char* Buffer, Inst* Instruction)
 {
-    // Add the prefix is there was one
+    // Add the prefix if there was one
     if(Instruction->Prefix != PREFIX_NONE)
     {
         strcat(Buffer, PrefixToString(Instruction->Prefix));

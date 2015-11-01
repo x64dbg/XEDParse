@@ -2,12 +2,12 @@
 
 enum OPERAND_TYPE
 {
-    OPERAND_INVALID,
-    OPERAND_REG,
-    OPERAND_IMM,
-    // OPERAND_IMM1,
-    OPERAND_MEM,
-    OPERAND_SEGSEL,
+    OPERAND_INVALID,    // Bad operand
+    OPERAND_REG,        // Register
+    OPERAND_IMM,        // Immediate
+    // OPERAND_IMM1,    // Immediate #2 (See ENTER instruction)
+    OPERAND_MEM,        // Memory
+    OPERAND_SEGSEL,     // Segment selector (Immediate)
 };
 
 struct InstOperand
@@ -48,11 +48,11 @@ struct InstOperand
             bool            Scale;
             xed_uint64_t    ScaleVal;
 
-            bool    Base;
-            REG     BaseVal;
+            bool            Base;
+            REG             BaseVal;
 
-            bool    Index;
-            REG     IndexVal;
+            bool            Index;
+            REG             IndexVal;
         } Mem;
 
         struct

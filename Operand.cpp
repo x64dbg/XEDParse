@@ -38,7 +38,7 @@ bool HandleSegSelectorOperand(XEDPARSE* Parse, const char* Value, InstOperand* O
     // Copy the offset
     strcpy(offset, strrchr(Value, ':') + 1);
 
-    // The segment selector is always a number
+    // The segment selector is always a number from 0 to 0xFFFF
     if(strlen(selector) > 0)
     {
         ULONGLONG selVal = 0;
