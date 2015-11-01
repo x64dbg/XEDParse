@@ -8,6 +8,8 @@ struct MnemonicEntry
 
 static MnemonicEntry XedMnemonicTable[] =
 {
+    { "sal", "shl" },
+
     { "retf",   "ret_far"   },
     { "ret",    "ret_near"  },
     { "retn",   "ret_near"  },
@@ -40,6 +42,7 @@ static MnemonicEntry XedMnemonicTable[] =
     { "loopz",  "loope"     },
     { "loopnz", "loopne"    },
 
+    { "movabs",     "mov"       },
     { "cmovae",     "cmovb"     },
     { "cmovc",      "cmovb"     },
     { "cmovnc",     "cmovnb"    },
@@ -70,8 +73,6 @@ static MnemonicEntry XedMnemonicTable[] =
     { "setng",  "setle"     },
     { "setg",   "setnle"    },
 
-    { "outs",   "out"   },
-    { "ins",    "in"    },
     { "wait",   "mwait" },
     { "xlatb",  "xlat"  },
     { "icebp",  "int1"  },
@@ -87,6 +88,7 @@ static MnemonicEntry XedMnemonicTable[] =
     //{ "sysret",   "sysret_amd"    },
 };
 
-const char* MnemonicToXed(const char* Mnemonic);
-char* InstMnemonicToXed(XEDPARSE* Parse, Inst* Instruction);
-void InstMnemonicExplicitFix(Inst* Instruction, const char* Base, const char* Normal);
+const char* MnemonicToXed(char* Mnemonic);
+const char* MnemonicInstToXed(XEDPARSE* Parse, Inst* Instruction);
+void MnemonicTranslateXmmAlias(char* Mnemonic, REG RegisterType);
+void MnemonicTranslateImplicitAlias(char* Mnemonic, Inst* Instruction);

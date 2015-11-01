@@ -1,17 +1,23 @@
 #include "Translator.h"
 
-const char* MnemonicToXed(const char* Mnemonic)
+const char* MnemonicToXed(char* Mnemonic)
 {
+    // Translate known aliases for certain instructions
     for(int i = 0; i < ARRAYSIZE(XedMnemonicTable); i++)
     {
-        if(!_stricmp(Mnemonic, XedMnemonicTable[i].Name))
-            return XedMnemonicTable[i].XedName;
+        if(_stricmp(Mnemonic, XedMnemonicTable[i].Name) != 0)
+            continue;
+
+        // Found an alias, copy the real mnemonic now
+        strcpy(Mnemonic, XedMnemonicTable[i].XedName);
+        break;
     }
 
-    return Mnemonic;
+    // Force uppercase, which is usually required by Xed
+    return _strupr(Mnemonic);
 }
 
-char* InstMnemonicToXed(XEDPARSE* Parse, Inst* Instruction)
+const char* MnemonicInstToXed(XEDPARSE* Parse, Inst* Instruction)
 {
     char* mnemonic = Instruction->Mnemonic;
 
@@ -19,7 +25,6 @@ char* InstMnemonicToXed(XEDPARSE* Parse, Inst* Instruction)
     TODO:
 
     BEXTR_XOP
-    PEXTRW_SSE4
     PREFETCH_EXCLUSIVE
     PREFETCH_RESERVED
     */
@@ -39,17 +44,7 @@ char* InstMnemonicToXed(XEDPARSE* Parse, Inst* Instruction)
                     strcpy(mnemonic, "mov_dr");
             }
 
-            if(!_stricmp(mnemonic, "cmpsd"))
-            {
-                if(IsXmmRegister(operand->Reg.Reg))
-                    strcpy(mnemonic, "cmpsd_xmm");
-            }
-
-            if(!_stricmp(mnemonic, "movsd"))
-            {
-                if(IsXmmRegister(operand->Reg.Reg))
-                    strcpy(mnemonic, "movsd_xmm");
-            }
+            MnemonicTranslateXmmAlias(mnemonic, operand->Reg.Reg);
         }
     }
 
@@ -73,86 +68,55 @@ char* InstMnemonicToXed(XEDPARSE* Parse, Inst* Instruction)
             strcat(Instruction->Mnemonic, "d");
     }
 
-    // Hidden/non-explicit operands (Ex: (MOVS/CMPS)(B/W/D/Q) case)
-    // Exclude instructions with XXXXX_XMM
-    if(!strstr(mnemonic, "xmm"))
-    {
-        InstMnemonicExplicitFix(Instruction, "movs", "mov");
-        InstMnemonicExplicitFix(Instruction, "cmps", "cmp");
-        InstMnemonicExplicitFix(Instruction, "scas", "sca");
-        InstMnemonicExplicitFix(Instruction, "stos", "sto");
-        InstMnemonicExplicitFix(Instruction, "lods", "lod");
-        InstMnemonicExplicitFix(Instruction, "outs", "out");
-    }
+    // Implicit aliases
+    MnemonicTranslateImplicitAlias(mnemonic, Instruction);
 
-    // Convert the name to XED format
-    strcpy(mnemonic, MnemonicToXed(mnemonic));
-
-    return _strupr(mnemonic);
+    // Done, onvert the name to Xed format
+    return MnemonicToXed(mnemonic);
 }
 
-void InstMnemonicExplicitFix(Inst* Instruction, const char* Base, const char* Normal)
+void MnemonicTranslateXmmAlias(char* Mnemonic, REG RegisterType)
 {
-    char* mnemonic  = Instruction->Mnemonic;
-    size_t len      = strlen(Base);
-
-    if(_strnicmp(mnemonic, Base, len))
-        return;
-
-    switch(mnemonic[len])
+    // Handles instructions where there is a regular GP register, or
+    // where an XMM register can be used
+    if(IsXmmRegister(RegisterType))
     {
-    case 'b':
-    case 'w':
-    case 'd':
-    case 'q':
-    case 'B':
-    case 'W':
-    case 'D':
-    case 'Q':
-        Instruction->OperandCount = 0;
-        break;
+        if(!_stricmp(Mnemonic, "cmpsd"))            // CMPSD
+            strcpy(Mnemonic, "cmpsd_xmm");
+        else if(!_stricmp(Mnemonic, "movsd"))       // MOVSD
+            strcpy(Mnemonic, "movsd_xmm");
+        else if(!_stricmp(Mnemonic, "pextrw"))      // PEXTRW
+            strcpy(Mnemonic, "pextrw_sse4");
     }
+}
 
-    // Case
-    if(mnemonic[len] == '\0')
+void MnemonicTranslateImplicitAlias(char* Mnemonic, Inst* Instruction)
+{
+    // Certain string instructions need to override the instruction size
+    if(!_strnicmp(Mnemonic, "ins", 3) ||
+            !_strnicmp(Mnemonic, "outs", 4) ||
+            !_strnicmp(Mnemonic, "movs", 4) ||
+            !_strnicmp(Mnemonic, "cmps", 4) ||
+            !_strnicmp(Mnemonic, "stos", 4) ||
+            !_strnicmp(Mnemonic, "lods", 4) ||
+            !_strnicmp(Mnemonic, "scas", 4))
     {
-        // Default to the "normal" instruction
-        strcpy(mnemonic, Normal);
+        // Avoid SSE conflicts
+        if(strchr(Mnemonic, '_'))
+            return;
 
-        // See if there's any explicit operands to convert
-        if(Instruction->OperandCount > 0)
+        if(Instruction->OperandCount >= 2)
         {
-            InstOperand* operands = Instruction->Operands;
+            // Determine size from the MEMORY operand REGISTER
+            auto operands = Instruction->Operands;
 
-            if(operands[0].Type == OPERAND_MEM && operands[1].Type == OPERAND_MEM)
-            {
-                if((operands[0].Mem.BaseVal == REG_RDI && operands[1].Mem.BaseVal == REG_RSI) ||
-                        (operands[0].Mem.BaseVal == REG_EDI && operands[1].Mem.BaseVal == REG_ESI) ||
-                        (operands[0].Mem.BaseVal == REG_RSI && operands[1].Mem.BaseVal == REG_RDI) ||
-                        (operands[0].Mem.BaseVal == REG_ESI && operands[1].Mem.BaseVal == REG_EDI))
-                {
-                    // Apply the base
-                    strcpy(mnemonic, Base);
-
-                    switch(operands[0].Size)
-                    {
-                    case SIZE_BYTE:
-                        strcat(mnemonic, "b");
-                        break;
-                    case SIZE_WORD:
-                        strcat(mnemonic, "w");
-                        break;
-                    case SIZE_DWORD:
-                        strcat(mnemonic, "d");
-                        break;
-                    case SIZE_QWORD:
-                        strcat(mnemonic, "q");
-                        break;
-                    }
-
-                    Instruction->OperandCount = 0;
-                }
-            }
+            if(operands[0].Type == OPERAND_MEM)
+                Instruction->AddressSizeOverride = OpsizeToBits(RegGetSize(operands[0].Mem.BaseVal));
+            else if(operands[1].Type == OPERAND_MEM)
+                Instruction->AddressSizeOverride = OpsizeToBits(RegGetSize(operands[1].Mem.BaseVal));
         }
+
+        // All operands are implicit/hidden
+        Instruction->OperandCount = 0;
     }
 }

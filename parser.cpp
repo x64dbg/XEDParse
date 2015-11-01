@@ -88,10 +88,34 @@ bool valfromstring(const char* text, ULONGLONG* value)
     return true;
 }
 
+char* stristr(const char* haystack, const char* needle)
+{
+    // Case insensitive strstr
+    // http://stackoverflow.com/questions/27303062/strstr-function-like-that-ignores-upper-or-lower-case
+    do
+    {
+        const char* h = haystack;
+        const char* n = needle;
+        while(tolower((unsigned char)*h) == tolower((unsigned char)*n) && *n)
+        {
+            h++;
+            n++;
+        }
+
+        if(*n == 0)
+            return (char*)haystack;
+
+    }
+    while(*haystack++);
+
+    // Not found
+    return nullptr;
+}
+
 bool StrDel(char* Source, char* Needle, char StopAt)
 {
     // Find the location in the string first
-    char* loc = strstr(Source, Needle);
+    char* loc = stristr(Source, Needle);
 
     if(!loc)
         return false;
@@ -251,7 +275,7 @@ bool ParseInstString(XEDPARSE* Parse, Inst* Instruction)
     }
 
     // Verify and translate the mnemonic this time
-    Instruction->Class = str2xed_iclass_enum_t(InstMnemonicToXed(Parse, Instruction));
+    Instruction->Class = str2xed_iclass_enum_t(MnemonicInstToXed(Parse, Instruction));
 
     if(Instruction->Class == XED_ICLASS_INVALID)
     {

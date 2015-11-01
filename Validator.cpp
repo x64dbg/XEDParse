@@ -396,13 +396,13 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
         return ResizeSingleOperand(Parse, Instruction->Class, &Instruction->Operands[0]);
 
     //
-    // Special case for LEA (Segments can't be used here)
+    // Special case for LEA (Segments can't be used)
     //
     if(Instruction->Class == XED_ICLASS_LEA)
         Instruction->Operands[1].Segment = REG_INVALID;
 
     //
-    // Special case for XCHG (Flip memory operand)
+    // Special case for XCHG (Swap memory operand)
     //
     if(Instruction->Class == XED_ICLASS_XCHG)
     {
@@ -424,21 +424,21 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
     case OPERAND_REG:
         switch(Instruction->Operands[1].Type)
         {
+        // INSTRUCTION REG, REG
         case OPERAND_REG:
-            // INSTRUCTION REG, REG
             // Registers can't be resized
             return true;
 
+        // INSTRUCTION REG, IMM
         case OPERAND_IMM:
-            // INSTRUCTION REG, IMM
             // Use EOSZ of the register
             Instruction->Operands[1].XedEOSZ = Instruction->Operands[0].XedEOSZ;
 
             return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 
+        // INSTRUCTION REG, []
         case OPERAND_MEM:
-            // INSTRUCTION REG, []
-            // Don't care if it is already set
+            // Don't care if size is already set
             if(Instruction->Operands[1].Size != SIZE_UNSET)
                 return true;
 
@@ -453,7 +453,8 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
         if(Instruction->Class == XED_ICLASS_OUT)
         {
             // Example: OUT 0xE9, EAX
-            if(Instruction->Operands[1].Type == OPERAND_REG)
+            if(Instruction->Operands[1].Type == OPERAND_REG &&
+                    Instruction->Operands[0].Imm.imm < 0x100)
                 return true;
         }
 
@@ -463,9 +464,9 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
     case OPERAND_MEM:
         switch(Instruction->Operands[1].Type)
         {
+        // INSTRUCTION [], REG
         case OPERAND_REG:
-            // INSTRUCTION [], REG
-            // Don't care if it is already set
+            // Don't care if size is already set
             if(Instruction->Operands[0].Size != SIZE_UNSET)
                 return true;
 
@@ -474,15 +475,15 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
 
             return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 
+        // INSTRUCTION [], IMM
         case OPERAND_IMM:
-            // INSTRUCTION [], IMM
             // Use EOSZ of the memory
             Instruction->Operands[1].XedEOSZ = Instruction->Operands[0].XedEOSZ;
 
             return ResizeDoubleOperands(Parse, Instruction->Class, Instruction->Operands);
 
+        // INSTRUCTION [], []
         case OPERAND_MEM:
-            // INSTRUCTION [], []
             strcpy(Parse->error, "Too many memory references");
             return false;
         }

@@ -50,7 +50,7 @@ int IClassBranchLength(xed_iclass_enum_t IClass, bool Imm8)
         return 5;
 
     // Both FAR CALL and FAR JMP are 7 bytes long, however
-    // displacement doesn't apply to them
+    // displacement doesn't apply
     case XED_ICLASS_JMP_FAR:
     case XED_ICLASS_CALL_FAR:
         return 0;

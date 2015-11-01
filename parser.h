@@ -14,12 +14,15 @@ struct Inst
     xed_iclass_enum_t   Class;
     PREFIX              Prefix;
 
-    bool                Near;
-    bool                Far;
-    bool                Short;
+    bool                Near;           // Near modifier  (near ptr)
+    bool                Far;            // Far modifier   (far ptr)
+    bool                Short;          // Short modifier (jump short)
 
     int                 OperandCount;
     InstOperand         Operands[4];
+
+    int AddressSizeOverride;            // Required to be set for instructions with implicit suppressed memops.
+    // 0, 16, 32, or 64
 };
 
 #include "MnemonicTable.h"

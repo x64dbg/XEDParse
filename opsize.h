@@ -34,7 +34,7 @@ struct OpsizeEntry
 static OpsizeEntry OpsizeEntryTable[] =
 {
     // See: enum OPSIZE
-    { "UNSET",      SIZE_UNSET,     1,  8   },
+    { "UNSET",      SIZE_UNSET,     0,  0   },
     { "byte",       SIZE_BYTE,      1,  8   },
     { "word",       SIZE_WORD,      2,  16  },
     { "dword",      SIZE_DWORD,     4,  32  },
