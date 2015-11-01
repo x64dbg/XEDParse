@@ -92,6 +92,12 @@ void MnemonicTranslateXmmAlias(char* Mnemonic, REG RegisterType)
 
 void MnemonicTranslateImplicitAlias(char* Mnemonic, Inst* Instruction)
 {
+    // Avoid naming conflicts (SSE "_XMM", MOVSX*)
+    if(strchr(Mnemonic, '_') ||
+            strchr(Mnemonic, 'X') ||
+            strchr(Mnemonic, 'x'))
+        return;
+
     // Certain string instructions need to override the instruction size
     if(!_strnicmp(Mnemonic, "ins", 3) ||
             !_strnicmp(Mnemonic, "outs", 4) ||
@@ -101,10 +107,6 @@ void MnemonicTranslateImplicitAlias(char* Mnemonic, Inst* Instruction)
             !_strnicmp(Mnemonic, "lods", 4) ||
             !_strnicmp(Mnemonic, "scas", 4))
     {
-        // Avoid SSE conflicts
-        if(strchr(Mnemonic, '_'))
-            return;
-
         if(Instruction->OperandCount >= 2)
         {
             // Determine size from the MEMORY operand REGISTER

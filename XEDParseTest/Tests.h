@@ -13,7 +13,7 @@ struct XED_TestEntry
 
 static XED_TestEntry XED_AllTests[] =
 {
-    // syntax, address, expected hexcode, input
+    // Syntax, Address, Expected hexcode, Input
     { ENTRY(false, 0x77513BEE, 2, "\xEB\xFE",                   "JMP SHORT 0x77513BEE") },  // 32 Short jump
     { ENTRY(false, 0x77513BEE, 2, "\xEB\x07",                   "JMP SHORT 0x77513BF7") },  // 32 Short jump forward
     { ENTRY(false, 0x77513BEE, 2, "\xEB\xCF",                   "JMP SHORT 0x77513BBF") },  // 32 Short jump backward
@@ -43,6 +43,7 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(false, 0x00405C23, 1, "\xCC",                               "INT3") },
     { ENTRY(false, 0x00405C23, 2, "\xCD\x03",                           "INT 3") },
     { ENTRY(false, 0x00405C23, 2, "\xE7\xE9",                           "OUT 0xE9, EAX") },
+    { ENTRY(false, 0x00405C23, 6, "\x69\xC0\xFF\x01\x00\x00",           "IMUL EAX, EAX, 0x1FF") },
 
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 7FFCAA022104") },                // 64 Short jump
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 7FFCAA022128") },                // 64 Short jump forward
@@ -53,11 +54,15 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(true, 0x000123456789, 6, "\xFF\x25\xFA\xFF\xFF\xFF",    "JMP QWORD[0x123456789]") },                // 64 Long jump ptr with RIP-rel
     { ENTRY(true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF",    "JMP QWORD PTR DS:[7FFCA9FE1A77]") },       // 64 Long jump ptr backward with RIP-rel
 
-    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00", "MOV RAX, 0x1234567890") },
-    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00", "MOVABS RAX, 0x1234567890") },
-    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xa1\x90\x78\x56\x34\x12\x00\x00\x00", "MOV RAX, QWORD PTR DS:[0x1234567890]") },
-    { ENTRY(true, 0x7FFCA9FF1977, 1,    "\xCC",                                     "INT3") },
-    { ENTRY(true, 0x7FFCA9FF1977, 2,    "\xCD\x03",                                 "INT 3") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",     "MOV RAX, 0x1234567890") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",     "MOVABS RAX, 0x1234567890") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xa1\x90\x78\x56\x34\x12\x00\x00\x00",     "MOV RAX, QWORD PTR DS:[0x1234567890]") },
+    { ENTRY(true, 0x7FFCA9FF1977, 1,    "\xCC",                                         "INT3") },
+    { ENTRY(true, 0x7FFCA9FF1977, 2,    "\xCD\x03",                                     "INT 3") },
+    { ENTRY(true, 0x7FFCA9FF1977, 3,    "\x48\x63\xD0",                                 "MOVSXD RDX, EAX") },
+    { ENTRY(true, 0x7FFCA9FF1977, 5,    "\x45\x0F\xBE\x24\x2F",                         "MOVSX R12D, BYTE PTR [R15+RBP*1]") },
+    { ENTRY(true, 0x7FFCA9FF1977, 7,    "\x4D\x69\xED\x10\x01\x00\x00",                 "IMUL R13, R13, 0x110") },
+    { ENTRY(true, 0x7FFCA9FF1977, 11,    "\x48\xC7\x05\xAF\x55\x0F\x00\xFE\xFF\xFF\xFF", "MOV QWORD PTR [RIP+0xF55AF], 0xFFFFFFFFFFFFFFFE") },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py
