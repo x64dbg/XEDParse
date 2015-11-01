@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <stdio.h>
-#include "..\XEDParse.h"
+#include "..\src\XEDParse.h"
 #include "Tests.h"
 
 void RunTests()

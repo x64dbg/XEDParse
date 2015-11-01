@@ -2,7 +2,7 @@
 
 extern "C"
 {
-#include "xed2\include\xed-interface.h"
+#include "..\xed2\include\xed-interface.h"
 }
 
 struct RegEntry

@@ -19,32 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BranchInst.cpp" />
-    <ClCompile Include="MemOperand.cpp" />
-    <ClCompile Include="MnemonicTable.cpp" />
-    <ClCompile Include="Operand.cpp" />
-    <ClCompile Include="OpSize.cpp" />
-    <ClCompile Include="Parser.cpp" />
-    <ClCompile Include="ParseTest.cpp" />
-    <ClCompile Include="Prefix.cpp" />
-    <ClCompile Include="Register.cpp" />
-    <ClCompile Include="Validator.cpp" />
-    <ClCompile Include="Translator.cpp" />
-    <ClCompile Include="XEDParse.cpp" />
+    <ClCompile Include="src\BranchInst.cpp" />
+    <ClCompile Include="src\MemOperand.cpp" />
+    <ClCompile Include="src\MnemonicTable.cpp" />
+    <ClCompile Include="src\Operand.cpp" />
+    <ClCompile Include="src\OpSize.cpp" />
+    <ClCompile Include="src\Parser.cpp" />
+    <ClCompile Include="src\ParseTest.cpp" />
+    <ClCompile Include="src\Prefix.cpp" />
+    <ClCompile Include="src\Register.cpp" />
+    <ClCompile Include="src\Validator.cpp" />
+    <ClCompile Include="src\Translator.cpp" />
+    <ClCompile Include="src\XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BranchInst.h" />
-    <ClInclude Include="MemOperand.h" />
-    <ClInclude Include="MnemonicTable.h" />
-    <ClInclude Include="Operand.h" />
-    <ClInclude Include="OpSize.h" />
-    <ClInclude Include="Parser.h" />
-    <ClInclude Include="ParseTest.h" />
-    <ClInclude Include="Prefix.h" />
-    <ClInclude Include="RegisterTable.h" />
-    <ClInclude Include="Register.h" />
-    <ClInclude Include="Translator.h" />
-    <ClInclude Include="Validator.h" />
+    <ClInclude Include="src\BranchInst.h" />
+    <ClInclude Include="src\MemOperand.h" />
+    <ClInclude Include="src\MnemonicTable.h" />
+    <ClInclude Include="src\Operand.h" />
+    <ClInclude Include="src\OpSize.h" />
+    <ClInclude Include="src\Parser.h" />
+    <ClInclude Include="src\ParseTest.h" />
+    <ClInclude Include="src\Prefix.h" />
+    <ClInclude Include="src\RegisterTable.h" />
+    <ClInclude Include="src\Register.h" />
+    <ClInclude Include="src\Translator.h" />
+    <ClInclude Include="src\Validator.h" />
     <ClInclude Include="xed2\include\xed-address-width-enum.h" />
     <ClInclude Include="xed2\include\xed-agen.h" />
     <ClInclude Include="xed2\include\xed-attribute-enum.h" />
