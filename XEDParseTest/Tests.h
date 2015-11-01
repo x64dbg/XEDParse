@@ -39,6 +39,10 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(false, 0x00405FF9, 7, "\x81\x60\x70\x0D\x00\x00\xF0",       "AND DWORD PTR DS:[EAX+70],F000000D") },
     { ENTRY(false, 0x00405C23, 8, "\xf2\x0f\x11\x0d\x00\x00\x00\x00",   "MOVSD QWORD PTR ds:[0x0],xmm1") },
     { ENTRY(false, 0x00405C23, 7, "\x8B\x04\xCD\x00\x00\x00\x00",       "MOV EAX,[ECX*8]") },
+    { ENTRY(false, 0x00405C23, 1, "\x60",                               "PUSHAD") },
+    { ENTRY(false, 0x00405C23, 1, "\xCC",                               "INT3") },
+    { ENTRY(false, 0x00405C23, 2, "\xCD\x03",                           "INT 3") },
+    { ENTRY(false, 0x00405C23, 2, "\xE7\xE9",                           "OUT 0xE9, EAX") },
 
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 7FFCAA022104") },                // 64 Short jump
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 7FFCAA022128") },                // 64 Short jump forward
@@ -49,9 +53,11 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(true, 0x000123456789, 6, "\xFF\x25\xFA\xFF\xFF\xFF",    "JMP QWORD[0x123456789]") },                // 64 Long jump ptr with RIP-rel
     { ENTRY(true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF",    "JMP QWORD PTR DS:[7FFCA9FE1A77]") },       // 64 Long jump ptr backward with RIP-rel
 
-    { ENTRY(true, 0x7FFCA9FF1977, 10, "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",   "MOV RAX, 0x1234567890") },
-    { ENTRY(true, 0x7FFCA9FF1977, 10, "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",   "MOVABS RAX, 0x1234567890") },
-    { ENTRY(true, 0x7FFCA9FF1977, 10, "\x48\xa1\x90\x78\x56\x34\x12\x00\x00\x00",   "MOV RAX, QWORD PTR DS:[0x1234567890]") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00", "MOV RAX, 0x1234567890") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00", "MOVABS RAX, 0x1234567890") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xa1\x90\x78\x56\x34\x12\x00\x00\x00", "MOV RAX, QWORD PTR DS:[0x1234567890]") },
+    { ENTRY(true, 0x7FFCA9FF1977, 1,    "\xCC",                                     "INT3") },
+    { ENTRY(true, 0x7FFCA9FF1977, 2,    "\xCD\x03",                                 "INT 3") },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py

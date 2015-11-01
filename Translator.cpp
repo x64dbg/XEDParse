@@ -180,25 +180,16 @@ bool Translate(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
     if(!ValidateInstOperands(Parse, Instruction))
         return false;
 
-    // Try encoding with various different effectiveWidth values
+    // Try encoding with various different effective width values
+    // 32-bit
     if(TryEncode(Parse, State, Instruction, 32))
         return true;
 
-    // Fix RIP-relative commands
-    for(int i = 0; i < Instruction->OperandCount; i++)
-    {
-        if(Instruction->Operands[i].Type != OPERAND_MEM)
-            continue;
-
-        if(!Instruction->Operands[i].Mem.DispRipRelative)
-            continue;
-
-        //Instruction->Operands[i].Mem.DispVal--;
-    }
-
+    // 64-bit
     if(Parse->x64 && TryEncode(Parse, State, Instruction, 64))
         return true;
 
+    // 16-bit
     if(TryEncode(Parse, State, Instruction, 16))
         return true;
 
