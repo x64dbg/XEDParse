@@ -193,7 +193,7 @@ bool Translate(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
         if(!Instruction->Operands[i].Mem.DispRipRelative)
             continue;
 
-        Instruction->Operands[i].Mem.DispVal--;
+        //Instruction->Operands[i].Mem.DispVal--;
     }
 
     if(Parse->x64 && TryEncode(Parse, State, Instruction, 64))
