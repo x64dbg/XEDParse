@@ -62,7 +62,7 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(true, 0x7FFCA9FF1977, 3,    "\x48\x63\xD0",                                 "MOVSXD RDX, EAX") },
     { ENTRY(true, 0x7FFCA9FF1977, 5,    "\x45\x0F\xBE\x24\x2F",                         "MOVSX R12D, BYTE PTR [R15+RBP*1]") },
     { ENTRY(true, 0x7FFCA9FF1977, 7,    "\x4D\x69\xED\x10\x01\x00\x00",                 "IMUL R13, R13, 0x110") },
-    { ENTRY(true, 0x7FFCA9FF1977, 11,    "\x48\xC7\x05\xAF\x55\x0F\x00\xFE\xFF\xFF\xFF", "MOV QWORD PTR [RIP+0xF55AF], 0xFFFFFFFFFFFFFFFE") },
+    { ENTRY(true, 0x7FFCA9FF1977, 11,   "\x48\xC7\x05\xAF\x55\x0F\x00\xFE\xFF\xFF\xFF", "MOV QWORD PTR [RIP+0xF55AF], 0xFFFFFFFFFFFFFFFE") },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py

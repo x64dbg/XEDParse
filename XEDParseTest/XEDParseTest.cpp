@@ -44,10 +44,12 @@ void RunTests()
 
 int main(int argc, char* argv[])
 {
-    RunTests();
-
-    if(argc < 2) //no arguments provided
+    if(argc < 2) // No arguments provided
     {
+        // Run tests first
+        RunTests();
+
+        // Now prompt the user to assemble an instruction
         XEDPARSE parse;
         memset(&parse, 0, sizeof(parse));
 #ifdef _WIN64
@@ -70,7 +72,8 @@ int main(int argc, char* argv[])
         system("pause");
         return 0;
     }
-    //parse an assembly text file with instructions
+
+    // Parse an assembly text file with instructions
     HANDLE hFile = CreateFileA(argv[1], GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
     if(hFile == INVALID_HANDLE_VALUE)
     {
