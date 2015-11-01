@@ -14,8 +14,10 @@ struct XED_TestEntry
 static XED_TestEntry XED_AllTests[] =
 {
     // syntax, address, expected hexcode, input
+    { ENTRY(false, 0x77513BEE, 2, "\xEB\xFE",                   "JMP SHORT 0x77513BEE") },  // 32 Short jump
     { ENTRY(false, 0x77513BEE, 2, "\xEB\x07",                   "JMP SHORT 0x77513BF7") },  // 32 Short jump forward
     { ENTRY(false, 0x77513BEE, 2, "\xEB\xCF",                   "JMP SHORT 0x77513BBF") },  // 32 Short jump backward
+
     { ENTRY(false, 0x00405C5B, 5, "\xE9\xCA\x70\x00\x00",       "JMP 0x0040CD2A") },        // 32 Long jump forward
     { ENTRY(false, 0x00405C5B, 5, "\xE9\x40\xFE\xFF\xFF",       "JMP 0x00405AA0") },        // 32 Long jump backward
     { ENTRY(false, 0x00405C5B, 6, "\xFF\x25\x00\x01\x00\x00",   "JMP DWORD PTR DS:[100]") },// 32 Long jump ptr
@@ -38,12 +40,18 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(false, 0x00405C23, 8, "\xf2\x0f\x11\x0d\x00\x00\x00\x00",   "MOVSD QWORD PTR ds:[0x0],xmm1") },
     { ENTRY(false, 0x00405C23, 7, "\x8B\x04\xCD\x00\x00\x00\x00",       "MOV EAX,[ECX*8]") },
 
-    { ENTRY(true, 0x7FFCA9FF197C, 5, "\xE9\x35\x64\x93\x53",    "JMP 0x7FFCFD927DB6") },                // 64 Long jump forward
-    { ENTRY(true, 0x000123456789, 6, "\xFF\x25\xFA\xFF\xFF\xFF", "JMP QWORD[0x123456789]") },           // 64 Long jump ptr with RIP-rel
-    { ENTRY(true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF", "JMP QWORD PTR DS:[7FFCA9FE1A77]") },  // 64 Long jump ptr with RIP-rel
+    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 7FFCAA022104") },                // 64 Short jump
+    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 7FFCAA022128") },                // 64 Short jump forward
+    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xF9",                    "JMP SHORT 7FFCAA0220FF") },                // 64 Short jump backward
+
+    { ENTRY(true, 0x7FFCA9FF197C, 5, "\xE9\x35\x64\x93\x53",        "JMP 0x7FFCFD927DB6") },                    // 64 Long jump forward
+    { ENTRY(true, 0x7FFCAA022104, 5, "\xE9\x7C\xF4\xFC\xFF",        "JMP 0x7FFCA9FF1585") },                    // 64 Long jump backward
+    { ENTRY(true, 0x000123456789, 6, "\xFF\x25\xFA\xFF\xFF\xFF",    "JMP QWORD[0x123456789]") },                // 64 Long jump ptr with RIP-rel
+    { ENTRY(true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF",    "JMP QWORD PTR DS:[7FFCA9FE1A77]") },       // 64 Long jump ptr backward with RIP-rel
 
     { ENTRY(true, 0x7FFCA9FF1977, 10, "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",   "MOV RAX, 0x1234567890") },
     { ENTRY(true, 0x7FFCA9FF1977, 10, "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",   "MOVABS RAX, 0x1234567890") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10, "\x48\xa1\x90\x78\x56\x34\x12\x00\x00\x00",   "MOV RAX, QWORD PTR DS:[0x1234567890]") },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py

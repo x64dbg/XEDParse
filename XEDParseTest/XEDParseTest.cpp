@@ -19,7 +19,7 @@ void RunTests()
         // Try to assemble the string
         if(XEDParseAssemble(&parse) != XEDPARSE_OK)
         {
-            printf("Test failed on index %i: %s\n", i, parse.error);
+            printf("Test %i failed: %s\n", i, parse.error);
             continue;
         }
 
@@ -27,14 +27,14 @@ void RunTests()
         // Compare output length
         if(parse.dest_size != XED_AllTests[i].DataLen)
         {
-            printf("Test failed on index %i: Output hex length mismatch (%d != %d)\n", i, parse.dest_size, XED_AllTests[i].DataLen);
+            printf("Test %i failed: Output hex length mismatch (%d != %d)\n", i, parse.dest_size, XED_AllTests[i].DataLen);
             continue;
         }
 
         // Compare pure data
         if(memcmp(XED_AllTests[i].Data, parse.dest, parse.dest_size) != 0)
         {
-            printf("Test failed on index %i: Output hex mismatch\n", i);
+            printf("Test %i failed: Output hex mismatch\n", i);
             continue;
         }
 

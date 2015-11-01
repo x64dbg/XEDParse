@@ -187,13 +187,13 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
         if(Operand->Mem.BaseVal == REG_ESP && !Parse->x64)
         {
             // If the segment isn't set and the base is ESP,
-            // set the segment to SS
+            // auto-set the segment to SS
             Operand->Segment = REG_SS;
         }
         else
         {
             // Default to DS
-            // 64-bit doesn't have true segments except for FS/GS/DS
+            // 64-bit also doesn't have true segments except for FS/GS/DS
             Operand->Segment = REG_DS;
         }
     }
@@ -216,6 +216,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
                     LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
                     ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
 
+                    // Check if the mask fits into a 32-bit variable (taking sign-extension into account)
                     if(masked == 0 || masked == 0xFFFFFFFF00000000)
                     {
                         Operand->Mem.DispRipRelative = true;
