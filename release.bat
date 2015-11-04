@@ -11,3 +11,5 @@ copy bin\x32\XEDParse.dll %RELEASEDIR%\x32\XEDParse.dll
 copy bin\x32\XEDParse.lib %RELEASEDIR%\XEDParse_x86.lib
 copy bin\x64\XEDParse.dll %RELEASEDIR%\x64\XEDParse.dll
 copy bin\x64\XEDParse.lib %RELEASEDIR%\XEDParse_x64.lib
+
+exit 0
