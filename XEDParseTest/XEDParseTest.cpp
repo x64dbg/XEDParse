@@ -5,7 +5,9 @@
 
 void RunTests()
 {
-    for(int i = 0; i < ARRAYSIZE(XED_AllTests); i++)
+    int testCount = ARRAYSIZE(XED_AllTests);
+    int successCount = 0;
+    for(int i = 0; i < testCount; i++)
     {
         XEDPARSE parse;
         memset(&parse, 0, sizeof(parse));
@@ -38,8 +40,10 @@ void RunTests()
             continue;
         }
 
-        printf("Test %i passed\n", i);
+        successCount++;
     }
+
+    printf("%i/%i tests were successful!\n", successCount, testCount);
 }
 
 int main(int argc, char* argv[])
@@ -59,7 +63,7 @@ int main(int argc, char* argv[])
 #endif
         parse.cip = 0;
         char instr[256] = "";
-        puts("instruction:");
+        puts("instruction (cip = 0):");
         fgets(instr, 256, stdin);
         instr[strlen(instr) - 1] = 0;
         strcpy(parse.instr, instr);
