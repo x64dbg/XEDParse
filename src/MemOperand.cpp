@@ -219,7 +219,6 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
                     // Check if the mask fits into a 32-bit variable (taking sign-extension into account)
                     if(masked == 0 || masked == 0xFFFFFFFF00000000)
                     {
-                        Operand->Mem.DispRipRelative = true;
                         Operand->Mem.DispVal         = newDisp;
                         Operand->Mem.DispWidth       = SIZE_DWORD;
                         Operand->Mem.Base            = true;
