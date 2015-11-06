@@ -5,7 +5,7 @@ IClassType XedInstLookupTable[XED_ICLASS_LAST];
 
 int ResizeOperandImmediate(InstOperand* Operand, xed_iclass_enum_t IClass, int FixedSize, int LargestSize)
 {
-    // Branches are skipped here
+    // Branches are excluded
     if(IClassIsBranch(IClass))
         return FixedSize;
 
@@ -72,7 +72,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
 
     case OPERAND_MEM:
     {
-        // If the memory size is set, there's nothing to do here
+        // If the memory size is set, there's nothing to do
         if(Operand->Size != SIZE_UNSET)
             return true;
 
@@ -283,7 +283,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
         case OPERAND_IMM:
         {
             //
-            // This is a special case
+            // This is a special case:
             // Both the memory and immediate operands need to be resized if needed
             // First get the smallest IMM possible, then also store MEM types
             //
@@ -303,14 +303,14 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 if(!xed_operand_is_memory_addressing(xed_operand_name(xedOp[0])))
                     continue;
 
-                // Check compatible immediate types
+                // Match immediate types
                 if(!xed_operand_type_is_immediate(xed_operand_type(xedOp[1])))
                     continue;
 
                 int memSize = xed_operand_width_bits(xedOp[0], Operands[0].XedEOSZ);
                 int immSize = xed_operand_width_bits(xedOp[1], Operands[1].XedEOSZ);
 
-                // Skip sizes smaller than the immediate
+                // Skip sizes smaller than the initial immediate
                 if(immSize < targetSize)
                     continue;
 
@@ -324,7 +324,7 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 }
                 else
                 {
-                    // Size was set, skip anything smaller
+                    // Memory size was set by user, skip anything smaller
                     if(memSize < (int)OpsizeToBits(Operands[0].Size))
                         continue;
                 }
@@ -353,7 +353,6 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
                 return false;
             }
 
-            fixedSize           = ResizeOperandImmediate(&Operands[1], IClass, fixedSize, OpsizeToBits(Operands[0].Size));
             Operands[1].Size    = OpsizeFromBits(fixedSize);
             Operands[1].BitSize = fixedSize;
             return true;
@@ -504,7 +503,7 @@ void LookupTableInit()
     if(bInitialized)
         return;
 
-    // Initialize XED's internal state
+    // Initialize Xed's internal state
     xed_tables_init();
 
     // Invalidate initial data

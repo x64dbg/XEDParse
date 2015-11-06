@@ -78,8 +78,38 @@ const char* OpsizeToString(OPSIZE Size)
 
 OPSIZE OpsizeFromValue(LONGLONG Value)
 {
-    int sign    = xed_shortest_width_signed(Value, 0xFF);
-    int unsign  = xed_shortest_width_unsigned(Value, 0xFF);
+    // First loop to get most significant bit index
+    size_t setBitStart = 0;
 
-    return OpsizeFromInt(min(sign, unsign));
+    for(ULONGLONG temp = Value; temp >>= 1;)
+        setBitStart++;
+
+    // Get the index of the last repeating 1-bit
+    size_t unsetBitStart = 0;
+
+    for(int i = setBitStart; i > 0; i--)
+    {
+        // If nonzero bit, continue
+        if((Value & ((ULONGLONG)1 << i)) != 0)
+            continue;
+
+        // Break when a zero is hit
+        unsetBitStart = i;
+        break;
+    }
+
+    // Convert the last bit set to a size value
+    if(unsetBitStart <= 8)
+        return SIZE_BYTE;
+
+    if(unsetBitStart <= 16)
+        return SIZE_WORD;
+
+    if(unsetBitStart <= 32)
+        return SIZE_DWORD;
+
+    if(unsetBitStart <= 64)
+        return SIZE_QWORD;
+
+    return SIZE_UNSET;
 }

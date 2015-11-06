@@ -44,6 +44,10 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(false, 0x00405C23, 2, "\xCD\x03",                           "INT 3") },
     { ENTRY(false, 0x00405C23, 2, "\xE7\xE9",                           "OUT 0xE9, EAX") },
     { ENTRY(false, 0x00405C23, 6, "\x69\xC0\xFF\x01\x00\x00",           "IMUL EAX, EAX, 0x1FF") },
+    { ENTRY(false, 0x00405C23, 6, "\x69\xC0\xFF\x00\x00\x00",           "IMUL EAX, EAX, 0xFF") },
+    { ENTRY(false, 0x00405C23, 6, "\x69\xC0\xFE\x00\x00\x00",           "IMUL EAX, EAX, 0xFE") },
+    { ENTRY(false, 0x00405C23, 5, "\xB8\x78\x56\x34\x12",               "MOV EAX, 0x12345678") },
+    { ENTRY(false, 0x00405C23, 5, "\xB8\xFE\xFF\xFF\xFF",               "MOV EAX, 0xFFFFFFFE") },
 
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 7FFCAA022104") },                // 64 Short jump
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 7FFCAA022128") },                // 64 Short jump forward
@@ -56,6 +60,7 @@ static XED_TestEntry XED_AllTests[] =
 
     { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",     "MOV RAX, 0x1234567890") },
     { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",     "MOVABS RAX, 0x1234567890") },
+    { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xB8\xFE\xFF\xFF\xFF\xFF\xFF\xFF\xFF",     "MOVABS RAX, 0xFFFFFFFFFFFFFFFE") },
     { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xa1\x90\x78\x56\x34\x12\x00\x00\x00",     "MOV RAX, QWORD PTR DS:[0x1234567890]") },
     { ENTRY(true, 0x7FFCA9FF1977, 1,    "\xCC",                                         "INT3") },
     { ENTRY(true, 0x7FFCA9FF1977, 2,    "\xCD\x03",                                     "INT 3") },
