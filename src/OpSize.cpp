@@ -85,6 +85,9 @@ OPSIZE OpsizeFromValue(LONGLONG Value)
         setBitStart++;
 
     // Get the index of the last repeating 1-bit
+    //
+    // 00000000111111111111101010001111
+    //                     ^ We want this index
     size_t unsetBitStart = 0;
 
     for(int i = setBitStart; i > 0; i--)
