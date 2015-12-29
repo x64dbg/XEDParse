@@ -184,9 +184,9 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     // Fix up the operand segment
     if(Operand->Segment == REG_INVALID)
     {
-        if(Operand->Mem.BaseVal == REG_ESP && !Parse->x64)
+        if((Operand->Mem.BaseVal == REG_ESP || Operand->Mem.BaseVal == REG_EBP) && !Parse->x64)
         {
-            // If the segment isn't set and the base is ESP,
+            // If the segment isn't set and the base is ESP or EBP,
             // auto-set the segment to SS
             Operand->Segment = REG_SS;
         }

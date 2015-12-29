@@ -49,7 +49,8 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(false, 0x00405C23, 5, "\xB8\x78\x56\x34\x12",               "MOV EAX, 0x12345678") },
     { ENTRY(false, 0x00405C23, 5, "\xB8\xFE\xFF\xFF\xFF",               "MOV EAX, 0xFFFFFFFE") },
     
-    { ENTRY(false, 0x00405C23, 10, "\xC7\x85\xE8\xFD\xFF\xFF\x00\x00\x08\x02", "MOV DWORD PTR [EBP-0x218], 0x2080000") }, //implicit SS segment
+    { ENTRY(false, 0x00405C23, 10, "\xC7\x85\xE8\xFD\xFF\xFF\x00\x00\x08\x02",     "MOV DWORD PTR [EBP-0x218],0x2080000") }, //implicit SS segment
+    { ENTRY(false, 0x00405C23, 11, "\xC7\x84\x24\xE8\xFD\xFF\xFF\x00\x00\x08\x02", "MOV DWORD PTR [ESP-0x218],0x2080000") }, //implicit SS segment
 
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 7FFCAA022104") },                // 64 Short jump
     { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 7FFCAA022128") },                // 64 Short jump forward
