@@ -184,7 +184,7 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
     // Displacement = name or number
     // Base         = register
     REG registerVal = RegFromString(Value);
-    ULONGLONG disp = 0;
+    ULONGLONG disp  = 0;
 
     if(registerVal != REG_INVALID)
     {
@@ -198,8 +198,8 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
         }
 
         // It's the base
-        Operand->Mem.Base = true;
-        Operand->Mem.BaseVal = registerVal;
+        Operand->Mem.Base       = true;
+        Operand->Mem.BaseVal    = registerVal;
     }
     else if(valfromstring(Value, &disp) || (Parse->cbUnknown && Parse->cbUnknown(Value, &disp)))
     {
@@ -207,9 +207,9 @@ void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand
         //
         // Displacement is either /8, /32, or /64
         // 5h = 101b
-        Operand->Mem.Disp = true;
-        Operand->Mem.DispVal = disp;
-        bool sign = (Value[0] == '-');
+        Operand->Mem.Disp       = true;
+        Operand->Mem.DispVal    = disp;
+        bool sign               = (Value[0] == '-');
 
         if(sign)
             Operand->Mem.DispWidth = OpsizeFromInt(xed_shortest_width_signed(disp, 0x5));
