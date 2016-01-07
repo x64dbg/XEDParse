@@ -6,25 +6,34 @@ struct XED_TestEntry
 {
     bool LongMode;          // 64-bit
     unsigned __int64 Ip;    // Instruction address
-    int DataLen;            // Length of data
+    int DataLen;            // Length of data (-1 indicates invalid instruction)
     const char* Data;       // Raw hex output
     const char* Asm;        // Assembler string
 };
 
 static XED_TestEntry XED_AllTests[] =
 {
-    // Syntax, Address, Expected hexcode, Input
-    { ENTRY(false, 0x77513BEE, 2, "\xEB\xFE",                   "JMP SHORT 0x77513BEE") },  // 32 Short jump
-    { ENTRY(false, 0x77513BEE, 2, "\xEB\x07",                   "JMP SHORT 0x77513BF7") },  // 32 Short jump forward
-    { ENTRY(false, 0x77513BEE, 2, "\xEB\xCF",                   "JMP SHORT 0x77513BBF") },  // 32 Short jump backward
+    // 32|64, Base IP, Hexcode length, Expected hexcode, Input
+    { ENTRY(false, 0x77513BEE, 2, "\xEB\xFE",                   "JMP SHORT 0x77513BEE") },              // 32 Short jump
+    { ENTRY(false, 0x77513BEE, 2, "\xEB\x07",                   "JMP SHORT 0x77513BF7") },              // 32 Short jump forward
+    { ENTRY(false, 0x77513BEE, 2, "\xEB\xCF",                   "JMP SHORT 0x77513BBF") },              // 32 Short jump backward
 
-    { ENTRY(false, 0x00405C5B, 5, "\xE9\xCA\x70\x00\x00",       "JMP 0x0040CD2A") },        // 32 Long jump forward
-    { ENTRY(false, 0x00405C5B, 5, "\xE9\x40\xFE\xFF\xFF",       "JMP 0x00405AA0") },        // 32 Long jump backward
-    { ENTRY(false, 0x00405C5B, 6, "\xFF\x25\x00\x01\x00\x00",   "JMP DWORD PTR DS:[100]") },// 32 Long jump ptr
+    { ENTRY(false, 0x00405C5B, 5, "\xE9\xCA\x70\x00\x00",       "JMP 0x0040CD2A") },                    // 32 Long jump forward
+    { ENTRY(false, 0x00405C5B, 5, "\xE9\x40\xFE\xFF\xFF",       "JMP 0x00405AA0") },                    // 32 Long jump backward
+    { ENTRY(false, 0x00405C5B, 6, "\xFF\x25\x00\x01\x00\x00",   "JMP DWORD PTR DS:[100]") },            // 32 Long jump ptr
 
-    { ENTRY(false, 0x00405CCC, 6, "\xFF\x15\x10\x00\x00\x00",   "CALL DWORD PTR DS:[10]") },// 32 Long call ptr
-    { ENTRY(false, 0x00405C5B, 5, "\xE8\xCA\x70\x00\x00",       "CALL 0x0040CD2A") },       // 32 Long call forward
-    { ENTRY(false, 0x00405EF0, 5, "\xE8\x06\xFF\xFF\xFF",       "CALL 0x00405DFB") },       // 32 Long call backward
+    { ENTRY(false, 0x00405CCC, 6, "\xFF\x15\x10\x00\x00\x00",   "CALL DWORD PTR DS:[10]") },            // 32 Long call ptr
+    { ENTRY(false, 0x00405C5B, 5, "\xE8\xCA\x70\x00\x00",       "CALL 0x0040CD2A") },                   // 32 Long call forward
+    { ENTRY(false, 0x00405EF0, 5, "\xE8\x06\xFF\xFF\xFF",       "CALL 0x00405DFB") },                   // 32 Long call backward
+
+    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xFE", "JMP SHORT 7FFCAA022104") },                           // 64 Short jump
+    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\x22", "JMP SHORT 7FFCAA022128") },                           // 64 Short jump forward
+    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xF9", "JMP SHORT 7FFCAA0220FF") },                           // 64 Short jump backward
+
+    { ENTRY(true, 0x7FFCA9FF197C, 5, "\xE9\x35\x64\x93\x53", "JMP 0x7FFCFD927DB6") },                   // 64 Long jump forward
+    { ENTRY(true, 0x7FFCAA022104, 5, "\xE9\x7C\xF4\xFC\xFF", "JMP 0x7FFCA9FF1585") },                   // 64 Long jump backward
+    { ENTRY(true, 0x000123456789, 6, "\xFF\x25\xFA\xFF\xFF\xFF", "JMP QWORD[0x123456789]") },           // 64 Long jump ptr with RIP-rel
+    { ENTRY(true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF", "JMP QWORD PTR DS:[7FFCA9FE1A77]") },  // 64 Long jump ptr backward with RIP-rel
 
     { ENTRY(false, 0x00405C6A, 6, "\xFF\x35\xF4\x0A\x47\x00",           "PUSH DWORD PTR DS:[470AF4]") },
     { ENTRY(false, 0x00405C92, 3, "\x8B\x45\x08",                       "MOV EAX,DWORD PTR SS:[EBP+8]") },
@@ -48,18 +57,12 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(false, 0x00405C23, 6, "\x69\xC0\xFE\x00\x00\x00",           "IMUL EAX, EAX, 0xFE") },
     { ENTRY(false, 0x00405C23, 5, "\xB8\x78\x56\x34\x12",               "MOV EAX, 0x12345678") },
     { ENTRY(false, 0x00405C23, 5, "\xB8\xFE\xFF\xFF\xFF",               "MOV EAX, 0xFFFFFFFE") },
-    
+
+    { ENTRY(false, 0x00405C23, -1, "", "MOV EAX, DWORD PTR ][") },
+    { ENTRY(false, 0x00405C23, -1, "", "MOV EAX, DWORD PTR [RAX]") },
+
     { ENTRY(false, 0x00405C23, 10, "\xC7\x85\xE8\xFD\xFF\xFF\x00\x00\x08\x02",     "MOV DWORD PTR [EBP-0x218],0x2080000") }, //implicit SS segment
     { ENTRY(false, 0x00405C23, 11, "\xC7\x84\x24\xE8\xFD\xFF\xFF\x00\x00\x08\x02", "MOV DWORD PTR [ESP-0x218],0x2080000") }, //implicit SS segment
-
-    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 7FFCAA022104") },                // 64 Short jump
-    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 7FFCAA022128") },                // 64 Short jump forward
-    { ENTRY(true, 0x7FFCAA022104, 2, "\xEB\xF9",                    "JMP SHORT 7FFCAA0220FF") },                // 64 Short jump backward
-
-    { ENTRY(true, 0x7FFCA9FF197C, 5, "\xE9\x35\x64\x93\x53",        "JMP 0x7FFCFD927DB6") },                    // 64 Long jump forward
-    { ENTRY(true, 0x7FFCAA022104, 5, "\xE9\x7C\xF4\xFC\xFF",        "JMP 0x7FFCA9FF1585") },                    // 64 Long jump backward
-    { ENTRY(true, 0x000123456789, 6, "\xFF\x25\xFA\xFF\xFF\xFF",    "JMP QWORD[0x123456789]") },                // 64 Long jump ptr with RIP-rel
-    { ENTRY(true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF",    "JMP QWORD PTR DS:[7FFCA9FE1A77]") },       // 64 Long jump ptr backward with RIP-rel
 
     { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",     "MOV RAX, 0x1234567890") },
     { ENTRY(true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",     "MOVABS RAX, 0x1234567890") },
@@ -72,6 +75,8 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(true, 0x7FFCA9FF1977, 7,    "\x4D\x69\xED\x10\x01\x00\x00",                 "IMUL R13, R13, 0x110") },
     { ENTRY(true, 0x7FFCA9FF1977, 11,   "\x48\xC7\x05\xAF\x55\x0F\x00\xFF\x00\x00\x00", "MOV QWORD PTR [RIP+0xF55AF], 0xFF") },
     { ENTRY(true, 0x7FFCA9FF1977, 11,   "\x48\xC7\x05\xAF\x55\x0F\x00\xFE\xFF\xFF\xFF", "MOV QWORD PTR [RIP+0xF55AF], 0xFFFFFFFFFFFFFFFE") },
+    { ENTRY(true, 0x7FFCA9FF1977, 4,    "\x48\x0F\xC7\x08",                             "CMPXCHG16B [RAX]") },
+    { ENTRY(true, 0x7FFCA9FF1977, 3,    "\x0F\xC7\x08",                                 "CMPXCHG8B [RAX]") },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py

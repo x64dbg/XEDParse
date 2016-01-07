@@ -21,7 +21,12 @@ void RunTests()
         // Try to assemble the string
         if(XEDParseAssemble(&parse) != XEDPARSE_OK)
         {
-            printf("Test %i failed: %s\n", i, parse.error);
+            // Did the test expect a failure?
+            if(XED_AllTests[i].DataLen == -1)
+                successCount++;
+            else
+                printf("Test %i failed: %s\n", i, parse.error);
+
             continue;
         }
 

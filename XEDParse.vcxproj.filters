@@ -21,9 +21,6 @@
     <ClCompile Include="src\BranchInst.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\MemOperand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\MnemonicTable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -54,11 +51,11 @@
     <ClCompile Include="src\XEDParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\OperandMem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="XEDParse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="xed2\include\xed-address-width-enum.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
@@ -263,9 +260,6 @@
     <ClInclude Include="src\BranchInst.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\MemOperand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\MnemonicTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -294,6 +288,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Validator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XEDParse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OperandMem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

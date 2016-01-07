@@ -28,7 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BranchInst.cpp" />
-    <ClCompile Include="src\MemOperand.cpp" />
+    <ClCompile Include="src\OperandMem.cpp" />
     <ClCompile Include="src\MnemonicTable.cpp" />
     <ClCompile Include="src\Operand.cpp" />
     <ClCompile Include="src\OpSize.cpp" />
@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BranchInst.h" />
-    <ClInclude Include="src\MemOperand.h" />
+    <ClInclude Include="src\OperandMem.h" />
     <ClInclude Include="src\MnemonicTable.h" />
     <ClInclude Include="src\Operand.h" />
     <ClInclude Include="src\OpSize.h" />
