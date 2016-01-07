@@ -9,12 +9,8 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
-    </Filter>
     <Filter Include="Header Files\XED2">
-      <UniqueIdentifier>{465a15c3-7ab8-4bcf-8596-0cf8b653a8fe}</UniqueIdentifier>
+      <UniqueIdentifier>{e8b1601e-9eed-4146-86ec-bc7216091d27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +52,43 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\BranchInst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MemOperand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MnemonicTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Operand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OpSize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ParseTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Prefix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RegisterTable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Register.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Translator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Validator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XEDParse.h">
     <ClInclude Include="xed2\include\xed-address-width-enum.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
@@ -66,6 +99,9 @@
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
     <ClInclude Include="xed2\include\xed-attributes.h">
+      <Filter>Header Files\XED2</Filter>
+    </ClInclude>
+    <ClInclude Include="xed2\include\xed-build-defines.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
     <ClInclude Include="xed2\include\xed-category-enum.h">
@@ -84,9 +120,6 @@
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
     <ClInclude Include="xed2\include\xed-decode.h">
-      <Filter>Header Files\XED2</Filter>
-    </ClInclude>
-    <ClInclude Include="xed2\include\xed-decode-cache.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
     <ClInclude Include="xed2\include\xed-decoded-inst.h">
@@ -167,9 +200,6 @@
     <ClInclude Include="xed2\include\xed-inst.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
-    <ClInclude Include="xed2\include\xed-inst-printer.h">
-      <Filter>Header Files\XED2</Filter>
-    </ClInclude>
     <ClInclude Include="xed2\include\xed-interface.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
@@ -230,6 +260,9 @@
     <ClInclude Include="xed2\include\xed-portability.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
+    <ClInclude Include="xed2\include\xed-print-info.h">
+      <Filter>Header Files\XED2</Filter>
+    </ClInclude>
     <ClInclude Include="xed2\include\xed-reg-class.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
@@ -257,44 +290,11 @@
     <ClInclude Include="xed2\include\xed-version.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
-    <ClInclude Include="src\BranchInst.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MnemonicTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Operand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OpSize.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ParseTest.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Prefix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RegisterTable.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Register.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Translator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Validator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\XEDParse.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\OperandMem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
