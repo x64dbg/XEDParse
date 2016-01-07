@@ -1,76 +1,6 @@
 #include "Translator.h"
 #include <stdio.h>
 
-void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
-{
-    // Displacement = name or number
-    // Base         = register
-    REG registerVal = RegFromString(Value);
-    ULONGLONG disp  = 0;
-
-    if(registerVal != REG_INVALID)
-    {
-        // If the base is already set, then use IMPLICIT scale
-        // REG + (REG * 1)
-        if(Operand->Mem.Base)
-        {
-            SetMemoryIndexOrScale(Parse, Value, Operand);
-            SetMemoryIndexOrScale(Parse, "1", Operand);
-            return;
-        }
-
-        // It's the base
-        Operand->Mem.Base    = true;
-        Operand->Mem.BaseVal = registerVal;
-    }
-    else if(valfromstring(Value, &disp) || (Parse->cbUnknown && Parse->cbUnknown(Value, &disp)))
-    {
-        // It's the displacement
-        //
-        // Displacement is either /8, /32, or /64
-        // 5h = 101b
-        Operand->Mem.Disp    = true;
-        Operand->Mem.DispVal = disp;
-        bool sign            = (Value[0] == '-');
-
-        if(sign)
-            Operand->Mem.DispWidth = OpsizeFromInt(xed_shortest_width_signed(disp, 0x5));
-        else
-            Operand->Mem.DispWidth = OpsizeFromInt(xed_shortest_width_unsigned(disp, 0x5));
-
-        Operand->Mem.DispWidth = PromoteImmediateWidth(sign, disp, Operand->Mem.DispWidth);
-    }
-    else
-    {
-        sprintf(Parse->error, "Unknown displacement or base '%s'", Value);
-    }
-}
-
-void SetMemoryIndexOrScale(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
-{
-    // Index = register
-    // Scale = 1, 2, 4, or 8
-    REG registerVal = RegFromString(Value);
-    ULONGLONG scale = 0;
-
-    if(registerVal != REG_INVALID)
-    {
-        // It's the index
-        Operand->Mem.Index    = true;
-        Operand->Mem.IndexVal = registerVal;
-    }
-    else if(valfromstring(Value, &scale))
-    {
-        // It's the scale
-        Operand->Mem.Scale    = true;
-        Operand->Mem.ScaleVal = scale;
-    }
-    else
-    {
-        sprintf(Parse->error, "Unknown index or scale '%s'", Value);
-    }
-}
-
 bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
 {
     // Copy the prefix into a buffer
@@ -81,6 +11,13 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
 
     // Copy the calculation into a buffer (strrchr is intentional)
     char calc[64];
+
+    if(strrchr(Value, '[') > strrchr(Value, ']'))
+    {
+        // Someone tried using a closing bracket before the opening
+        strcpy(Parse->error, "Invalid memory bracket open/close pair");
+        return false;
+    }
 
     strcpy(calc, strrchr(Value, '[') + 1);
     *strchr(calc, ']') = '\0';
@@ -219,10 +156,10 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
                     // Check if the mask fits into a 32-bit variable (taking sign-extension into account)
                     if(masked == 0 || masked == 0xFFFFFFFF00000000)
                     {
-                        Operand->Mem.DispVal         = newDisp;
-                        Operand->Mem.DispWidth       = SIZE_DWORD;
-                        Operand->Mem.Base            = true;
-                        Operand->Mem.BaseVal         = REG_RIP;
+                        Operand->Mem.DispVal    = newDisp;
+                        Operand->Mem.DispWidth  = SIZE_DWORD;
+                        Operand->Mem.Base       = true;
+                        Operand->Mem.BaseVal    = REG_RIP;
                     }
                     else
                         Operand->Mem.DispWidth = SIZE_QWORD;
@@ -240,4 +177,74 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     }
 
     return true;
+}
+
+void SetMemoryDisplacementOrBase(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
+{
+    // Displacement = name or number
+    // Base         = register
+    REG registerVal = RegFromString(Value);
+    ULONGLONG disp = 0;
+
+    if(registerVal != REG_INVALID)
+    {
+        // If the base is already set, then use IMPLICIT scale
+        // REG + (REG * 1)
+        if(Operand->Mem.Base)
+        {
+            SetMemoryIndexOrScale(Parse, Value, Operand);
+            SetMemoryIndexOrScale(Parse, "1", Operand);
+            return;
+        }
+
+        // It's the base
+        Operand->Mem.Base = true;
+        Operand->Mem.BaseVal = registerVal;
+    }
+    else if(valfromstring(Value, &disp) || (Parse->cbUnknown && Parse->cbUnknown(Value, &disp)))
+    {
+        // It's the displacement
+        //
+        // Displacement is either /8, /32, or /64
+        // 5h = 101b
+        Operand->Mem.Disp = true;
+        Operand->Mem.DispVal = disp;
+        bool sign = (Value[0] == '-');
+
+        if(sign)
+            Operand->Mem.DispWidth = OpsizeFromInt(xed_shortest_width_signed(disp, 0x5));
+        else
+            Operand->Mem.DispWidth = OpsizeFromInt(xed_shortest_width_unsigned(disp, 0x5));
+
+        Operand->Mem.DispWidth = PromoteImmediateWidth(sign, disp, Operand->Mem.DispWidth);
+    }
+    else
+    {
+        sprintf(Parse->error, "Unknown displacement or base '%s'", Value);
+    }
+}
+
+void SetMemoryIndexOrScale(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
+{
+    // Index = register
+    // Scale = 1, 2, 4, or 8
+    REG registerVal = RegFromString(Value);
+    ULONGLONG scale = 0;
+
+    if(registerVal != REG_INVALID)
+    {
+        // It's the index
+        Operand->Mem.Index      = true;
+        Operand->Mem.IndexVal   = registerVal;
+    }
+    else if(valfromstring(Value, &scale))
+    {
+        // It's the scale
+        Operand->Mem.Scale      = true;
+        Operand->Mem.ScaleVal   = scale;
+    }
+    else
+    {
+        sprintf(Parse->error, "Unknown index or scale '%s'", Value);
+    }
 }
