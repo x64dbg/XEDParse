@@ -2,15 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+      <UniqueIdentifier>{a56693d4-2760-4c5b-8d72-b51951b40c54}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+      <UniqueIdentifier>{bafd4044-9a4d-4ec2-a485-00c892ec471c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\XED2">
-      <UniqueIdentifier>{e8b1601e-9eed-4146-86ec-bc7216091d27}</UniqueIdentifier>
+      <UniqueIdentifier>{d0698997-ad63-4a31-bde6-eddd991d7551}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -21,6 +19,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Operand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OperandMem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\OpSize.cpp">
@@ -38,24 +39,18 @@
     <ClCompile Include="src\Register.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Validator.cpp">
+    <ClCompile Include="src\Translator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Translator.cpp">
+    <ClCompile Include="src\Validator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\XEDParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\OperandMem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BranchInst.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MemOperand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\MnemonicTable.h">
@@ -64,22 +59,25 @@
     <ClInclude Include="src\Operand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\OperandMem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\OpSize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ParseTest.h">
+    <ClInclude Include="src\parsetest.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Prefix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\RegisterTable.h">
+    <ClInclude Include="src\Register.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Register.h">
+    <ClInclude Include="src\RegisterTable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Translator.h">
@@ -89,6 +87,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\XEDParse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="xed2\include\xed-address-width-enum.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
@@ -290,11 +290,5 @@
     <ClInclude Include="xed2\include\xed-version.h">
       <Filter>Header Files\XED2</Filter>
     </ClInclude>
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\XEDParse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OperandMem.h">
   </ItemGroup>
 </Project>

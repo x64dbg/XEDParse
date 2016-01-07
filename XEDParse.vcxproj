@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -28,29 +28,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\BranchInst.cpp" />
-    <ClCompile Include="src\OperandMem.cpp" />
     <ClCompile Include="src\MnemonicTable.cpp" />
     <ClCompile Include="src\Operand.cpp" />
+    <ClCompile Include="src\OperandMem.cpp" />
     <ClCompile Include="src\OpSize.cpp" />
     <ClCompile Include="src\Parser.cpp" />
     <ClCompile Include="src\ParseTest.cpp" />
     <ClCompile Include="src\Prefix.cpp" />
     <ClCompile Include="src\Register.cpp" />
-    <ClCompile Include="src\Validator.cpp" />
     <ClCompile Include="src\Translator.cpp" />
+    <ClCompile Include="src\Validator.cpp" />
     <ClCompile Include="src\XEDParse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BranchInst.h" />
-    <ClInclude Include="src\OperandMem.h" />
     <ClInclude Include="src\MnemonicTable.h" />
     <ClInclude Include="src\Operand.h" />
+    <ClInclude Include="src\OperandMem.h" />
     <ClInclude Include="src\OpSize.h" />
     <ClInclude Include="src\Parser.h" />
     <ClInclude Include="src\ParseTest.h" />
     <ClInclude Include="src\Prefix.h" />
-    <ClInclude Include="src\RegisterTable.h" />
     <ClInclude Include="src\Register.h" />
+    <ClInclude Include="src\RegisterTable.h" />
     <ClInclude Include="src\Translator.h" />
     <ClInclude Include="src\Validator.h" />
     <ClInclude Include="src\XEDParse.h" />
