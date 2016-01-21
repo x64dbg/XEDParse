@@ -5,7 +5,7 @@
 struct IClassType
 {
     xed_iclass_enum_t   IClass;
-    const xed_inst_t*    Instructions[32];
+    const xed_inst_t*   Instructions[32];
     int                 InstructionCount;
     unsigned int        MinimumOperands;
 };

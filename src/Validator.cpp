@@ -368,27 +368,68 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
     return true;
 }
 
+void ValidateFpuOperands(XEDPARSE* Parse, Inst* Instruction)
+{
+    // We only care if there is 1 operand
+    if(Instruction->OperandCount != 1)
+        return;
+
+    // Loop all IFORMs for this class
+    IClassType* type = &XedInstLookupTable[Instruction->Class];
+
+    for(int i = 0; i < type->InstructionCount; i++)
+    {
+        const xed_inst_t* inst = type->Instructions[i];
+        const xed_operand_t* op = xed_inst_operand(inst, 0);
+        xed_operand_enum_t name = xed_operand_name(op);
+
+        // FPU extensions only
+        if(xed_iform_to_extension(inst->_iform_enum) != XED_EXTENSION_X87)
+            continue;
+
+        // String compare for _ST0
+        const char* iformStr = xed_iform_enum_t2str(inst->_iform_enum);
+        size_t iformLen = strlen(iformStr);
+
+        if(!strstr(iformStr, "_ST0"))
+            continue;
+
+        if(iformStr[iformLen - 2] != 'T')
+            continue;
+
+        // Add operand
+        if(AnalyzeOperand(Parse, RegToString(REG_ST0), &Instruction->Operands[1]))
+            Instruction->OperandCount++;
+
+        break;
+    }
+}
+
 bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
 {
     // Only the first two operands actually matter right now
     // Instructions with 3+ operands will be handled later
 
-    // XED IS WRONG (xed_inst_noperands() shouldn't be used)
-    // This is incorrect for now
-    // int minimumOperands = XedInstLookupTable[Instruction->Class].MinimumOperands;
-
     // So what happens first?
     //
     // Verify that the number of user-supplied operands is valid
+    //
+    // XED IS WRONG (xed_inst_noperands() shouldn't be used) - incorrect for now
+    // int minimumOperands = XedInstLookupTable[Instruction->Class].MinimumOperands;
     //
     //if (Instruction->OperandCount < minimumOperands)
     //  return false;
 
     //
-    // Instructions with no operands do not apply here
+    // Instructions with no operands do not apply
     //
     if(Instruction->OperandCount <= 0)
         return true;
+
+    //
+    // Xed requires an implicit "ST0" register for some X87 instructions
+    //
+    ValidateFpuOperands(Parse, Instruction);
 
     //
     // Instructions with a single operand are "easy" to solve
