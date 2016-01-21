@@ -82,7 +82,7 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
         // This defaults to the full size, which is all 32 or all 64 bits,
         // if the instruction has multiple memory types -> AMBIGUOUS
         unsigned int memoryOperandCount = 0;
-        int memoryOperandSize  = 0;
+        int memoryOperandSize = 0;
 
         for(int i = 0; i < type->InstructionCount; i++)
         {
@@ -102,7 +102,10 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
             if(size > OpsizeToBits(SIZE_ZMMWORD) || memoryOperandSize > OpsizeToBits(SIZE_ZMMWORD))
                 memoryOperandCount = 0;
 
-            memoryOperandCount++;
+            // Skip identical sizes
+            if(size != memoryOperandSize)
+                memoryOperandCount++;
+
             memoryOperandSize = max(memoryOperandSize, size);
         }
 
