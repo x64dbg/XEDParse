@@ -78,6 +78,11 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(true, 0x7FFCA9FF1977, 11,   "\x48\xC7\x05\xAF\x55\x0F\x00\xFE\xFF\xFF\xFF", "MOV QWORD PTR [RIP+0xF55AF], 0xFFFFFFFFFFFFFFFE") },
     { ENTRY(true, 0x7FFCA9FF1977, 4,    "\x48\x0F\xC7\x08",                             "CMPXCHG16B [RAX]") },
     { ENTRY(true, 0x7FFCA9FF1977, 3,    "\x0F\xC7\x08",                                 "CMPXCHG8B [RAX]") },
+    { ENTRY(true, 0x7FF6845CB974, 7,    "\x48\x8D\x15\xA5\x16\x25\x00",                 "LEA RDX, QWORD PTR DS:[7FF68481D020]") },
+    { ENTRY(true, 0x7FF6845CB974, 7,    "\x48\x8D\x15\xA5\x16\x25\x00",                 "LEA RDX, QWORD PTR DS:[RIP+0x2516A5]") },
+    { ENTRY(true, 0x7FF6845CB974, 3,    "\x48\x8D\x10",                                 "LEA RDX, [RAX]") },
+    { ENTRY(true, 0x7FF6845CB982, 8,    "\x48\x83\x05\x63\x0F\x25\x00\x01",             "ADD QWORD PTR [0x7FF68481C8ED], 0x1") },
+    { ENTRY(true, 0x7FF6845CB982, 8,    "\x48\x83\x05\x63\x0F\x25\x00\x01",             "ADD QWORD PTR [RIP+0x250F63], 0x1") },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py
