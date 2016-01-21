@@ -370,8 +370,8 @@ bool ResizeDoubleOperands(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand
 
 void ValidateFpuOperands(XEDPARSE* Parse, Inst* Instruction)
 {
-    // We only care if there is 1 operand
-    if(Instruction->OperandCount != 1)
+    // We only care if there is 1 or less operands
+    if(Instruction->OperandCount > 1)
         return;
 
     // Loop all IFORMs for this class
@@ -398,7 +398,7 @@ void ValidateFpuOperands(XEDPARSE* Parse, Inst* Instruction)
             continue;
 
         // Add operand
-        if(AnalyzeOperand(Parse, RegToString(REG_ST0), &Instruction->Operands[1]))
+        if(AnalyzeOperand(Parse, RegToString(REG_ST0), &Instruction->Operands[Instruction->OperandCount]))
             Instruction->OperandCount++;
 
         break;
@@ -421,15 +421,15 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
     //  return false;
 
     //
+    // Xed requires an implicit "ST0" register for some X87 instructions
+    //
+    ValidateFpuOperands(Parse, Instruction);
+
+    //
     // Instructions with no operands do not apply
     //
     if(Instruction->OperandCount <= 0)
         return true;
-
-    //
-    // Xed requires an implicit "ST0" register for some X87 instructions
-    //
-    ValidateFpuOperands(Parse, Instruction);
 
     //
     // Instructions with a single operand are "easy" to solve

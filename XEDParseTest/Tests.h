@@ -58,6 +58,8 @@ static XED_TestEntry XED_AllTests[] =
     { ENTRY(false, 0x00405C23, 5, "\xB8\x78\x56\x34\x12",               "MOV EAX, 0x12345678") },
     { ENTRY(false, 0x00405C23, 5, "\xB8\xFE\xFF\xFF\xFF",               "MOV EAX, 0xFFFFFFFE") },
     { ENTRY(false, 0x00405C23, 3, "\xDF\x3C\x24",                       "FISTP QWORD PTR [ESP]") },
+    { ENTRY(false, 0x00405C23, 2, "\xD9\xF6",                           "FDECSTP") },
+    { ENTRY(false, 0x00405C23, 2, "\xD9\xFF",                           "FCOS") },
 
     { ENTRY(false, 0x00405C23, -1, "", "MOV EAX, DWORD PTR ][") },      // Invalid command
     { ENTRY(false, 0x00405C23, -1, "", "MOV EAX, DWORD PTR [RAX]") },   // Invalid 32-bit command
