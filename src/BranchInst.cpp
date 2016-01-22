@@ -99,7 +99,7 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
     {
         LONGLONG delta = TranslateRelativeCip(Parse, operand->Imm.imm, true);
 
-        // XED doesn't automatically do this:
+        // Xed doesn't automatically do this:
         //
         // Modify the delta so that it accommodates for the instruction size
         //
@@ -151,7 +151,7 @@ bool TranslateBranchInst(XEDPARSE* Parse, Inst* Instruction)
     else if(operand->Type == OPERAND_SEGSEL)
     {
         // JMP FAR 0000:00000000
-        // This is considered 2 operands by XED
+        // This is considered 2 operands by Xed
         Instruction->OperandCount           = 2;
         Instruction->Operands[1].Type       = OPERAND_IMM;
         Instruction->Operands[1].Size       = SIZE_WORD;

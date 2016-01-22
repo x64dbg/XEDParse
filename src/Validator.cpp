@@ -382,7 +382,7 @@ void ValidateFpuOperands(XEDPARSE* Parse, Inst* Instruction)
         const xed_inst_t* inst = type->Instructions[i];
 
         // FPU extensions only
-        if(xed_iform_to_extension(inst->_iform_enum) != XED_EXTENSION_X87)
+        if(xed_iform_to_extension(xed_inst_iform_enum(inst)) != XED_EXTENSION_X87)
             continue;
 
         // String compare for _ST0

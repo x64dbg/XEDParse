@@ -53,7 +53,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
     }
     else if(strchr(Value, ':'))
     {
-        // Segment selector operand
+        // Segment selector
         Operand->Type       = OPERAND_SEGSEL;
         Operand->Segment    = REG_INVALID;
         Operand->Size       = SIZE_DWORD;
