@@ -380,8 +380,6 @@ void ValidateFpuOperands(XEDPARSE* Parse, Inst* Instruction)
     for(int i = 0; i < type->InstructionCount; i++)
     {
         const xed_inst_t* inst = type->Instructions[i];
-        const xed_operand_t* op = xed_inst_operand(inst, 0);
-        xed_operand_enum_t name = xed_operand_name(op);
 
         // FPU extensions only
         if(xed_iform_to_extension(inst->_iform_enum) != XED_EXTENSION_X87)
@@ -421,7 +419,7 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
     //  return false;
 
     //
-    // Xed requires an implicit "ST0" register for some X87 instructions
+    // Special case: Implicit "ST0" register required for some X87 instructions
     //
     ValidateFpuOperands(Parse, Instruction);
 
@@ -439,13 +437,13 @@ bool ValidateInstOperands(XEDPARSE* Parse, Inst* Instruction)
         return ResizeSingleOperand(Parse, Instruction->Class, &Instruction->Operands[0]);
 
     //
-    // Special case for LEA (Segments can't be used)
+    // Special case: LEA (Segments can't be used)
     //
     if(Instruction->Class == XED_ICLASS_LEA)
         Instruction->Operands[1].Segment = REG_INVALID;
 
     //
-    // Special case for XCHG (Swap memory operand)
+    // Special case: XCHG (Swap memory operand)
     //
     if(Instruction->Class == XED_ICLASS_XCHG)
     {
@@ -569,6 +567,9 @@ void LookupTableInit()
         IClassType* type        = &XedInstLookupTable[iclass];
         type->IClass            = iclass;
         type->MinimumOperands   = min(xed_inst_noperands(inst), type->MinimumOperands);
+
+        if(type->InstructionCount >= 32)
+            __debugbreak();
 
         type->Instructions[type->InstructionCount++] = inst;
     }

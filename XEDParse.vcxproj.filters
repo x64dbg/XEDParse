@@ -48,6 +48,9 @@
     <ClCompile Include="src\XEDParse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\OperandSegSel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\BranchInst.h">
@@ -289,6 +292,9 @@
     </ClInclude>
     <ClInclude Include="xed2\include\xed-version.h">
       <Filter>Header Files\XED2</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OperandSegSel.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

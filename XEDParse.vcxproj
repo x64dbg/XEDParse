@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -31,6 +31,7 @@
     <ClCompile Include="src\MnemonicTable.cpp" />
     <ClCompile Include="src\Operand.cpp" />
     <ClCompile Include="src\OperandMem.cpp" />
+    <ClCompile Include="src\OperandSegSel.cpp" />
     <ClCompile Include="src\OpSize.cpp" />
     <ClCompile Include="src\Parser.cpp" />
     <ClCompile Include="src\ParseTest.cpp" />
@@ -45,6 +46,7 @@
     <ClInclude Include="src\MnemonicTable.h" />
     <ClInclude Include="src\Operand.h" />
     <ClInclude Include="src\OperandMem.h" />
+    <ClInclude Include="src\OperandSegSel.h" />
     <ClInclude Include="src\OpSize.h" />
     <ClInclude Include="src\Parser.h" />
     <ClInclude Include="src\ParseTest.h" />

@@ -6,6 +6,7 @@
 #include "Register.h"
 #include "Operand.h"
 #include "OperandMem.h"
+#include "OperandSegSel.h"
 #include "Prefix.h"
 
 struct Inst
