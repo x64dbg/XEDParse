@@ -1,3 +1,7 @@
+# XEDParse
+
+[![Build status](https://ci.appveyor.com/api/projects/status/p7w775lmulveb2d1?svg=true)](https://ci.appveyor.com/project/mrexodia/xedparse)
+
 XEDParse is a library to parse MASM-like plaintext instructions to the XED
 instruction format. The library is meant to have quick access to assembly
 in certain low-level programs (such as debuggers).
