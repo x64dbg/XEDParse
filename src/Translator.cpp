@@ -9,48 +9,6 @@ LONGLONG TranslateRelativeCip(XEDPARSE* Parse, ULONGLONG Value, bool Signed)
     return (LONGLONG)((ULONGLONG)Value - Parse->cip);
 }
 
-const char* XedErrorToString(xed_error_enum_t Error)
-{
-    switch(Error)
-    {
-    case XED_ERROR_BUFFER_TOO_SHORT:
-        return "There were not enough bytes in the given buffer.";
-    case XED_ERROR_GENERAL_ERROR:
-        return "XED could not encode the given instruction.";
-    case XED_ERROR_INVALID_FOR_CHIP:
-        return "The instruciton is not valid for the specified chip.";
-    case XED_ERROR_BAD_REGISTER:
-        return "XED could not decode the given instruction because an invalid register encoding was used.";
-    case XED_ERROR_BAD_LOCK_PREFIX:
-        return "A lock prefix was found where none is allowed.";
-    case XED_ERROR_BAD_REP_PREFIX:
-        return "An F2 or F3 prefix was found where none is allowed.";
-    case XED_ERROR_BAD_LEGACY_PREFIX:
-        return "A 66, F2 or F3 prefix was found where none is allowed.";
-    case XED_ERROR_BAD_REX_PREFIX:
-        return "A REX prefix was found where none is allowed.";
-    case XED_ERROR_BAD_EVEX_UBIT:
-        return "An illegal value for the EVEX.U bit was present in the instruction.";
-    case XED_ERROR_BAD_MAP:
-        return "An illegal value for the MAP field was detected in the instruction.";
-    case XED_ERROR_NO_OUTPUT_POINTER:
-        return "The output pointer for xed_agen was zero";
-    case XED_ERROR_NO_AGEN_CALL_BACK_REGISTERED:
-        return "One or both of the callbacks for xed_agen were missing.";
-    case XED_ERROR_BAD_MEMOP_INDEX:
-        return "Memop indices must be 0 or 1.";
-    case XED_ERROR_CALLBACK_PROBLEM:
-        return "The register or segment callback for xed_agen experienced a problem";
-    case XED_ERROR_GATHER_REGS:
-        return "The index, dest and mask regs for AVX2 gathers must be different.";
-    case XED_ERROR_INSTR_TOO_LONG:
-        return "Full decode of instruction would exeed 15 bytes.";
-    }
-
-    // XED_ERROR_NONE
-    return "There was no error.";
-}
-
 xed_encoder_operand_t OperandToXed(InstOperand* Operand)
 {
     xed_encoder_operand_t o;
@@ -157,13 +115,7 @@ bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, unsigned i
 
     if(err != XED_ERROR_NONE)
     {
-        const char* fullError = XedErrorToString(err);
-
-        if(fullError)
-            sprintf(Parse->error, "Failed to encode instruction! %s", fullError);
-        else
-            strcpy(Parse->error, "Failed to encode instruction!");
-
+        strcpy(Parse->error, "Failed to encode instruction!");
         return false;
     }
 
