@@ -52,6 +52,8 @@ struct InstOperand
 
             bool            Index;
             REG             IndexVal;
+
+            bool            ImplicitRip;
         } Mem;
 
         struct

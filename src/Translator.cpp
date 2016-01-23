@@ -170,6 +170,45 @@ bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, unsigned i
     return true;
 }
 
+bool TryEncode64(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
+{
+    if(!Parse->x64)
+        return false;
+
+    // First round, try regular encoding
+    if(!TryEncode(Parse, State, Instruction, 64))
+        return false;
+
+    // Check if any operands are RIP-relative memory references
+    bool reEncode = false;
+
+    for(int i = 0; i < Instruction->OperandCount; i++)
+    {
+        auto operand = &Instruction->Operands[i];
+
+        if(operand->Type != OPERAND_MEM)
+            continue;
+
+        if(!operand->Mem.ImplicitRip)
+            continue;
+
+        // Adjust displacement based on the instruction length
+        operand->Mem.DispVal -= Parse->dest_size;
+        reEncode = true;
+
+        // Encoding will fail if displacement is larger than 32 bits
+        if(abs((LONGLONG)operand->Mem.DispVal) > ULONG_MAX)
+            return false;
+    }
+
+    // Operands were modified
+    if(reEncode)
+        return TryEncode(Parse, State, Instruction, 64);
+
+    // Nothing was changed
+    return true;
+}
+
 bool Translate(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
 {
     // Jumps are IP-based and need to be fixed
@@ -186,7 +225,7 @@ bool Translate(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
         return true;
 
     // 64-bit
-    if(Parse->x64 && TryEncode(Parse, State, Instruction, 64))
+    if(TryEncode64(Parse, State, Instruction))
         return true;
 
     // 16-bit

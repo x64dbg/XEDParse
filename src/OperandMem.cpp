@@ -150,16 +150,17 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
                 // If a 32-bit address was given, don't apply RIP-relative addressing
                 if(Operand->Mem.DispWidth != SIZE_DWORD)
                 {
-                    LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal - 6, true);
+                    LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal, true);
                     ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;
 
                     // Check if the mask fits into a 32-bit variable (taking sign-extension into account)
                     if(masked == 0 || masked == 0xFFFFFFFF00000000)
                     {
-                        Operand->Mem.DispVal    = newDisp;
-                        Operand->Mem.DispWidth  = SIZE_DWORD;
-                        Operand->Mem.Base       = true;
-                        Operand->Mem.BaseVal    = REG_RIP;
+                        Operand->Mem.DispVal     = newDisp;
+                        Operand->Mem.DispWidth   = SIZE_DWORD;
+                        Operand->Mem.Base        = true;
+                        Operand->Mem.BaseVal     = REG_RIP;
+                        Operand->Mem.ImplicitRip = true;
                     }
                     else
                         Operand->Mem.DispWidth = SIZE_QWORD;
