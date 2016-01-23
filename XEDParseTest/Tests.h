@@ -90,6 +90,8 @@ static XED_TestEntry XED_AllTests[] =
     { true, 0x7FF6845CB974, 3,    "\x48\x8D\x10",                                 "LEA RDX, [RAX]" },
     { true, 0x7FF6845CB982, 8,    "\x48\x83\x05\x63\x0F\x25\x00\x01",             "ADD QWORD PTR [0x7FF68481C8ED], 0x1" },
     { true, 0x7FF6845CB982, 8,    "\x48\x83\x05\x63\x0F\x25\x00\x01",             "ADD QWORD PTR [RIP+0x250F63], 0x1" },
+    { true, 0x000000000000, 8,    "\x48\x83\x05\xFF\xFF\xFF\xFF\x01",             "ADD QWORD PTR [RIP+0xFFFFFFFF], 0x1" },
+    { true, 0x7FFB65E2199E, 8,    "\x48\x83\x05\xFF\xFF\xFF\xFF\x48",             "ADD QWORD PTR [7FFB65E219A5], 0x48" },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py
