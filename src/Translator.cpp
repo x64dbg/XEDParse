@@ -91,14 +91,14 @@ void InstructionToXed(Inst* Instruction, xed_state_t Mode, xed_encoder_instructi
         xed_addr(XedInst, Instruction->AddressSizeOverride);
 }
 
-bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, unsigned int EffectiveWidth)
+bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, unsigned int Bits)
 {
     // Convert this struct to XED's format
     xed_encoder_instruction_t xedInst;
     memset(&xedInst, 0, sizeof(xed_encoder_instruction_t));
 
     // XEDParse instruction -> Xed instruction
-    InstructionToXed(Instruction, State, &xedInst, EffectiveWidth);
+    InstructionToXed(Instruction, State, &xedInst, Bits);
 
     // Conversion request -> encoder request
     xed_encoder_request_t encReq;
@@ -122,14 +122,15 @@ bool TryEncode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, unsigned i
     return true;
 }
 
-bool TryEncode64(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
+bool TryRecode(XEDPARSE* Parse, xed_state_t State, Inst* Instruction, unsigned int Bits)
 {
-    if(!Parse->x64)
+    // First round, try regular encoding
+    if(!TryEncode(Parse, State, Instruction, Bits))
         return false;
 
-    // First round, try regular encoding
-    if(!TryEncode(Parse, State, Instruction, 64))
-        return false;
+    // 32-bit code returns immediately
+    if(!Parse->x64)
+        return true;
 
     // Check if any operands are RIP-relative memory references
     bool reEncode = false;
@@ -155,7 +156,7 @@ bool TryEncode64(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
 
     // Operands were modified
     if(reEncode)
-        return TryEncode(Parse, State, Instruction, 64);
+        return TryEncode(Parse, State, Instruction, Bits);
 
     // Nothing was changed
     return true;
@@ -173,15 +174,15 @@ bool Translate(XEDPARSE* Parse, xed_state_t State, Inst* Instruction)
 
     // Try encoding with various different effective width values
     // 32-bit
-    if(TryEncode(Parse, State, Instruction, 32))
+    if(TryRecode(Parse, State, Instruction, 32))
         return true;
 
     // 64-bit
-    if(TryEncode64(Parse, State, Instruction))
+    if(TryRecode(Parse, State, Instruction, 64))
         return true;
 
     // 16-bit
-    if(TryEncode(Parse, State, Instruction, 16))
+    if(TryRecode(Parse, State, Instruction, 16))
         return true;
 
     return false;
