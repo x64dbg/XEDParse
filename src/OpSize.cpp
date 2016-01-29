@@ -96,22 +96,22 @@ OPSIZE OpsizeFromValue(LONGLONG Value)
         if((Value & ((ULONGLONG)1 << i)) != 0)
             continue;
 
-        // Break when a zero is hit
-        unsetBitStart = i;
+        // Break when a zero is hit (use the index of the previous 1 bit)
+        unsetBitStart = i + 1;
         break;
     }
 
     // Convert the last bit set to a size value
-    if(unsetBitStart <= 8)
+    if(unsetBitStart < 8)
         return SIZE_BYTE;
 
-    if(unsetBitStart <= 16)
+    if(unsetBitStart < 16)
         return SIZE_WORD;
 
-    if(unsetBitStart <= 32)
+    if(unsetBitStart < 32)
         return SIZE_DWORD;
 
-    if(unsetBitStart <= 64)
+    if(unsetBitStart < 64)
         return SIZE_QWORD;
 
     return SIZE_UNSET;

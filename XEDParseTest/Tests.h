@@ -66,7 +66,7 @@ static XED_TestEntry XED_AllTests[] =
     { false, 0x00405C23, 11, "\xC7\x84\x24\xE8\xFD\xFF\xFF\x00\x00\x08\x02", "MOV DWORD PTR [ESP-0x218],0x2080000" },// Implicit SS segment
     { false, 0x00000000, 10, "\xC7\x05\xBA\x55\x0F\x00\xFF\x00\x00\x00",     "MOV DWORD PTR [0xF55BA], 0xFF" },
     { false, 0x00000000, 9,  "\x66\xC7\x05\xBA\x55\x0F\x00\xFF\x00",         "MOV WORD PTR [0xF55BA], 0xFF" },
-    { false, 0x00000000, 8,  "\xC6\x05\xBA\x55\x0F\x00\xFF",                 "MOV BYTE PTR [0xF55BA], 0xFF" },
+    { false, 0x00000000, 7,  "\xC6\x05\xBA\x55\x0F\x00\xFF",                 "MOV BYTE PTR [0xF55BA], 0xFF" },
 
     // 32-bit invalid commands (error verification)
     { false, 0x00405C23, -1, "", "MOV EAX, DWORD PTR ][" },
@@ -74,10 +74,13 @@ static XED_TestEntry XED_AllTests[] =
     { false, 0x00405C23, -1, "", "MOV EAX, DWORD PTR [0xFFFFFFFFF]" },
 
     // 64-bit miscellaneous instructions
-    { true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",         "MOV RAX, 0x1234567890" },
-    { true, 0x7FFCA9FF1977, 10,   "\x48\xb8\x90\x78\x56\x34\x12\x00\x00\x00",         "MOVABS RAX, 0x1234567890" },
+    { true, 0x7FFCA9FF1977, 10,   "\x48\xB8\x90\x78\x56\x34\x12\x00\x00\x00",         "MOV RAX, 0x1234567890" },
+    { true, 0x7FFCA9FF1977, 7,    "\x48\xC7\xC0\x00\x00\x00\x00",                     "MOV RAX, 0" },
+    { true, 0x7FFCA9FF1977, 10,   "\x48\xB8\x00\x00\x00\x00\x01\x00\x00\x00",         "MOV RAX, 0x100000000" },
+    { true, 0x7FFCA9FF1977, 7,    "\x48\xC7\xC0\x8F\xFA\xFF\x00",                     "MOV RAX, 0xFFFA8F" },
+    { true, 0x7FFCA9FF1977, 10,   "\x48\xB8\x90\x78\x56\x34\x12\x00\x00\x00",         "MOVABS RAX, 0x1234567890" },
     { true, 0x7FFCA9FF1977, 10,   "\x48\xB8\xFE\xFF\xFF\xFF\xFF\xFF\xFF\xFF",         "MOVABS RAX, 0xFFFFFFFFFFFFFFFE" },
-    { true, 0x7FFCA9FF1977, 10,   "\x48\xa1\x90\x78\x56\x34\x12\x00\x00\x00",         "MOV RAX, QWORD PTR DS:[0x1234567890]" },
+    { true, 0x7FFCA9FF1977, 10,   "\x48\xA1\x90\x78\x56\x34\x12\x00\x00\x00",         "MOV RAX, QWORD PTR DS:[0x1234567890]" },
     { true, 0x7FFCA9FF1977, 1,    "\xCC",                                             "INT3" },
     { true, 0x7FFCA9FF1977, 2,    "\xCD\x03",                                         "INT 3" },
     { true, 0x7FFCA9FF1977, 3,    "\x48\x63\xD0",                                     "MOVSXD RDX, EAX" },
