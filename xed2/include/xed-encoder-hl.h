@@ -254,7 +254,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_b(xed_reg_enum_t base,
 /// @ingroup ENCHL
 /// memory operand - base and displacement only
 static XED_INLINE  xed_encoder_operand_t xed_mem_bd(xed_reg_enum_t base,
-        xed_enc_displacement_t disp,
+        const xed_enc_displacement_t &disp,
         xed_uint_t width)
 {
     xed_encoder_operand_t o;
@@ -273,7 +273,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_bd(xed_reg_enum_t base,
 static XED_INLINE  xed_encoder_operand_t xed_mem_bisd(xed_reg_enum_t base,
         xed_reg_enum_t index,
         xed_uint_t scale,
-        xed_enc_displacement_t disp,
+        const xed_enc_displacement_t &disp,
         xed_uint_t width)
 {
     xed_encoder_operand_t o;
@@ -310,7 +310,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_gb(xed_reg_enum_t seg,
 /// memory operand - segment, base and displacement only
 static XED_INLINE  xed_encoder_operand_t xed_mem_gbd(xed_reg_enum_t seg,
         xed_reg_enum_t base,
-        xed_enc_displacement_t disp,
+        const xed_enc_displacement_t &disp,
         xed_uint_t width)
 {
     xed_encoder_operand_t o;
@@ -327,7 +327,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_gbd(xed_reg_enum_t seg,
 /// @ingroup ENCHL
 /// memory operand - segment and displacement only
 static XED_INLINE  xed_encoder_operand_t xed_mem_gd(xed_reg_enum_t seg,
-        xed_enc_displacement_t disp,
+        const xed_enc_displacement_t &disp,
         xed_uint_t width)
 {
     xed_encoder_operand_t o;
@@ -347,7 +347,7 @@ static XED_INLINE  xed_encoder_operand_t xed_mem_gbisd(xed_reg_enum_t seg,
         xed_reg_enum_t base,
         xed_reg_enum_t index,
         xed_uint_t scale,
-        xed_enc_displacement_t disp,
+        const xed_enc_displacement_t &disp,
         xed_uint_t width)
 {
     xed_encoder_operand_t o;
@@ -473,7 +473,7 @@ static XED_INLINE  void xed_inst1(
     xed_state_t mode,
     xed_iclass_enum_t iclass,
     xed_uint_t effective_operand_width,
-    xed_encoder_operand_t op0)
+    const xed_encoder_operand_t &op0)
 {
 
     inst->mode = mode;
@@ -492,8 +492,8 @@ static XED_INLINE  void xed_inst2(
     xed_state_t mode,
     xed_iclass_enum_t iclass,
     xed_uint_t effective_operand_width,
-    xed_encoder_operand_t op0,
-    xed_encoder_operand_t op1)
+    const xed_encoder_operand_t &op0,
+    const xed_encoder_operand_t &op1)
 {
 
     inst->mode = mode;
@@ -513,9 +513,9 @@ static XED_INLINE  void xed_inst3(
     xed_state_t mode,
     xed_iclass_enum_t iclass,
     xed_uint_t effective_operand_width,
-    xed_encoder_operand_t op0,
-    xed_encoder_operand_t op1,
-    xed_encoder_operand_t op2)
+    const xed_encoder_operand_t &op0,
+    const xed_encoder_operand_t &op1,
+    const xed_encoder_operand_t &op2)
 {
 
     inst->mode = mode;
@@ -537,10 +537,10 @@ static XED_INLINE  void xed_inst4(
     xed_state_t mode,
     xed_iclass_enum_t iclass,
     xed_uint_t effective_operand_width,
-    xed_encoder_operand_t op0,
-    xed_encoder_operand_t op1,
-    xed_encoder_operand_t op2,
-    xed_encoder_operand_t op3)
+    const xed_encoder_operand_t &op0,
+    const xed_encoder_operand_t &op1,
+    const xed_encoder_operand_t &op2,
+    const xed_encoder_operand_t &op3)
 {
 
     inst->mode = mode;
@@ -562,11 +562,11 @@ static XED_INLINE  void xed_inst5(
     xed_state_t mode,
     xed_iclass_enum_t iclass,
     xed_uint_t effective_operand_width,
-    xed_encoder_operand_t op0,
-    xed_encoder_operand_t op1,
-    xed_encoder_operand_t op2,
-    xed_encoder_operand_t op3,
-    xed_encoder_operand_t op4)
+    const xed_encoder_operand_t &op0,
+    const xed_encoder_operand_t &op1,
+    const xed_encoder_operand_t &op2,
+    const xed_encoder_operand_t &op3,
+    const xed_encoder_operand_t &op4)
 {
 
     inst->mode = mode;
