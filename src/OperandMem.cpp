@@ -23,7 +23,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
     *strchr(calc, ']') = '\0';
 
     // Gather any information & check the prefix validity
-    if(strlen(prefix) > 0)
+    if(strlen(prefix) != '\0')
     {
         // Prefix must be lowercase
         _strlwr(prefix);
@@ -58,7 +58,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
 
         // If the size is UNSET and there's still chars left in the string,
         // it is an invalid identifier
-        if(Operand->Size == SIZE_UNSET && strlen(prefix) > 0)
+        if(Operand->Size == SIZE_UNSET && strlen(prefix) != '\0')
         {
             sprintf(Parse->error, "Unknown identifier in '%s'", Value);
             return false;
