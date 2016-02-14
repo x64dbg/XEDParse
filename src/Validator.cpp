@@ -121,6 +121,12 @@ bool ResizeSingleOperand(XEDPARSE* Parse, xed_iclass_enum_t IClass, InstOperand*
         return true;
     }
     break;
+
+	case OPERAND_INVALID:
+		break;
+
+	case OPERAND_SEGSEL:
+		break;
     }
 
     return false;
