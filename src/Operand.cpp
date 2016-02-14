@@ -7,8 +7,8 @@ OPSIZE PromoteImmediateWidth(bool Signed, ULONGLONG Value, OPSIZE Width)
     //
     // half     = pow(2, n_bits - 1);
     // minhalf  = -half;
-    xed_uint64_t maxhalf = 1 << (OpsizeToBits(Width) - 1);
-    xed_uint64_t minhalf = 1 + (~maxhalf);
+    xed_uint64_t maxhalf = 1ui64 << (OpsizeToBits(Width) - 1);
+    xed_uint64_t minhalf = 1ui64 + (~maxhalf); // #FIXME: maybe this "1ui64" dont need?
 
     // Values that are <  -(MAX_VALUE/2) need to use the next biggest size
     // Values that are >= +(MAX_VALUE/2) need to use the next biggest size
