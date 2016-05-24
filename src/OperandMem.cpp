@@ -148,7 +148,7 @@ bool HandleMemoryOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operan
             if(!Operand->Mem.Base && !Operand->Mem.Index && !Operand->Mem.Scale)
             {
                 // If a 32-bit address was given, don't apply RIP-relative addressing
-                if(Operand->Mem.DispWidth != SIZE_DWORD)
+                if(true || Operand->Mem.DispWidth != SIZE_DWORD) //removed this because rip-relative instructions are smaller
                 {
                     LONGLONG newDisp = TranslateRelativeCip(Parse, Operand->Mem.DispVal, true);
                     ULONGLONG masked = newDisp & 0xFFFFFFFF00000000;

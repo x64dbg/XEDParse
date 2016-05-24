@@ -20,33 +20,33 @@ static XED_TestEntry XED_AllTests[] =
 
     { false, 0x00405C5B, 5,    "\xE9\xCA\x70\x00\x00",        "JMP 0x0040CD2A" },                    // 32 Long jump forward
     { false, 0x00405C5B, 5,    "\xE9\x40\xFE\xFF\xFF",        "JMP 0x00405AA0" },                    // 32 Long jump backward
-    { false, 0x00405C5B, 6,    "\xFF\x25\x00\x01\x00\x00",    "JMP DWORD PTR DS:[100]" },            // 32 Long jump ptr
+    { false, 0x00405C5B, 6,    "\xFF\x25\x00\x01\x00\x00",    "JMP DWORD PTR DS:[0x100]" },            // 32 Long jump ptr
 
-    { false, 0x00405CCC, 6,    "\xFF\x15\x10\x00\x00\x00",    "CALL DWORD PTR DS:[10]" },            // 32 Long call ptr
+    { false, 0x00405CCC, 6,    "\xFF\x15\x10\x00\x00\x00",    "CALL DWORD PTR DS:[0x10]" },            // 32 Long call ptr
     { false, 0x00405C5B, 5,    "\xE8\xCA\x70\x00\x00",        "CALL 0x0040CD2A" },                   // 32 Long call forward
     { false, 0x00405EF0, 5,    "\xE8\x06\xFF\xFF\xFF",        "CALL 0x00405DFB" },                   // 32 Long call backward
 
-    { true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 7FFCAA022104" },            // 64 Short jump
-    { true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 7FFCAA022128" },            // 64 Short jump forward
-    { true, 0x7FFCAA022104, 2, "\xEB\xF9",                    "JMP SHORT 7FFCAA0220FF" },            // 64 Short jump backward
+    { true, 0x7FFCAA022104, 2, "\xEB\xFE",                    "JMP SHORT 0x7FFCAA022104" },            // 64 Short jump
+    { true, 0x7FFCAA022104, 2, "\xEB\x22",                    "JMP SHORT 0x7FFCAA022128" },            // 64 Short jump forward
+    { true, 0x7FFCAA022104, 2, "\xEB\xF9",                    "JMP SHORT 0x7FFCAA0220FF" },            // 64 Short jump backward
 
     { true, 0x7FFCA9FF197C, 5, "\xE9\x35\x64\x93\x53",        "JMP 0x7FFCFD927DB6" },                // 64 Long jump forward
     { true, 0x7FFCAA022104, 5, "\xE9\x7C\xF4\xFC\xFF",        "JMP 0x7FFCA9FF1585" },                // 64 Long jump backward
     { true, 0x000123456789, 6, "\xFF\x25\xFA\xFF\xFF\xFF",    "JMP QWORD[0x123456789]" },            // 64 Long jump ptr with RIP-rel
-    { true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF",    "JMP QWORD PTR DS:[7FFCA9FE1A77]" },   // 64 Long jump ptr backward with RIP-rel
+    { true, 0x7FFCA9FF1977, 6, "\xFF\x25\xFA\x00\xFF\xFF",    "JMP QWORD PTR DS:[0x7FFCA9FE1A77]" },   // 64 Long jump ptr backward with RIP-rel
 
     // 32-bit miscellaneous instructions
-    { false, 0x00405C6A, 6,  "\xFF\x35\xF4\x0A\x47\x00",                     "PUSH DWORD PTR DS:[470AF4]" },
+    { false, 0x00405C6A, 6,  "\xFF\x35\xF4\x0A\x47\x00",                     "PUSH DWORD PTR DS:[0x470AF4]" },
     { false, 0x00405C92, 3,  "\x8B\x45\x08",                                 "MOV EAX,DWORD PTR SS:[EBP+8]" },
-    { false, 0x00405CB8, 7,  "\xC7\x45\xF4\x00\x40\x99\x01",                 "MOV DWORD PTR SS:[EBP-0C],01994000" },
+    { false, 0x00405CB8, 7,  "\xC7\x45\xF4\x00\x40\x99\x01",                 "MOV DWORD PTR SS:[EBP-0xC],0x1994000" },
     { false, 0x00405D4C, 3,  "\x8A\x14\x08",                                 "MOV DL,BYTE PTR DS:[EAX+ECX]" },
-    { false, 0x00405D4C, 5,  "\x0F\xB7\x4C\x45\x98",                         "MOVZX ECX,WORD PTR SS:[EAX*2+EBP-68]" },
-    { false, 0x00405D4C, 8,  "\xC6\x84\x30\x1D\x01\x00\x00\x00",             "MOV BYTE PTR DS:[EAX+ESI+11D],0" },
-    { false, 0x0040652A, 5,  "\xC0\x64\x18\x50\xFF",                         "SAL BYTE PTR DS:[EAX+EBX+50],0FF" },
-    { false, 0x00405F1E, 2,  "\x6A\x0D",                                     "PUSH 0D" },
-    { false, 0x00405F1E, 5,  "\x68\xFF\x00\x00\x00",                         "PUSH FF" },
-    { false, 0x00405FF9, 4,  "\x83\x60\x70\xFD",                             "AND DWORD PTR DS:[EAX+70],FFFFFFFD" },
-    { false, 0x00405FF9, 7,  "\x81\x60\x70\x0D\x00\x00\xF0",                 "AND DWORD PTR DS:[EAX+70],F000000D" },
+    { false, 0x00405D4C, 5,  "\x0F\xB7\x4C\x45\x98",                         "MOVZX ECX,WORD PTR SS:[EAX*2+EBP-0x68]" },
+    { false, 0x00405D4C, 8,  "\xC6\x84\x30\x1D\x01\x00\x00\x00",             "MOV BYTE PTR DS:[EAX+ESI+0x11D],0" },
+    { false, 0x0040652A, 5,  "\xC0\x64\x18\x50\xFF",                         "SAL BYTE PTR DS:[EAX+EBX+0x50],0xFF" },
+    { false, 0x00405F1E, 2,  "\x6A\x0D",                                     "PUSH 0xD" },
+    { false, 0x00405F1E, 5,  "\x68\xFF\x00\x00\x00",                         "PUSH 0xFF" },
+    { false, 0x00405FF9, 4,  "\x83\x60\x70\xFD",                             "AND DWORD PTR DS:[EAX+0x70],0xFFFFFFFD" },
+    { false, 0x00405FF9, 7,  "\x81\x60\x70\x0D\x00\x00\xF0",                 "AND DWORD PTR DS:[EAX+0x70],0xF000000D" },
     { false, 0x00405C23, 8,  "\xf2\x0f\x11\x0d\x00\x00\x00\x00",             "MOVSD QWORD PTR ds:[0x0],xmm1" },
     { false, 0x00405C23, 7,  "\x8B\x04\xCD\x00\x00\x00\x00",                 "MOV EAX,[ECX*8]" },
     { false, 0x00405C23, 1,  "\x60",                                         "PUSHAD" },
@@ -88,20 +88,20 @@ static XED_TestEntry XED_AllTests[] =
     { true, 0x7FFCA9FF1977, 7,    "\x4D\x69\xED\x10\x01\x00\x00",                     "IMUL R13, R13, 0x110" },
     { true, 0x7FFCA9FF1977, 4,    "\x4D\x6B\xED\x11",                                 "IMUL R13, R13, 0x11" },
     { true, 0x7FFCA9FF1977, 11,   "\x48\xC7\x05\xAF\x55\x0F\x00\xFF\x00\x00\x00",     "MOV QWORD PTR [RIP+0xF55AF], 0xFF" },
-    { true, 0x000000000000, 12,   "\x48\xC7\x04\x25\xBA\x55\x0F\x00\xFF\x00\x00\x00", "MOV QWORD PTR [0xF55BA], 0xFF" },
+    { true, 0x000000000000, 11,   "\x48\xC7\x05\xAF\x55\x0F\x00\xFF\x00\x00\x00",     "MOV QWORD PTR [0xF55BA], 0xFF" },
     { true, 0x7FFCA9FF1977, 11,   "\x48\xC7\x05\xAF\x55\x0F\x00\xFE\xFF\xFF\xFF",     "MOV QWORD PTR [RIP+0xF55AF], 0xFFFFFFFFFFFFFFFE" },
     { true, 0x7FFCA9FF1977, 4,    "\x48\x0F\xC7\x08",                                 "CMPXCHG16B [RAX]" },
     { true, 0x7FFCA9FF1977, 3,    "\x0F\xC7\x08",                                     "CMPXCHG8B [RAX]" },
-    { true, 0x7FF6845CB974, 7,    "\x48\x8D\x15\xA5\x16\x25\x00",                     "LEA RDX, QWORD PTR DS:[7FF68481D020]" },
+    { true, 0x7FF6845CB974, 7,    "\x48\x8D\x15\xA5\x16\x25\x00",                     "LEA RDX, QWORD PTR DS:[0x7FF68481D020]" },
     { true, 0x7FF6845CB974, 7,    "\x48\x8D\x15\xA5\x16\x25\x00",                     "LEA RDX, QWORD PTR DS:[RIP+0x2516A5]" },
     { true, 0x7FF6845CB974, 3,    "\x48\x8D\x10",                                     "LEA RDX, [RAX]" },
     { true, 0x7FF6845CB982, 8,    "\x48\x83\x05\x63\x0F\x25\x00\x01",                 "ADD QWORD PTR [0x7FF68481C8ED], 0x1" },
     { true, 0x7FF6845CB982, 8,    "\x48\x83\x05\x63\x0F\x25\x00\x01",                 "ADD QWORD PTR [RIP+0x250F63], 0x1" },
     { true, 0x000000000000, 8,    "\x48\x83\x05\xFF\xFF\xFF\xFF\x01",                 "ADD QWORD PTR [RIP+0xFFFFFFFF], 0x1" },
-    { true, 0x7FFB65E2199E, 8,    "\x48\x83\x05\xFF\xFF\xFF\xFF\x48",                 "ADD QWORD PTR [7FFB65E219A5], 0x48" },
-    { true, 0x07FEF18BC878, 10,   "\xC7\x05\x5E\x3B\xD8\xFF\x00\x00\x00\x00",         "MOV DWORD PTR DS:[7FEF16403E0],0" },
-    { true, 0x000000000000, 10,   "\x66\xC7\x04\x25\x54\xFF\x0F\x00\x00\x00",         "MOV WORD PTR DS:[0xFFF54],0" },
-    { true, 0x000000000000, 8,    "\xC6\x04\x25\x54\xFF\x0F\x00\x00",                 "MOV BYTE PTR DS:[0xFFF54],0" },
+    { true, 0x7FFB65E2199E, 8,    "\x48\x83\x05\xFF\xFF\xFF\xFF\x48",                 "ADD QWORD PTR [0x7FFB65E219A5], 0x48" },
+    { true, 0x07FEF18BC878, 10,   "\xC7\x05\x5E\x3B\xD8\xFF\x00\x00\x00\x00",         "MOV DWORD PTR DS:[0x7FEF16403E0],0" },
+    { true, 0x000000000000, 9,    "\x66\xC7\x05\x4B\xFF\x0F\x00\x00\x00",             "MOV WORD PTR DS:[0xFFF54],0" },
+    { true, 0x000000000000, 7,    "\xC6\x05\x4D\xFF\x0F\x00\x00",                     "MOV BYTE PTR DS:[0xFFF54],0" },
 
     // Derived from:
     // https://raw.githubusercontent.com/aquynh/capstone/24341dcd5ab6f75333342911f2616518dc1f07b4/suite/regress.py
