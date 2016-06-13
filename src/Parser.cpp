@@ -2,42 +2,17 @@
 #include "Translator.h"
 #include <stdio.h>
 
-static bool isinbase(char ch, const char* base)
+static bool convertNumber(const char* str, ULONGLONG & result, int radix)
 {
-    for(; *base != '\0'; base++)
-    {
-        if(tolower(ch) == tolower(*base))
-            return true;
-    }
-
-    return false;
-}
-
-static bool isbase(const char* text, const char* base)
-{
-    for(; *text != '\0'; text++)
-    {
-        if(!isinbase(*text, base))
-            return false;
-    }
-
-    return true;
-}
-
-static bool parsebinary(const char* text, ULONGLONG* value)
-{
-    if(!isbase(text, "01"))
+    errno = 0;
+    char* end;
+    result = strtoull(str, &end, radix);
+    if(!result && end == str)
         return false;
-    ULONGLONG result = 0;
-    int len = strlen(text);
-    for(int i = 0; i < len; i++)
-    {
-        if(i)
-            result <<= 1;
-        if(text[i] == '1')
-            result++;
-    }
-    *value = result;
+    if(result == ULLONG_MAX && errno)
+        return false;
+    if(*end)
+        return false;
     return true;
 }
 
@@ -68,35 +43,28 @@ bool valfromstring(const char* text, ULONGLONG* value)
 
     case 'x':
         // Hexadecimal
-        if(!isbase(text, "0123456789ABCDEF"))
-            return false;
-
-        if(sscanf(text, "%llx", value) != 1)
+        if(!convertNumber(text, *value, 16))
             return false;
         break;
 
     case '.':
-        if(tolower(text[0]) == 'b')  // Binary
+        if(tolower(text[0]) == 'b')
         {
-            if(!parsebinary(text + 1, value))
+            // Binary
+            if(!convertNumber(text + 1, *value, 2))
                 return false;
         }
-        else // Decimal
+        else
         {
-            if(!isbase(text, "0123456789"))
-                return false;
-
-            if(sscanf(text, "%llu", value) != 1)
+            // Decimal
+            if(!convertNumber(text, *value, 10))
                 return false;
         }
         break;
 
     case 'o':
         // Octal
-        if(!isbase(text, "01234567"))
-            return false;
-
-        if(sscanf(text, "%llo", value) != 1)
+        if(!convertNumber(text, *value, 8))
             return false;
         break;
     }
