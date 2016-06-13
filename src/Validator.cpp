@@ -569,7 +569,7 @@ void LookupTableInit()
         type->MinimumOperands   = min(xed_inst_noperands(inst), type->MinimumOperands);
 
         if(type->InstructionCount >= 32)
-            __debugbreak();
+            __debugbreak(); //This can actually happen when two threads call LookupTableInit with bInitialized = false, mitigated by placing LookupTableInit() in DllMain.
 
         type->Instructions[type->InstructionCount++] = inst;
     }

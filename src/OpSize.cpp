@@ -79,6 +79,9 @@ const char* OpsizeToString(OPSIZE Size)
 OPSIZE OpsizeFromValue(LONGLONG Value)
 {
     // First loop to get most significant bit index
+    //
+    // 00000000111111111111101010001111
+    //         ^ We want this index
     size_t setBitStart = 0;
 
     for(ULONGLONG temp = Value; temp >>= 1;)

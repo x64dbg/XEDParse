@@ -49,6 +49,7 @@ XEDPARSE_EXPORT XEDPARSE_STATUS XEDPARSE_CALL XEDParseAssemble(XEDPARSE* XEDPars
 #ifndef XEDPARSE_STATIC
 extern "C" __declspec(dllexport) BOOL APIENTRY DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
 {
+    LookupTableInit();
     return TRUE;
 }
 #endif // XEDPARSE_STATIC

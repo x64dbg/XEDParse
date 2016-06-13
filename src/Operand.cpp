@@ -28,6 +28,15 @@ OPSIZE PromoteImmediateWidth(bool Signed, ULONGLONG Value, OPSIZE Width)
 
 bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
 {
+    if (!*Value)
+    {
+        // Empty operand
+        Operand->Type = OPERAND_INVALID;
+
+        strcpy_s(Parse->error, "Empty operand");
+        return false;
+    }
+
     REG registerVal  = RegFromString(Value);
     ULONGLONG immVal = 0;
 

@@ -67,6 +67,7 @@ static XED_TestEntry XED_AllTests[] =
     { false, 0x00000000, 10, "\xC7\x05\xBA\x55\x0F\x00\xFF\x00\x00\x00",     "MOV DWORD PTR [0xF55BA], 0xFF" },
     { false, 0x00000000, 9,  "\x66\xC7\x05\xBA\x55\x0F\x00\xFF\x00",         "MOV WORD PTR [0xF55BA], 0xFF" },
     { false, 0x00000000, 7,  "\xC6\x05\xBA\x55\x0F\x00\xFF",                 "MOV BYTE PTR [0xF55BA], 0xFF" },
+    { false, 0x00000000, 6,  "\x81\x38\x80\x07\x00\x00",                     "CMP DWORD PTR [EAX], 0x780" }, //OpsizeFromValue problem
 
     // 32-bit invalid commands (error verification)
     { false, 0x00405C23, -1, "", "MOV EAX, DWORD PTR ][" },

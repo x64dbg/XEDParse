@@ -16,9 +16,9 @@ void OperandToString(char* Buffer, InstOperand* Operand)
 
     case OPERAND_IMM:
         if(Operand->Imm.Signed && Operand->Imm.simm < 0)
-            sprintf(Buffer, "-0x%llX", (~Operand->Imm.imm) + 1);
+            sprintf(Buffer, "-0x%llX/%d", (~Operand->Imm.imm) + 1, Operand->Size);
         else
-            sprintf(Buffer, "0x%llX", Operand->Imm.imm);
+            sprintf(Buffer, "0x%llX/%d", Operand->Imm.imm, Operand->Size);
         break;
 
     case OPERAND_MEM:
