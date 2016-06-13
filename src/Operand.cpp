@@ -75,7 +75,7 @@ bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
         // Immediate
         Operand->Type       = OPERAND_IMM;
         Operand->Segment    = REG_INVALID;
-        Operand->Size       = OpsizeFromValue(immVal);
+        Operand->Size       = OpsizeFromValue(Parse->x64, immVal);
         Operand->XedEOSZ    = EOSZ_64_32(Parse->x64);
         Operand->Imm.Signed = (Value[0] == '-');
         Operand->Imm.imm    = immVal;

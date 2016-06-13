@@ -57,4 +57,4 @@ int OpsizeToEosz(OPSIZE Value);
 OPSIZE OpsizeFromString(const char* Value);
 const char* OpsizeToString(OPSIZE Size);
 
-OPSIZE OpsizeFromValue(LONGLONG Value);
+OPSIZE OpsizeFromValue(bool x64, LONGLONG Value);

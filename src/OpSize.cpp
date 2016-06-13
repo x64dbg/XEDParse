@@ -76,7 +76,7 @@ const char* OpsizeToString(OPSIZE Size)
     return OpsizeEntryTable[Size].Name;
 }
 
-OPSIZE OpsizeFromValue(LONGLONG Value)
+OPSIZE OpsizeFromValue(bool x64, LONGLONG Value)
 {
     // First loop to get most significant bit index
     //
@@ -87,22 +87,28 @@ OPSIZE OpsizeFromValue(LONGLONG Value)
     for(ULONGLONG temp = Value; temp >>= 1;)
         setBitStart++;
 
-    // Get the index of the last repeating 1-bit
-    //
-    // 00000000111111111111101010001111
-    //                     ^ We want this index
     size_t unsetBitStart = 0;
-
-    for(int i = setBitStart; i > 0; i--)
+    ULONGLONG mask = x64 ? 0x8000000000000000 : 0x0000000080000000; //Mask for negative values
+    if (Value & mask)
     {
-        // If nonzero bit, continue
-        if((Value & ((ULONGLONG)1 << i)) != 0)
-            continue;
+        // Get the index of the last repeating 1-bit
+        //
+        // 00000000111111111111101010001111
+        //                     ^ We want this index
 
-        // Break when a zero is hit (use the index of the previous 1 bit)
-        unsetBitStart = i + 1;
-        break;
+        for (int i = setBitStart; i > 0; i--)
+        {
+            // If nonzero bit, continue
+            if ((Value & ((ULONGLONG)1 << i)) != 0)
+                continue;
+
+            // Break when a zero is hit (use the index of the previous 1 bit)
+            unsetBitStart = i + 1;
+            break;
+        }
     }
+    else
+        unsetBitStart = setBitStart;
 
     // Convert the last bit set to a size value
     if(unsetBitStart < 8)
