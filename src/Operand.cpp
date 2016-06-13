@@ -28,7 +28,7 @@ OPSIZE PromoteImmediateWidth(bool Signed, ULONGLONG Value, OPSIZE Width)
 
 bool AnalyzeOperand(XEDPARSE* Parse, const char* Value, InstOperand* Operand)
 {
-    if (!*Value)
+    if(!*Value)
     {
         // Empty operand
         Operand->Type = OPERAND_INVALID;

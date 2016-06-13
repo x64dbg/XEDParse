@@ -7,11 +7,11 @@ static void printTest(const XED_TestEntry & test, const XEDPARSE & result)
 {
     printf("  \"%s\", IP: 0x%llX, Mode: %s\n", test.Asm, test.Ip, test.LongMode ? "x64" : "x32");
     printf("  Expected (%i) ", test.DataLen);
-    for (int i = 0; i < test.DataLen; i++)
+    for(int i = 0; i < test.DataLen; i++)
         printf("%02X ", (unsigned char)test.Data[i]);
     puts("");
     printf("  Actual (%i)   ", result.dest_size);
-    for (unsigned int i = 0; i < result.dest_size; i++)
+    for(unsigned int i = 0; i < result.dest_size; i++)
         printf("%02X ", result.dest[i]);
     puts("");
 }
@@ -19,15 +19,15 @@ static void printTest(const XED_TestEntry & test, const XEDPARSE & result)
 void PrintTests()
 {
     int testCount = ARRAYSIZE(XED_AllTests);
-    for (auto i = 0; i < testCount; i++)
+    for(auto i = 0; i < testCount; i++)
     {
         auto & test = XED_AllTests[i];
         printf("runTest(%d, %s, 0x%llX, [", i, test.LongMode ? "True" : "False", test.Ip);
-        if (test.DataLen != -1)
+        if(test.DataLen != -1)
         {
-            for (auto j = 0; j < test.DataLen; j++)
+            for(auto j = 0; j < test.DataLen; j++)
             {
-                if (j)
+                if(j)
                     printf(", ");
                 printf("0x%02X", (unsigned char)test.Data[j]);
             }
@@ -56,7 +56,7 @@ void RunTests()
         if(XEDParseAssemble(&parse) != XEDPARSE_OK)
         {
             // Did the test expect a failure?
-            if (test.DataLen == -1)
+            if(test.DataLen == -1)
                 successCount++;
             else
             {
@@ -69,7 +69,7 @@ void RunTests()
 
         // Compare output data with the predetermined struct
         // Compare output length
-        if (test.DataLen != parse.dest_size)
+        if(test.DataLen != parse.dest_size)
         {
             printf("Test %i failed: Output hex length mismatch (expected %d, actual %d)\n", i, test.DataLen, parse.dest_size);
             printTest(test, parse);
@@ -77,7 +77,7 @@ void RunTests()
         }
 
         // Compare pure data
-        if (memcmp(test.Data, parse.dest, parse.dest_size) != 0)
+        if(memcmp(test.Data, parse.dest, parse.dest_size) != 0)
         {
             printf("Test %i failed: Output hex mismatch\n", i);
             printTest(test, parse);

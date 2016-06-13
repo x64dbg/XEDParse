@@ -89,17 +89,17 @@ OPSIZE OpsizeFromValue(bool x64, LONGLONG Value)
 
     size_t unsetBitStart = 0;
     ULONGLONG mask = x64 ? 0x8000000000000000 : 0x0000000080000000; //Mask for negative values
-    if (Value & mask)
+    if(Value & mask)
     {
         // Get the index of the last repeating 1-bit
         //
         // 00000000111111111111101010001111
         //                     ^ We want this index
 
-        for (int i = setBitStart; i > 0; i--)
+        for(int i = setBitStart; i > 0; i--)
         {
             // If nonzero bit, continue
-            if ((Value & ((ULONGLONG)1 << i)) != 0)
+            if((Value & ((ULONGLONG)1 << i)) != 0)
                 continue;
 
             // Break when a zero is hit (use the index of the previous 1 bit)
