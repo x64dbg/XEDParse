@@ -71,7 +71,8 @@ bool valfromstring(const char* text, ULONGLONG* value)
         if(!isbase(text, "0123456789ABCDEF"))
             return false;
 
-        sscanf(text, "%llx", value);
+        if(sscanf(text, "%llx", value) != 1)
+            return false;
         break;
 
     case '.':
@@ -85,7 +86,8 @@ bool valfromstring(const char* text, ULONGLONG* value)
             if(!isbase(text, "0123456789"))
                 return false;
 
-            sscanf(text, "%llu", value);
+            if(sscanf(text, "%llu", value) != 1)
+                return false;
         }
         break;
 
@@ -94,7 +96,8 @@ bool valfromstring(const char* text, ULONGLONG* value)
         if(!isbase(text, "01234567"))
             return false;
 
-        sscanf(text, "%llo", value);
+        if(sscanf(text, "%llo", value) != 1)
+            return false;
         break;
     }
 
